@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background-image: linear-gradient(to right, black,yellow); */
+  /* background-color: orange; */
+  height: 100%;
+  width: 100%;
+}
+
+
