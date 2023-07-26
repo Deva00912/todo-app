@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import InputBox from "./InputBox";
 import Button from "./Button";
 import "./styles/register.css";
+// import Login from "./Login";
 
 export default function Tasks() {
-  const [task, setTask] = useState({ entry: "" });
+  const [task, setTask] = useState({ id: "", entry: "" });
+  const [edit, setEdit] = useState(false);
   const [list, setList] = useState(
     localStorage.getItem("Tasks") &&
       Object.values(JSON.parse(localStorage.getItem("Tasks")))?.length > 0
@@ -18,8 +20,9 @@ export default function Tasks() {
   const logOut = () => {
     localStorage.setItem("Tasks", JSON.stringify(list));
     localStorage.removeItem("LoggedUsers");
-    navigate("/");
+    navigate("/login");
   };
+  
 
   useEffect(() => {
     if (submit) {
@@ -28,8 +31,17 @@ export default function Tasks() {
         setSubmit(false);
       }
     }
+    if (edit) {
+      localStorage.setItem("Tasks", JSON.stringify(list));
+      setEdit(false);
+    }
+
     // eslint-disable-next-line
-  }, [JSON.parse(localStorage.getItem("Tasks")), submit]);
+  }, [submit, edit]);
+
+  // useEffect(() => {
+  //   // eslint-disable-next-line
+  // }, [localStorage.getItem("Users"), localStorage.getItem("LoggedUsers")]);
 
   console.log(task, "task");
 
@@ -43,8 +55,10 @@ export default function Tasks() {
         onSubmit={(e) => {
           e.preventDefault();
           let d = [];
-          if (list) {
+          if (list && list.length > 0) {
             d = [...list, task];
+          } else {
+            d.push(task);
           }
           localStorage.setItem("Tasks", JSON.stringify(d));
           setSubmit(true);
@@ -52,41 +66,41 @@ export default function Tasks() {
       >
         <InputBox placeholder="Entry" type="type" name="entry" />
         <Button className="btn" type="submit" value="Save" />
-        {/* <Button
-          className="btn"
-          type="button"
-          onClick={() => {
-            console.log("Hello");
-          }}
-          value="Delete"
-        /> */}
       </form>
       <div
         className="listViewTasks"
         style={{
           color: "white",
           display: "flex",
-          // justifyContent: "center",
           flexDirection: "column",
-          width:"300px",
+          width: "300px",
         }}
       >
-        {list?.map((data, index) => (
-          <>
-            {/* <input type="checkbox" /> */}
+        {list.length > 0 &&
+          list?.map((data, index) => (
             <div className="list-view">
               {data.entry}
               <Button
                 className="btn"
+                value="Edit"
                 type="button"
                 onClick={() => {
-                  console.log("Hello");
+                  setEdit(true);
+                  list[index] = task;
                 }}
+              />
+              <Button
+                className="btn"
                 value="Delete"
+                type="button"
+                onClick={() => {
+                  list.splice(index, 1);
+                  setList([...list]);
+                  localStorage.setItem("Tasks", JSON.stringify(list));
+                }}
               />
             </div>
-          </>
-        ))}
+          ))}
       </div>
     </div>
   );

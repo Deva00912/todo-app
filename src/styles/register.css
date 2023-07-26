@@ -1,69 +1,67 @@
-.reg-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 50px;
+.reg-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 50px;
 }
 
-
-.message{
-    color:#00b3b3;
-    /* width:100%; */
-    font-size: 30px;
-    margin-bottom: 4px;
-    font-family: 'Times New Roman', Times, serif;
+.message {
+  color: #00b3b3;
+  /* width:100%; */
+  font-size: 30px;
+  margin-bottom: 4px;
+  font-family: "Times New Roman", Times, serif;
 }
 
-.input-box{
-    /* width: 100%; */
-    padding:10px;
-    margin:8px;
-    border:0px;
-    border-radius: 30px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
+.input-box {
+  /* width: 100%; */
+  padding: 10px;
+  margin: 8px;
+  border: 0px;
+  border-radius: 30px;
+  font-family: Georgia, "Times New Roman", Times, serif;
 }
 
-.input-box::placeholder{
-    text-align: center;
+.input-box::placeholder {
+  text-align: center;
 }
 
-
-.btn{
-    margin: 5px;
-    /* width: 100px; */
-    padding: 8px;
-    background-color:#00b3b3;
-    color: #fff;
-    border-radius: 30px;
-    border: 0px white;
-    align-items: center;
-    font-family: Georgia, 'Times New Roman', Times, serif
+.btn {
+  margin: 5px;
+  /* width: 100px; */
+  padding: 8px;
+  background-color: #00b3b3;
+  color: #fff;
+  border-radius: 30px;
+  border: 0px white;
+  align-items: center;
+  font-family: Georgia, "Times New Roman", Times, serif;
 }
-/* .btn:hover{
+.btn:hover{
     background-color: #03acac;
-} */
-
-.form{
-    /* width:70%; */
-    background-blend-mode: lighten;
-    border-radius: 40px;
-    padding: 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-};
-
-.msg-error{
-    color:#00b3b3;
-    /* width:100%; */
-    font-size: 3px;
-    margin-bottom: 4px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-.list-view{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.form {
+  /* width:70%; */
+  background-blend-mode: lighten;
+  border-radius: 40px;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.msg-error {
+  color: #00b3b3;
+  /* width:100%; */
+  font-size: 3px;
+  margin-bottom: 4px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.list-view {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

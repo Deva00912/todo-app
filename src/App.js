@@ -12,29 +12,34 @@ function App() {
   const navigate = useNavigate();
   const ProtectedRoute = ({ children, isLogged }) => {
     if (!isLogged) {
-      navigate("/");
+      navigate("/login");
     } else {
       return children;
     }
   };
-  useEffect(() => {
+  const isLoggedPresent = () => {
     if (
-      localStorage.getItem("LoggedUsers") &&
-      Object.values(JSON.parse(localStorage.getItem("LoggedUsers")))?.length > 0
+      !JSON.parse(localStorage.getItem("Users")) ||
+      !JSON.parse(localStorage.getItem("LoggedUsers"))
     ) {
-      navigate("/tasks");
-    } else {
-      navigate("/");
+      navigate("/login");
     }
-    // eslint-disable-next-line
-  }, [localStorage]);
+  };
+  useEffect(() => {
+    window.addEventListener("storage", isLoggedPresent);
+
+    return () => {
+      window.removeEventListener("storage", isLoggedPresent);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
-          path="/tasks"
+          path="/"
           element={
             <ProtectedRoute
               isLogged={

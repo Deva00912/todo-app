@@ -5,7 +5,7 @@ export default function InputBox(props) {
   const regExName = /^[a-z0-9]{6,}$/;
   const regPwd = /^[A-Za-z0-9@*#()]{8,15}$/;
 
-  const [errors, setErrors] = useState({});
+  const errors = {};
 
   function formValidation(e) {
     const { name, value } = e.target;
@@ -37,7 +37,7 @@ export default function InputBox(props) {
         break;
     }
 
-    setErrors(newErrors);
+    // setErrors();
   }
 
   return (
@@ -48,14 +48,17 @@ export default function InputBox(props) {
         type={props.type}
         placeholder={props.placeholder}
         onChange={(e) => {
-          formValidation(e);
+          // formValidation(e);
+          
+          
         }}
       />
+
       <div
         className="error-msg"
         style={{
           color: "#00b3b3",
-          // width: "100%",   
+          // width: "100%",
           fontSize: "12px",
           marginBottom: "0px",
           fontFamily: "Georgia, 'Times New Roman', Times, serif",

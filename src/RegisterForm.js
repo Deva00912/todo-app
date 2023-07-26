@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import InputBox from "./InputBox";
 import "./styles/register.css";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 
 export default function Register() {
-  const [user, setUser] = useState({ uName: "", pwd: "", cPwd: "" });
+
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState({
+    id: useId(),
+    uName: "",
+    pwd: "",
+    cPwd: "",
+  });
+
   const data =
     localStorage.getItem("Users") &&
     JSON.parse(localStorage.getItem("Users")).length > 0
@@ -65,6 +74,7 @@ export default function Register() {
               if (data) {
                 localStorage.setItem("Users", JSON.stringify(data));
                 toast.success("User registered!!");
+                navigate('/login');
               }
             } else {
               toast.error("User already exists");
@@ -74,6 +84,18 @@ export default function Register() {
       >
         <div className="message">Create a account</div>
 
+        <InputBox
+          placeholder="First name"
+          type="text"
+          name="fName"
+          className="input-box"
+        />
+        <InputBox
+          placeholder="Last name"
+          type="text"
+          name="lName"
+          className="input-box"
+        />
         <InputBox
           placeholder="Username"
           type="text"
@@ -101,7 +123,7 @@ export default function Register() {
 
         <div>
           <Link
-            to="/"
+            to="/login"
             style={{
               color: "#00b3b3",
             }}
