@@ -3,10 +3,15 @@ import { useNavigate } from "react-router-dom";
 import InputBox from "./InputBox";
 import Button from "./Button";
 import "./styles/register.css";
-// import Login from "./Login";
 
 export default function Tasks() {
-  const [task, setTask] = useState({ id: "", entry: "" });
+  const [loggedUser, setLoggedUser] = useState(
+    localStorage.getItem("LoggedUsers") &&
+      Object.values(JSON.parse(localStorage.getItem("LoggedUsers"))).length > 0
+      ? JSON.parse(localStorage.getItem("LoggedUsers"))
+      : {}
+  );
+  const [task, setTask] = useState({ id: loggedUser?.uId, entry: "" });
   const [edit, setEdit] = useState(false);
   const [list, setList] = useState(
     localStorage.getItem("Tasks") &&
@@ -22,7 +27,6 @@ export default function Tasks() {
     localStorage.removeItem("LoggedUsers");
     navigate("/login");
   };
-  
 
   useEffect(() => {
     if (submit) {
@@ -38,10 +42,6 @@ export default function Tasks() {
 
     // eslint-disable-next-line
   }, [submit, edit]);
-
-  // useEffect(() => {
-  //   // eslint-disable-next-line
-  // }, [localStorage.getItem("Users"), localStorage.getItem("LoggedUsers")]);
 
   console.log(task, "task");
 

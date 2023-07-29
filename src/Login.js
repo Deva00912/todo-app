@@ -1,21 +1,26 @@
-import React, { useId, useState } from "react";
+import React, { useState } from "react";
 import InputBox from "./InputBox";
 import "./styles/register.css";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
-import { useAuthentication } from "./useAuth";
+import { useAuth } from "./useCustomHook";
+// import { useAuthentication } from "./useAuth";
 
-export default function Login() {
-  const id = useId();
+export default function Login(props) {
+  const id = props.id;
   const [user, setUser] = useState({ uId: id, uName: "", pwd: "" });
   const navigate = useNavigate();
 
-  const checkUser = useAuthentication({
-    choice: "checkExistUser",
-    userData: user,
-  });
-  console.log(checkUser);
+  const [getUser, setUserData] = useAuth();
+  // console.log("state--",getUser, setUserData({uId:42, uName:"devendran99", pwd:"Dev@1234"}))
+  // setUserData({ uId: 42, uName: "devendran99", pwd: "Dev@1234" });
+  // const [getUsers, addUsers, checkUser] = useAuthentication();
+
+  // console.log(getUsers("Users"), "GetUsers login Page");
+  // console.log(addUsers, "AddUsers login Page");
+  // console.log(user);
+  // console.log(checkUser({ user }), "CheckUsers login Page");
 
   const regExName = /^[a-z0-9]{6,}$/;
   const regPwd = /^[A-Za-z0-9@*#()]{8,15}$/;
@@ -42,8 +47,10 @@ export default function Login() {
         }}
         onSubmit={(e) => {
           e.preventDefault();
+          console.log(user);
+          // console.log(checkUser({ user }), "CheckUsers login Page");
           if (validate()) {
-            if (checkUser) {
+            if (true) {
               navigate("/");
               localStorage.setItem("LoggedUsers", JSON.stringify(user));
               toast.success("Logged in");
@@ -68,7 +75,7 @@ export default function Login() {
           name="pwd"
           className="input-box"
         />
-        <Button type="submit" className="btn" value="Log in " />
+        <Button type="submit" className="btn" value="Log in" />
         <div>
           <Link
             to="/register"

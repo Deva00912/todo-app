@@ -1,16 +1,18 @@
-import React, { useId, useState } from "react";
+import React, { useState } from "react";
 import InputBox from "./InputBox";
 import "./styles/register.css";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
+import uuid from "react-uuid";
+import { useAuth } from "./useCustomHook";
 
 export default function Register() {
-
   const navigate = useNavigate();
+  const [getUser, setUserData] = useAuth();
 
   const [user, setUser] = useState({
-    id: useId(),
+    id: uuid(),
     uName: "",
     pwd: "",
     cPwd: "",
@@ -70,11 +72,11 @@ export default function Register() {
           if (validate()) {
             if (!checkUserExist()) {
               data.push(user);
-
+              setUserData(user);
               if (data) {
-                localStorage.setItem("Users", JSON.stringify(data));
+                // localStorage.setItem("Users", JSON.stringify(data));
                 toast.success("User registered!!");
-                navigate('/login');
+                navigate("/login");
               }
             } else {
               toast.error("User already exists");

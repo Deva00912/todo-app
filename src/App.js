@@ -26,6 +26,12 @@ function App() {
     }
   };
   useEffect(() => {
+    if (
+      !JSON.parse(localStorage.getItem("Users")) ||
+      !JSON.parse(localStorage.getItem("LoggedUsers"))
+    ) {
+      navigate("/login");
+    }
     window.addEventListener("storage", isLoggedPresent);
 
     return () => {

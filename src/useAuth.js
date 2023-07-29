@@ -1,77 +1,91 @@
-import { useEffect, useState } from "react";
-export const useAuthentication = (props) => {
-  const [res, setRes] = useState(false);
 
-  useEffect(() => {
-    if (props.choice === "checkExistUser") {
-      const data =
-        localStorage.getItem("Users") &&
-        JSON.parse(localStorage.getItem("Users")).length > 0
-          ? JSON.parse(localStorage.getItem("Users"))
-          : [];
+export function useAuthentication() {
 
-      if (!props.userData || !data) {
+  function checkUser( users) {
+    const data =
+      localStorage.getItem("Users") &&
+      JSON.parse(localStorage.getItem("Users")).length > 0
+        ? JSON.parse(localStorage.getItem("Users"))
+        : [];
+    if (!users || !data) {
+      return false;
+    } else {
+      const loggedUser = data.find(
+        (ele) => ele?.uName === users?.uName && ele?.pwd === users?.pwd
+      );
+      console.log("Logged in CheckUsers",loggedUser);
+      if (loggedUser === null || loggedUser === undefined) {
         return false;
       } else {
-        const loggedUser = data.find(
-          (ele) =>
-            ele?.uName === props.userData?.uName &&
-            ele?.pwd === props.userData?.pwd
-        );
-        if (loggedUser === null || loggedUser === undefined) {
-          setRes(false);
+        if (Object.values(loggedUser)?.length > 0) {
+          return (true);
         } else {
-          if (Object.values(loggedUser)?.length > 0) {
-            setRes(true);
-          } else {
-            setRes(false);
-          }
-        }
-      }
-    } else {
-      if (props.choice === "getUsers") {
-        return getUsers();
-      } else {
-        if (props.choice === "addUsers") {
-          return addUsers();
-        } else {
-          return -1;
+          return false;
         }
       }
     }
-
-    // eslint-disable-next-line
-  }, [localStorage.getItem("Users"), props.userData]);
-
-  return res;
-};
-
-const getUsers = () => {
-  const data =
-    localStorage.getItem("Users") &&
-    JSON.parse(localStorage.getItem("Users")).length > 0
-      ? JSON.parse(localStorage.getItem("Users"))
-      : [];
-
-  if (!data) {
-    return {};
-  } else {
-    return data;
   }
-  // eslint-disable-next-line
-};
-
-const addUsers = (user) => {
-  const data =
-    localStorage.getItem("Users") &&
-    JSON.parse(localStorage.getItem("Users")).length > 0
-      ? JSON.parse(localStorage.getItem("Users"))
-      : [];
-  if (!user) {
-    return false;
-  } else {
-    data.push(user);
-    localStorage.setItem("Users", JSON.stringify(data));
-    return true;
+  function getUser(key) {
+    const data =
+      localStorage.getItem(String(key)) &&
+      JSON.parse(localStorage.getItem(String(key))).length > 0
+        ? JSON.parse(localStorage.getItem(String(key)))
+        : [];
+    // console.log(data, "getUsers");
+    if (!data) {
+      return data;
+    } else {
+      return data;
+    }
   }
-};
+
+  function addUser(props) {
+    const data =
+      localStorage.getItem("Users") &&
+      JSON.parse(localStorage.getItem("Users")).length > 0
+        ? JSON.parse(localStorage.getItem("Users"))
+        : [];
+    if (!props) {
+      return false;
+    } else {
+      data.push(props);
+      localStorage.setItem("Users", JSON.stringify(data));
+      return true;
+    }
+  }
+
+  return [getUser, addUser,checkUser];
+}
+
+// useEffect(() => {
+//   console.log("first");
+
+//   window.addEventListener("storage", checkUser());
+
+//   return () => {
+//     window.removeEventListener("storage", checkUser());
+//   };
+// }, [res,props]);
+// export const useGetUsers = () => {
+//   useEffect(() => {
+
+//     window.addEventListener("storage", getUser());
+
+//     return () => {
+//       window.removeEventListener("storage", getUser());
+//     };
+//   }, []);
+
+//   // eslint-disable-next-line
+// };
+
+// export const useAddUsers = (user) => {
+//   useEffect(() => {
+
+//     window.addEventListener("storage", addUser());
+//     return () => {
+//       window.removeEventListener("storage", addUser());
+//     };
+//     // eslint-disable-next-line
+//   }, []);
+// };
