@@ -3,22 +3,30 @@ import { useNavigate } from "react-router-dom";
 import InputBox from "./InputBox";
 import Button from "./Button";
 import "./styles/register.css";
+import uuid from "react-uuid";
 
 export default function Tasks() {
-  const [loggedUser, setLoggedUser] = useState(
+  const loggedUser =
     localStorage.getItem("LoggedUsers") &&
-      Object.values(JSON.parse(localStorage.getItem("LoggedUsers"))).length > 0
+    Object.values(JSON.parse(localStorage.getItem("LoggedUsers"))).length > 0
       ? JSON.parse(localStorage.getItem("LoggedUsers"))
-      : {}
-  );
-  const [task, setTask] = useState({ id: loggedUser?.uId, entry: "" });
-  const [edit, setEdit] = useState(false);
+      : {};
+
+  const [task, setTask] = useState({
+    userId: loggedUser?.id,
+    entry: "",
+    taskId: "",
+  });
+
   const [list, setList] = useState(
     localStorage.getItem("Tasks") &&
       Object.values(JSON.parse(localStorage.getItem("Tasks")))?.length > 0
       ? JSON.parse(localStorage.getItem("Tasks"))
       : []
   );
+
+  const [edit, setEdit] = useState(false);
+  const [listTask, setListTask] = useState([]);
   const [submit, setSubmit] = useState(false);
 
   const navigate = useNavigate();
@@ -31,7 +39,7 @@ export default function Tasks() {
   useEffect(() => {
     if (submit) {
       if (JSON.parse(localStorage.getItem("Tasks"))) {
-        setList(JSON.parse(localStorage.getItem("Tasks")));
+        localStorage.setItem("Tasks", JSON.stringify(list));
         setSubmit(false);
       }
     }
@@ -40,31 +48,49 @@ export default function Tasks() {
       setEdit(false);
     }
 
+    findTask();
     // eslint-disable-next-line
-  }, [submit, edit]);
+  }, [submit, edit, list]);
 
-  console.log(task, "task");
+  useEffect(() => {
+    localStorage.setItem("Tasks", JSON.stringify(list));
+  }, [list]);
+
+  const findTask = () => {
+    const filterTask = list.filter((task) => task.userId === loggedUser?.id);
+    setListTask(filterTask);
+  };
+
+  const deleteTask = (taskDeleteId) => {
+    const keepList = list.filter((task) => task.taskId !== taskDeleteId);
+    setList(keepList);
+    localStorage.setItem("Tasks", JSON.stringify(list));
+  };
 
   return (
     <div>
       <Button className="btn" value="Log out" onClick={logOut} />
       <form
         onChange={(e) => {
-          setTask({ ...task, [e.target.name]: e.target.value });
+          setTask({
+            ...task,
+            [e.target.name]: e.target.value,
+            taskId: uuid(),
+          });
         }}
         onSubmit={(e) => {
           e.preventDefault();
-          let d = [];
-          if (list && list.length > 0) {
-            d = [...list, task];
-          } else {
-            d.push(task);
-          }
-          localStorage.setItem("Tasks", JSON.stringify(d));
+          setList([...list, task]);
           setSubmit(true);
+          findTask();
         }}
       >
-        <InputBox placeholder="Entry" type="type" name="entry" />
+        <InputBox
+          placeholder="Entry"
+          type="type"
+          name="entry"
+          className="input-box"
+        />
         <Button className="btn" type="submit" value="Save" />
       </form>
       <div
@@ -76,9 +102,9 @@ export default function Tasks() {
           width: "300px",
         }}
       >
-        {list.length > 0 &&
-          list?.map((data, index) => (
-            <div className="list-view">
+        {listTask.length > 0 &&
+          listTask?.map((data, index) => (
+            <div key={index} className="list-view">
               {data.entry}
               <Button
                 className="btn"
@@ -94,9 +120,8 @@ export default function Tasks() {
                 value="Delete"
                 type="button"
                 onClick={() => {
-                  list.splice(index, 1);
-                  setList([...list]);
-                  localStorage.setItem("Tasks", JSON.stringify(list));
+                  const taskDeleteId = listTask[index].taskId;
+                  deleteTask(taskDeleteId);
                 }}
               />
             </div>

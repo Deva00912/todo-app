@@ -5,58 +5,35 @@ import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import uuid from "react-uuid";
-import { useAuth } from "./useCustomHook";
+import { useAuth } from "./useAuthentication";
 
 export default function Register() {
   const navigate = useNavigate();
-  const [getUser, setUserData] = useAuth();
+  const { setUserData, isUser } = useAuth();
 
   const [user, setUser] = useState({
     id: uuid(),
-    uName: "",
-    pwd: "",
-    cPwd: "",
+    userName: "",
+    password: "",
+    confirmPassword: "",
   });
 
-  const data =
-    localStorage.getItem("Users") &&
-    JSON.parse(localStorage.getItem("Users")).length > 0
-      ? JSON.parse(localStorage.getItem("Users"))
-      : [];
-
-  const regExName = /^[a-z0-9]{6,}$/;
-  const regPwd = /^[A-Za-z0-9@*#()]{8,15}$/;
-
-  const checkUserExist = () => {
-    if (!data) {
-      return false;
-    } else {
-      const ch = data.find((ele) => ele?.uName === user.uName);
-      if (ch === null || ch === undefined) {
-        return false;
-      }
-      if (Object.values(ch)?.length) {
-        toast.error("Username already exists!");
-        return true;
-      } else {
-        return false;
-      }
-    }
-  };
+  const regexUserName = /^[a-z0-9]{6,}$/;
+  const regexPassword = /^[A-Za-z0-9@*#()]{8,15}$/;
 
   const validate = () => {
     if (
-      user.uName &&
-      user.cPwd &&
-      user.pwd &&
-      user.pwd === user.cPwd &&
-      regExName.test(user.uName) &&
-      regPwd.test(user.pwd) &&
-      regPwd.test(user.cPwd)
+      user.userName &&
+      user.confirmPassword &&
+      user.password &&
+      user.password === user.confirmPassword &&
+      regexUserName.test(user.userName) &&
+      regexPassword.test(user.password) &&
+      regexPassword.test(user.confirmPassword)
     ) {
       return true;
     } else {
-      return false;
+      throw new Error("Check entered details again!");
     }
   };
 
@@ -69,17 +46,23 @@ export default function Register() {
         }}
         onSubmit={(e) => {
           e.preventDefault();
-          if (validate()) {
-            if (!checkUserExist()) {
-              data.push(user);
-              setUserData(user);
-              if (data) {
-                // localStorage.setItem("Users", JSON.stringify(data));
-                toast.success("User registered!!");
-                navigate("/login");
-              }
-            } else {
-              toast.error("User already exists");
+          try {
+            validate();
+            isUser(user);
+            setUserData(user);
+            toast.success("User registered!!");
+            navigate("/login");
+          } catch (error) {
+            if (error === "Check entered details again!") {
+              toast.error("Check entered details again!");
+            }
+            if (error === "Entered details are wrong") {
+              toast.error("Entered details are wrong");
+            }
+            if (error === "Invalid parameters") {
+              toast.error(`Invalid parameters`);
+            } else if (error === "User already exists!") {
+              toast.error("User already exists!");
             }
           }
         }}
@@ -89,39 +72,34 @@ export default function Register() {
         <InputBox
           placeholder="First name"
           type="text"
-          name="fName"
+          name="firstName"
           className="input-box"
         />
         <InputBox
           placeholder="Last name"
           type="text"
-          name="lName"
+          name="lastName"
           className="input-box"
         />
         <InputBox
           placeholder="Username"
           type="text"
-          name="uName"
+          name="userName"
           className="input-box"
         />
         <InputBox
           placeholder="New password"
           type="password"
-          name="pwd"
+          name="password"
           className="input-box"
         />
         <InputBox
-          placeholder="Confirm new password"
+          placeholder="Confirm password"
           type="password"
-          name="cPwd"
+          name="confirmPassword"
           className="input-box"
         />
-        <Button
-          className="btn"
-          type="submit"
-          disabled={!validate()}
-          value="Register"
-        />
+        <Button className="btn" type="submit" value="Register" />
 
         <div>
           <Link

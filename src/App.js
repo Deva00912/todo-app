@@ -26,12 +26,6 @@ function App() {
     }
   };
   useEffect(() => {
-    if (
-      !JSON.parse(localStorage.getItem("Users")) ||
-      !JSON.parse(localStorage.getItem("LoggedUsers"))
-    ) {
-      navigate("/login");
-    }
     window.addEventListener("storage", isLoggedPresent);
 
     return () => {
@@ -39,11 +33,12 @@ function App() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <div className="App">
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login navigate={navigate} />} />
+        <Route path="/register" element={<Register navigate={navigate} />} />
         <Route
           path="/"
           element={
@@ -56,7 +51,7 @@ function App() {
                   : false
               }
             >
-              <Tasks />
+              <Tasks navigate={navigate} />
             </ProtectedRoute>
           }
         />

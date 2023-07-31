@@ -2,35 +2,24 @@ import React, { useState } from "react";
 import InputBox from "./InputBox";
 import "./styles/register.css";
 import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "./Button";
-import { useAuth } from "./useCustomHook";
-// import { useAuthentication } from "./useAuth";
+import { useAuth } from "./useAuthentication";
 
 export default function Login(props) {
-  const id = props.id;
-  const [user, setUser] = useState({ uId: id, uName: "", pwd: "" });
-  const navigate = useNavigate();
+  const [user, setUser] = useState({ userName: "", password: "" });
 
-  const [getUser, setUserData] = useAuth();
-  // console.log("state--",getUser, setUserData({uId:42, uName:"devendran99", pwd:"Dev@1234"}))
-  // setUserData({ uId: 42, uName: "devendran99", pwd: "Dev@1234" });
-  // const [getUsers, addUsers, checkUser] = useAuthentication();
-
-  // console.log(getUsers("Users"), "GetUsers login Page");
-  // console.log(addUsers, "AddUsers login Page");
-  // console.log(user);
-  // console.log(checkUser({ user }), "CheckUsers login Page");
-
+  const a = useAuth();
+  
   const regExName = /^[a-z0-9]{6,}$/;
   const regPwd = /^[A-Za-z0-9@*#()]{8,15}$/;
 
   const validate = () => {
     if (
-      user.uName &&
-      user.pwd &&
-      regExName.test(user.uName) &&
-      regPwd.test(user.pwd)
+      user.userName &&
+      user.password &&
+      regExName.test(user.userName) &&
+      regPwd.test(user.password)
     ) {
       return true;
     } else {
@@ -47,12 +36,11 @@ export default function Login(props) {
         }}
         onSubmit={(e) => {
           e.preventDefault();
-          console.log(user);
-          // console.log(checkUser({ user }), "CheckUsers login Page");
           if (validate()) {
-            if (true) {
-              navigate("/");
-              localStorage.setItem("LoggedUsers", JSON.stringify(user));
+            const loggedUser = a.isUserLogin(user);
+            if (loggedUser) {
+              props.navigate("/");
+              localStorage.setItem("LoggedUsers", JSON.stringify(loggedUser));
               toast.success("Logged in");
             } else {
               toast.error("User does not exist!");
@@ -66,25 +54,22 @@ export default function Login(props) {
         <InputBox
           placeholder="Enter Username"
           type="text"
-          name="uName"
+          name="userName"
           className="input-box"
         />
         <InputBox
           placeholder="Enter Password"
           type="password"
-          name="pwd"
+          name="password"
           className="input-box"
         />
         <Button type="submit" className="btn" value="Log in" />
-        <div>
-          <Link
-            to="/register"
-            style={{
-              color: "#00b3b3",
-            }}
-          >
-            Don't have a account?
-          </Link>
+        <div
+          style={{
+            color: "#00b3b3",
+          }}
+        >
+          <Link to="/register">Don't have a account?</Link>
         </div>
       </form>
     </div>

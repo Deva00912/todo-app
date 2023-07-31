@@ -2,33 +2,48 @@ import React, { useState } from "react";
 import "./styles/register.css";
 
 export default function InputBox(props) {
-  const regExName = /^[a-z0-9]{6,}$/;
-  const regPwd = /^[A-Za-z0-9@*#()]{8,15}$/;
+  const regexText = /^[a-zA-Z]{1,}$/;
+  const regexName = /^[a-z0-9]{6,}$/;
+  const regexPassword = /^[A-Za-z0-9@*#()]{8,15}$/;
 
-  const errors = {};
+  const [errors, setErrors] = useState({});
 
   function formValidation(e) {
     const { name, value } = e.target;
     let newErrors = {};
     switch (name) {
-      case "uName":
+      case "firstName":
         if (value === "") {
-          newErrors.uName = "Name can't be blank";
-        } else if (!regExName.test(value)) {
-          newErrors.uName = "Username is invalid";
+          newErrors.firstName = "First name can't be blank";
+        } else if (!regexText.test(value)) {
+          newErrors.firstName = "Name is invalid";
         }
         break;
-      case "pwd":
+      case "lastName":
+        if (value === "") {
+          newErrors.lastName = "Last name can't be blank";
+        } else if (!regexText.test(value)) {
+          newErrors.lastName = "Name is invalid";
+        }
+        break;
+      case "userName":
+        if (value === "") {
+          newErrors.userName = "Name can't be blank";
+        } else if (!regexName.test(value)) {
+          newErrors.userName = "Username is invalid";
+        }
+        break;
+      case "password":
         if (value === "") {
           newErrors.pwd = "Password can't be blank";
-        } else if (!regPwd.test(value)) {
+        } else if (!regexPassword.test(value)) {
           newErrors.pwd = "Invalid Password Format";
         }
         break;
-      case "cPwd":
+      case "confirmPassword":
         if (value === "") {
           newErrors.cPwd = "Confirm password can't be blank";
-        } else if (!regPwd.test(value)) {
+        } else if (!regexPassword.test(value)) {
           newErrors.cPwd = "Invalid Password Format";
         }
         break;
@@ -37,7 +52,7 @@ export default function InputBox(props) {
         break;
     }
 
-    // setErrors();
+    setErrors(newErrors);
   }
 
   return (
@@ -48,9 +63,7 @@ export default function InputBox(props) {
         type={props.type}
         placeholder={props.placeholder}
         onChange={(e) => {
-          // formValidation(e);
-          
-          
+          formValidation(e);
         }}
       />
 
