@@ -1,16 +1,155 @@
+html {
+  height: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
 
 body {
   margin: 0;
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #004242;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+input{
+  outline:none;
+  padding: 1px;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.flex-direction-column {
+  flex-direction: column;
+}
+.flex-direction-row {
+  flex-direction: row;
+}
+
+.height-100-percent {
+  height: 100%;
+}
+
+.width-70-percent {
+  width: 70%;
+}
+.background-color-black {
+  background-color: rgb(36, 36, 36);
+}
+
+.background-color-teal-blue {
+  background-color: #00b3b3;
+}
+.background-color-green{
+  background-color: #00b345;
+}
+
+.height-inherit {
+  height: inherit;
+}
+
+.height-40px {
+  height: 40px;
+}
+.width-80px {
+  width: 80px;
+}
+
+.align-item-center {
+  align-items: center;
+}
+
+.justify-content-space-between {
+  justify-content: space-between;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-space-around {
+  justify-content: space-around;
+}
+
+.border-radius-6px {
+  border-radius: 6px;
+}
+.border-radius-8px {
+  border-radius: 8px;
+}
+
+.border-0px {
+  border: 0px;
+}
+
+.margin-bottom-0px {
+  margin-bottom: 0px;
+}
+.margin-8px {
+  margin: 8px;
+}
+.margin-4px {
+  margin: 4px;
+}
+
+.padding-10px {
+  padding: 10px;
+}
+
+.color-teal-blue {
+  color: #00b3b3;
+}
+
+.font-size-12px {
+  font-size: 12px;
+}
+.font-size-38px {
+  font-size: 38px;
+}
+.font-size-100-percent {
+  font-size: 100%;
+}
+.font-family-times-new-roman {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.margin-5px {
+  margin: 5px;
+}
+
+.padding-8px {
+  padding: 8px;
+}
+
+.color-white {
+  color: rgb(255, 255, 255);
+}
+
+.line-height-16px {
+  line-height: 16px;
+}
+
+.line-height-24px {
+  line-height: 24px;
+}
+
+.background-model-color {
+  background-color: red;
 }

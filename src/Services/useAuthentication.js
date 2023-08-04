@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 
 export function useAuth(val) {
   const [getUser, setGetUser] = useState([]);
+  const loggedUser = localStorage.getItem("LoggedUsers")
+    ? Object.values(JSON.parse(localStorage.getItem("LoggedUsers"))).length > 0
+      ? JSON.parse(localStorage.getItem("LoggedUsers"))
+      : {}
+    : {};
   useEffect(() => {
     function readUser() {
       const data =
@@ -14,8 +19,7 @@ export function useAuth(val) {
     readUser();
   }, [val]);
 
-
-  function setUserData(user) {
+  function setUserData(user, id) {
     if (!user) {
       throw new Error("Invalid parameters");
     } else {
@@ -69,5 +73,6 @@ export function useAuth(val) {
       }
     }
   }
-  return { getUser, setUserData, isUser, isUserLogin };
+
+  return { getUser, loggedUser, setUserData, isUser, isUserLogin };
 }

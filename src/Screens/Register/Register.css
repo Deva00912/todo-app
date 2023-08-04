@@ -9,6 +9,7 @@
   color: #00b3b3;
   /* width:100%; */
   font-size: 30px;
+  /* size: 10; */
   margin-bottom: 4px;
   font-family: "Times New Roman", Times, serif;
 }
@@ -37,8 +38,12 @@
   align-items: center;
   font-family: Georgia, "Times New Roman", Times, serif;
 }
-.btn:hover{
-    background-color: #03acac;
+.btn:hover {
+  background-color: #03acac;
+}
+
+.hover-effect::hover {
+  display: none;
 }
 
 .form {

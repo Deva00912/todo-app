@@ -1,12 +1,12 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
 .App {
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; */
+  /* align-items: center; */
   /* background-image: linear-gradient(to right, black,yellow); */
   /* background-color: orange; */
   height: 100%;
@@ -15,6 +15,6 @@
 
 
 .dark-gold {color: #8E793E}
-.light-gold {color: #AD974F}
+.light-gold {color: #cfa828}
 .intellectual-grey {color: #231F20}
 .light-grey {color: #EAEAEA}
