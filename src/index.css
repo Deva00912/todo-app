@@ -22,8 +22,8 @@ code {
     monospace;
 }
 
-input{
-  outline:none;
+input {
+  outline: none;
   padding: 1px;
 }
 
@@ -57,7 +57,7 @@ input{
 .background-color-teal-blue {
   background-color: #00b3b3;
 }
-.background-color-green{
+.background-color-green {
   background-color: #00b345;
 }
 
@@ -68,8 +68,22 @@ input{
 .height-40px {
   height: 40px;
 }
+.height-44px {
+  height: 44px;
+}
 .width-80px {
   width: 80px;
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+.text-underline-offset-6px {
+  text-underline-offset: 6px;
+}
+.text-underline-offset-10px {
+  text-underline-offset: 10px;
 }
 
 .align-item-center {
@@ -94,7 +108,9 @@ input{
 .border-radius-8px {
   border-radius: 8px;
 }
-
+.cursor-pointer{
+  cursor: pointer;
+}
 .border-0px {
   border: 0px;
 }
@@ -104,6 +120,9 @@ input{
 }
 .margin-8px {
   margin: 8px;
+}
+.margin-14px {
+  margin: 14px;
 }
 .margin-4px {
   margin: 4px;

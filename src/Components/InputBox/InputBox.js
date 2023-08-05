@@ -31,16 +31,16 @@ export default function InputBox(props) {
         break;
       case "password":
         if (value === "") {
-          newErrors.pwd = "Password can't be blank";
+          newErrors.password = "Password can't be blank";
         } else if (!regex.password.test(value)) {
-          newErrors.pwd = "Invalid Password Format";
+          newErrors.password = "Invalid Password Format";
         }
         break;
       case "confirmPassword":
         if (value === "") {
-          newErrors.cPwd = "Confirm password can't be blank";
+          newErrors.confirmPassword = "Confirm password can't be blank";
         } else if (!regex.password.test(value)) {
-          newErrors.cPwd = "Invalid Password Format";
+          newErrors.confirmPassword = "Invalid Password Format";
         }
         break;
 
@@ -53,21 +53,23 @@ export default function InputBox(props) {
 
   return (
     <>
-      <input
-        className={`${props.className}margin-8px padding-10px border-0px border-radius-6px line-height-24px font-family-times-new-roman font-size-100-percent`}
-        disabled={props.disabled}
-        defaultValue={props.defaultValue}
-        value={props.value}
-        style={props.style}
-        name={props.name}
-        type={props.type}
-        placeholder={props.placeholder}
-        onChange={(e) => {
-          formValidation(e);
-        }}
-      />
-      <div className="color-teal-blue font-size-12px margin-bottom-0px font-family-times-new-roman">
-        {errors[props.name]}
+      <div className="display-flex flex-direction-column align-item-center">
+        <input
+          className={`${props?.className} margin-8px padding-10px border-0px border-radius-6px line-height-24px font-family-times-new-roman font-size-100-percent`}
+          disabled={props?.disabled}
+          defaultValue={props?.defaultValue}
+          value={props?.value}
+          style={props?.style}
+          name={props?.name}
+          type={props?.type}
+          placeholder={props?.placeholder}
+          onChange={(e) => {
+            formValidation(e);
+          }}
+        />
+        <div className="color-teal-blue font-size-12px margin-bottom-0px font-family-times-new-roman">
+          {errors[props?.name]}
+        </div>
       </div>
     </>
   );

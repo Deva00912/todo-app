@@ -41,34 +41,23 @@ export default function Login(props) {
           props.navigate("/");
         }}
       >
-        <div className="margin-8px color-teal-blue font-size-38px font-family-times-new-roman ">
-          LogIn
+        <div className="text-underline text-underline-offset-10px margin-8px color-teal-blue font-size-38px font-family-times-new-roman ">
+          Log in
         </div>
-        <InputBox
-          placeholder="Enter Username"
-          type="text"
-          name="userName"
-          className="margin-8px padding-10px border-0px border-radius-6px line-height-24px font-family-times-new-roman font-size-100-percent"
-        />
+        <InputBox placeholder="Enter Username" type="text" name="userName" />
         <InputBox
           placeholder="Enter Password"
           type="password"
           name="password"
-          className="margin-8px padding-10px border-0px border-radius-6px line-height-24px font-family-times-new-roman font-size-100-percent"
         />
-        <Button
-          type="submit"
-          className="margin-5px height-40px width-80px padding-8px background-color-teal-blue color-white border-radius-6px border-0px align-item-center font-family-times-new-roman font-size-100-percent line-height-16px"
-          value="Log in"
-        />
-        <div className="margin-4px color-teal-blue font-family-times-new-roman line-height-16px font-size-100-percent ">
-          <div
-            onClick={() => {
-              props.navigate("/register");
-            }}
-          >
-            Don't have a account?
-          </div>
+        <Button type="submit" value="Log in" />
+        <div
+          className="cursor-pointer margin-4px color-teal-blue font-family-times-new-roman line-height-16px font-size-100-percent "
+          onClick={() => {
+            props.navigate("/register");
+          }}
+        >
+          Don't have an account?
         </div>
       </form>
     </>

@@ -53,6 +53,7 @@ export function useAuth(val) {
       }
     }
   }
+  
   function isUserLogin(user) {
     const data =
       localStorage.getItem("Users") &&
