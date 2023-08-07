@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./Register.css";
 import { toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
 import uuid from "react-uuid";
@@ -40,22 +39,12 @@ export default function Register(props) {
           e.preventDefault();
           try {
             formValidation();
-            props.auth.isUser(user);
+            props.auth.checkUsernameAvailability(user);
             props.auth.setUserData({ ...user, id: uuid() });
             toast.success("User registered!!");
-            props.navigate("/login");
+            props.navigate("/");
           } catch (error) {
-            if (error === "Check entered details again!") {
-              toast.error(error);
-            }
-            if (error === "Entered details are wrong") {
-              toast.error(error);
-            }
-            if (error === "Invalid parameters") {
-              toast.error(error);
-            } else if (error === "User already exists!") {
-              toast.error(error);
-            }
+            toast.error(error?.message);
           }
         }}
       >

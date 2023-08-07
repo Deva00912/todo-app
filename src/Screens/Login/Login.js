@@ -24,21 +24,22 @@ export default function Login(props) {
     <>
       <form
         className="height-100-percent width-100-percent display-flex flex-direction-column justify-content-center align-item-center"
-        onChange={(e) => {
-          setUser({ ...user, [e.target.name]: e.target.value });
+        onChange={(event) => {
+          setUser({ ...user, [event.target.name]: event.target.value });
         }}
-        onSubmit={(e) => {
-          e.preventDefault();
+        onSubmit={(event) => {
+          event.preventDefault();
           if (!validate()) {
             return toast.error("Entered details is wrong!");
           }
-          const loggedUser = props.auth.isUserLogin(user);
-          if (!loggedUser) {
+          const loggedInData = props.auth.checkAndGetUserDetails(user);
+          if (!loggedInData) {
             return toast.error("User does not exist!");
           }
-          localStorage.setItem("LoggedUsers", JSON.stringify(loggedUser));
+          props?.auth?.logInUser(loggedInData);
           toast.success("Logged in");
           props.navigate("/");
+          console.log("After Navigate");
         }}
       >
         <div className="text-underline text-underline-offset-10px margin-8px color-teal-blue font-size-38px font-family-times-new-roman ">

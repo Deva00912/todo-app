@@ -86,6 +86,14 @@ input {
   text-underline-offset: 10px;
 }
 
+.width-fit-content {
+  width: fit-content;
+}
+
+.white-space-nowrap {
+  white-space: nowrap;
+}
+
 .align-item-center {
   align-items: center;
 }
@@ -108,7 +116,7 @@ input {
 .border-radius-8px {
   border-radius: 8px;
 }
-.cursor-pointer{
+.cursor-pointer {
   cursor: pointer;
 }
 .border-0px {

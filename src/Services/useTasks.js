@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
 export function useTasks(props) {
-  const loggedUser = localStorage.getItem("LoggedUsers")
-    ? Object.values(JSON.parse(localStorage.getItem("LoggedUsers"))).length > 0
-      ? JSON.parse(localStorage.getItem("LoggedUsers"))
+  const loggedUser = localStorage.getItem("LoggedInUsers")
+    ? Object.values(JSON.parse(localStorage.getItem("LoggedInUsers"))).length >
+      0
+      ? JSON.parse(localStorage.getItem("LoggedInUsers"))
       : {}
     : {};
   const [taskList, setTaskList] = useState(
@@ -16,7 +17,7 @@ export function useTasks(props) {
 
   useEffect(() => {
     localStorage.setItem("Tasks", JSON.stringify(taskList));
-    getUserTasks();
+    getIndividualUserTasks();
 
     // eslint-disable-next-line
   }, [taskList]);
@@ -38,7 +39,7 @@ export function useTasks(props) {
     localStorage.setItem("Tasks", JSON.stringify(taskList));
   }
 
-  function getUserTasks() {
+  function getIndividualUserTasks() {
     const filterTask = taskList.filter(
       (task) => task?.userId === loggedUser?.id
     );
@@ -58,11 +59,13 @@ export function useTasks(props) {
     setTaskList(keepList);
     localStorage.setItem("Tasks", JSON.stringify(taskList));
   }
-  function logOut() {
-    localStorage.setItem("Tasks", JSON.stringify(taskList));
-    localStorage.removeItem("LoggedUsers");
-    props.navigate("/login");
-  }
 
-  return { taskList, addTask, deleteTask, getUserTasks, editTask, clearAllTask, logOut };
+  return {
+    taskList,
+    addTask,
+    deleteTask,
+    getIndividualUserTasks,
+    editTask,
+    clearAllTask,
+  };
 }

@@ -1,79 +1,105 @@
 import { useEffect, useState } from "react";
 
-export function useAuth(val) {
-  const [getUser, setGetUser] = useState([]);
-  const loggedUser = localStorage.getItem("LoggedUsers")
-    ? Object.values(JSON.parse(localStorage.getItem("LoggedUsers"))).length > 0
-      ? JSON.parse(localStorage.getItem("LoggedUsers"))
+export function useAuth(props) {
+  const [allUser, setAllUser] = useState(
+    localStorage.getItem("Users")
+      ? JSON.parse(localStorage.getItem("Users")).length > 0
+        ? JSON.parse(localStorage.getItem("Users"))
+        : []
+      : []
+  );
+  const [loggedInUser, setLoggedInUser] = useState(
+    localStorage.getItem("LoggedInUsers")
+      ? Object.values(JSON.parse(localStorage.getItem("LoggedInUsers")))
+          .length > 0
+        ? JSON.parse(localStorage.getItem("LoggedInUsers"))
+        : {}
       : {}
-    : {};
+  );
+
   useEffect(() => {
-    function readUser() {
-      const data =
-        localStorage.getItem("Users") &&
-        JSON.parse(localStorage.getItem("Users")).length > 0
-          ? JSON.parse(localStorage.getItem("Users"))
-          : [];
-      setGetUser(data);
+    localStorage.setItem("Users", JSON.stringify(allUser));
+    localStorage.setItem("LoggedInUsers", JSON.stringify(loggedInUser));
+  }, [allUser, loggedInUser]);
+
+  const isLoggedPresent = () => {
+    if (
+      !JSON.parse(localStorage.getItem("Users")) ||
+      !JSON.parse(localStorage.getItem("LoggedInUsers"))
+    ) {
+      props.navigate("/login");
     }
-    readUser();
-  }, [val]);
+    if (!JSON.parse(localStorage.getItem("Users"))) {
+      setLoggedInUser({});
+      setAllUser([]);
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("storage", isLoggedPresent);
+
+    return () => {
+      window.removeEventListener("storage", isLoggedPresent);
+    };
+    // eslint-disable-next-line
+  }, []);
 
   function setUserData(user, id) {
     if (!user) {
       throw new Error("Invalid parameters");
     } else {
-      const data =
-        localStorage.getItem("Users") &&
-        JSON.parse(localStorage.getItem("Users")).length > 0
-          ? JSON.parse(localStorage.getItem("Users"))
-          : [];
-      data.push(user);
-      localStorage.setItem("Users", JSON.stringify(data));
+      setAllUser([...allUser, user]);
+      setLoggedInUser(user);
     }
   }
 
-  function isUser(user) {
-    const data =
-      localStorage.getItem("Users") &&
-      JSON.parse(localStorage.getItem("Users")).length > 0
-        ? JSON.parse(localStorage.getItem("Users"))
-        : [];
+  function checkUsernameAvailability(user) {
     if (!user) {
       throw new Error("Invalid parameters");
     } else {
-      const loggedData = data.find(
-        (element) => element?.userName === user.userName
+      const findUser = allUser.find(
+        (userData) => userData?.userName === user.userName
       );
-      if (loggedData === null || loggedData === undefined) {
+      if (findUser === null || findUser === undefined) {
         return true;
       }
-      if (Object.values(loggedData).length) {
+      if (Object.values(findUser).length) {
         throw new Error("User already exists!");
       }
     }
   }
-  
-  function isUserLogin(user) {
-    const data =
-      localStorage.getItem("Users") &&
-      JSON.parse(localStorage.getItem("Users")).length > 0
-        ? JSON.parse(localStorage.getItem("Users"))
-        : [];
+
+  function checkAndGetUserDetails(user) {
     if (!user) {
       throw new Error("Invalid parameters");
     } else {
-      const loggedData = data.find(
-        (element) => element?.userName === user.userName
+      const findUser = allUser.find(
+        (userData) => userData?.userName === user.userName
       );
-      if (loggedData === null || loggedData === undefined) {
-        return false;
+      if (findUser === null || findUser === undefined) {
+        return true;
       }
-      if (Object.values(loggedData).length) {
-        return loggedData;
+      if (Object.values(findUser).length) {
+        return findUser;
       }
     }
   }
 
-  return { getUser, loggedUser, setUserData, isUser, isUserLogin };
+  function logInUser(user) {
+    localStorage.setItem("LoggedInUsers", JSON.stringify(user));
+    setLoggedInUser(user);
+  }
+  function logOut() {
+    localStorage.setItem("LoggedInUsers", JSON.stringify({}));
+    setLoggedInUser({});
+  }
+
+  return {
+    allUser,
+    loggedInUser,
+    setUserData,
+    checkUsernameAvailability,
+    checkAndGetUserDetails,
+    logOut,
+    logInUser,
+  };
 }
