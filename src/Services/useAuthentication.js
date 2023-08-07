@@ -23,7 +23,7 @@ export function useAuth(props) {
   }, [allUser, loggedInUser]);
 
   const isLoggedPresent = () => {
-    if (!JSON.parse(localStorage.getItem("LoggedInUsers"))) {
+    if (!localStorage.getItem("LoggedInUsers")) {
       setLoggedInUser({});
     }
     if (!JSON.parse(localStorage.getItem("Users"))) {
@@ -57,7 +57,7 @@ export function useAuth(props) {
         (userData) => userData?.userName === user.userName
       );
       if (findUser === null || findUser === undefined) {
-        return true;
+        throw new Error("User does not exists!");
       }
       if (Object.values(findUser).length) {
         throw new Error("User already exists!");
@@ -73,7 +73,7 @@ export function useAuth(props) {
         (userData) => userData?.userName === user.userName
       );
       if (findUser === null || findUser === undefined) {
-        return true;
+        throw new Error("User does not exists!");
       }
       if (Object.values(findUser).length) {
         return findUser;
@@ -84,9 +84,26 @@ export function useAuth(props) {
   function logInUser(user) {
     setLoggedInUser(user);
   }
+
   function logOut() {
     localStorage.setItem("LoggedInUsers", JSON.stringify({}));
     setLoggedInUser({});
+  }
+
+  function checkUserCredentials(user) {
+    if (!user) {
+      throw new Error("Invalid parameters");
+    } else {
+      const findUser = allUser.find(
+        (userData) => userData?.userName === user.userName
+      );
+      if (findUser === null || findUser === undefined) {
+        throw new Error("User does not exists!");
+      }
+      if (!(findUser?.password === user?.password)) {
+        throw new Error("Password does not match");
+      }
+    }
   }
 
   return {
@@ -98,5 +115,6 @@ export function useAuth(props) {
     logOut,
     logInUser,
     isLoggedPresent,
+    checkUserCredentials,
   };
 }

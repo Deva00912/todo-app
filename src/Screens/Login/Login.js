@@ -32,13 +32,15 @@ export default function Login(props) {
           if (!validate()) {
             return toast.error("Entered details is wrong!");
           }
-          const loggedInData = props.auth.checkAndGetUserDetails(user);
-          if (!loggedInData) {
-            return toast.error("User does not exist!");
+          try {
+            const loggedInData = props.auth.checkAndGetUserDetails(user);
+            props.auth.checkUserCredentials(user);
+            props?.auth?.logInUser(loggedInData);
+            toast.success("Logged in");
+            props.navigate("/");
+          } catch (error) {
+            toast.error(error.message);
           }
-          props?.auth?.logInUser(loggedInData);
-          toast.success("Logged in");
-          props.navigate("/");
         }}
       >
         <div className="text-underline text-underline-offset-10px margin-8px color-teal-blue font-size-38px font-family-times-new-roman ">
