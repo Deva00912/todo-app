@@ -125,8 +125,7 @@ export default function Tasks(props) {
                     value="Delete"
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      const taskDeleteId = showTask[index].taskId;
-                      props.task.deleteTask(taskDeleteId);
+                      props.task.deleteTask(showTask[index].taskId);
                       setCreate(true);
                     }}
                   >

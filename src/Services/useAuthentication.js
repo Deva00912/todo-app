@@ -82,7 +82,6 @@ export function useAuth(props) {
   }
 
   function logInUser(user) {
-    localStorage.setItem("LoggedInUsers", JSON.stringify(user));
     setLoggedInUser(user);
   }
   function logOut() {
