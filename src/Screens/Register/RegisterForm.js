@@ -42,7 +42,6 @@ export default function Register(props) {
             props.auth.checkUsernameAvailability(user);
             props.auth.setUserData({ ...user, id: uuid() });
             toast.success("User registered!!");
-            props.navigate("/");
           } catch (error) {
             toast.error(error?.message);
           }

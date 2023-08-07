@@ -13,18 +13,18 @@ export default function Tasks(props) {
   });
   const [showTask, setShowTask] = useState(props.task.getIndividualUserTasks());
   const [clicked, setClicked] = useState("");
-  const [submit, setSubmit] = useState(false);
+  const [create, setCreate] = useState(false);
   const [edit, setEdit] = useState(false);
 
   useEffect(() => {
-    if (submit) {
+    if (create) {
       setShowTask(props.task.getIndividualUserTasks());
-      setSubmit(false);
+      setCreate(false);
     }
     if (edit) {
       setEdit(false);
     }
-  }, [props.task, edit, submit, clicked]);
+  }, [props.task, edit, create, clicked]);
 
   function logOut() {
     props.auth.logOut();
@@ -50,7 +50,7 @@ export default function Tasks(props) {
             }}
             onSubmit={(e) => {
               e.preventDefault();
-              setSubmit(true);
+              setCreate(true);
               props.task.addTask(entry);
             }}
           >
@@ -127,7 +127,7 @@ export default function Tasks(props) {
                     onClick={() => {
                       const taskDeleteId = showTask[index].taskId;
                       props.task.deleteTask(taskDeleteId);
-                      setSubmit(true);
+                      setCreate(true);
                     }}
                   >
                     Delete
@@ -145,7 +145,7 @@ export default function Tasks(props) {
             value="Clear all Tasks"
             onClick={() => {
               props.task.clearAllTask();
-              setSubmit(true);
+              setCreate(true);
             }}
           />
           <Button

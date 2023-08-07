@@ -6,11 +6,12 @@ import Register from "./Screens/Register/RegisterForm";
 import Tasks from "./Screens/Task/Tasks";
 import { useAuth } from "./Services/useAuthentication";
 import { useTasks } from "./Services/useTasks";
+import { useEffect } from "react";
 
 function App() {
   const navigate = useNavigate();
   const auth = useAuth({ navigate: navigate });
-  const task = useTasks();
+  const task = useTasks(auth.loggedInUser);
 
   const ProtectedRoute = ({ children, isLogged }) => {
     if (!isLogged) {
@@ -19,6 +20,18 @@ function App() {
       return children;
     }
   };
+
+  useEffect(() => {
+    if (Object.values(auth.loggedInUser).length === 0) {
+      navigate("/login");
+    } else {
+      navigate("/");
+    }
+    if (Object.values(auth.allUser).length === 0) {
+      navigate("/login");
+    }
+    // eslint-disable-next-line
+  }, [auth.loggedInUser]);
 
   return (
     <>

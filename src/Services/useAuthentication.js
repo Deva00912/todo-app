@@ -23,11 +23,8 @@ export function useAuth(props) {
   }, [allUser, loggedInUser]);
 
   const isLoggedPresent = () => {
-    if (
-      !JSON.parse(localStorage.getItem("Users")) ||
-      !JSON.parse(localStorage.getItem("LoggedInUsers"))
-    ) {
-      props.navigate("/login");
+    if (!JSON.parse(localStorage.getItem("LoggedInUsers"))) {
+      setLoggedInUser({});
     }
     if (!JSON.parse(localStorage.getItem("Users"))) {
       setLoggedInUser({});
@@ -101,5 +98,6 @@ export function useAuth(props) {
     checkAndGetUserDetails,
     logOut,
     logInUser,
+    isLoggedPresent,
   };
 }

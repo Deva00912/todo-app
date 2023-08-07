@@ -39,7 +39,6 @@ export default function Login(props) {
           props?.auth?.logInUser(loggedInData);
           toast.success("Logged in");
           props.navigate("/");
-          console.log("After Navigate");
         }}
       >
         <div className="text-underline text-underline-offset-10px margin-8px color-teal-blue font-size-38px font-family-times-new-roman ">

@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 
 export function useTasks(props) {
-  const loggedUser = localStorage.getItem("LoggedInUsers")
-    ? Object.values(JSON.parse(localStorage.getItem("LoggedInUsers"))).length >
-      0
-      ? JSON.parse(localStorage.getItem("LoggedInUsers"))
-      : {}
-    : {};
   const [taskList, setTaskList] = useState(
     localStorage.getItem("Tasks")
       ? Object.values(JSON.parse(localStorage.getItem("Tasks"))).length > 0
@@ -41,7 +35,7 @@ export function useTasks(props) {
 
   function getIndividualUserTasks() {
     const filterTask = taskList.filter(
-      (task) => task?.userId === loggedUser?.id
+      (task) => task?.userId === props.loggedInUser?.id
     );
     filterTask.sort((a, b) => b.timestamp - a.timestamp);
     return filterTask;
@@ -55,7 +49,9 @@ export function useTasks(props) {
   }
 
   function clearAllTask() {
-    const keepList = taskList.filter((task) => task.userId !== loggedUser.id);
+    const keepList = taskList.filter(
+      (task) => task.userId !== props.loggedInUser.id
+    );
     setTaskList(keepList);
     localStorage.setItem("Tasks", JSON.stringify(taskList));
   }
