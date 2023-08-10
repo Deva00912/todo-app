@@ -40,7 +40,7 @@ export function useAuth(props) {
     // eslint-disable-next-line
   }, []);
 
-  function setUserData(user, id) {
+  function setUserData(user) {
     if (!user) {
       throw new Error("Invalid parameters");
     } else {
@@ -57,7 +57,8 @@ export function useAuth(props) {
         (userData) => userData?.userName === user.userName
       );
       if (findUser === null || findUser === undefined) {
-        throw new Error("User does not exists!");
+        // throw new Error("User does not exists!");
+        return true;
       }
       if (Object.values(findUser).length) {
         throw new Error("User already exists!");
@@ -86,7 +87,7 @@ export function useAuth(props) {
   }
 
   function logOut() {
-    localStorage.setItem("LoggedInUsers", JSON.stringify({}));
+    // localStorage.setItem("LoggedInUsers", JSON.stringify({}));
     setLoggedInUser({});
   }
 

@@ -3,6 +3,7 @@ import Button from "../../Components/Button/Button";
 import InputBox from "../../Components/InputBox/InputBox";
 import uuid from "react-uuid";
 import "./Tasks.css";
+import { toast } from "react-toastify";
 
 export default function Tasks(props) {
   const [entry, setEntry] = useState({
@@ -50,14 +51,15 @@ export default function Tasks(props) {
             }}
             onSubmit={(e) => {
               e.preventDefault();
-              setCreate(true);
               props.task.addTask(entry);
+              setCreate(true);
             }}
           >
             <InputBox
               placeholder="Write your tasks..."
               type="textarea"
               name="entry"
+              datacy="taskEntry"
             />
             <Button
               className={`${
@@ -65,6 +67,7 @@ export default function Tasks(props) {
               } height-44px`}
               type="submit"
               value="Add task"
+              datacy="addTask"
               disabled={entry.entry.length > 0 ? false : true}
             />
           </form>
@@ -106,6 +109,7 @@ export default function Tasks(props) {
                   </div>
                   <div
                     value="Edit"
+                    datacy="editButton"
                     style={{
                       cursor: "pointer",
                       textDecoration: `${
@@ -116,6 +120,7 @@ export default function Tasks(props) {
                       const taskDeleteId = showTask[index].taskId;
                       props.task.editTask(taskDeleteId, entry);
                       setEdit(true);
+                      toast.success("Task Edited");
                     }}
                     disabled={data.taskId === clicked ? true : false}
                   >
@@ -123,10 +128,12 @@ export default function Tasks(props) {
                   </div>
                   <div
                     value="Delete"
+                    datacy="deleteButton"
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       props.task.deleteTask(showTask[index].taskId);
                       setCreate(true);
+                      toast.success("Task deleted");
                     }}
                   >
                     Delete
@@ -142,16 +149,19 @@ export default function Tasks(props) {
           <Button
             className=" width-fit-content white-space-nowrap"
             value="Clear all Tasks"
+            datacy="clearAllTasksButton"
             onClick={() => {
-              props.task.clearAllTask();
+              props.task.clearUserTask();
               setCreate(true);
             }}
           />
           <Button
             className="width-fit-content"
+            datacy="logOutButton"
             value="Logout"
             onClick={() => {
               logOut();
+              toast.success("Logout successful");
             }}
           />
         </div>

@@ -52,25 +52,27 @@ export default function InputBox(props) {
   }
 
   return (
-    <>
-      <div className="display-flex flex-direction-column align-item-center">
-        <input
-          className={`${props?.className} margin-8px padding-10px border-0px border-radius-6px line-height-24px font-family-times-new-roman font-size-100-percent`}
-          disabled={props?.disabled}
-          defaultValue={props?.defaultValue}
-          value={props?.value}
-          style={props?.style}
-          name={props?.name}
-          type={props?.type}
-          placeholder={props?.placeholder}
-          onChange={(e) => {
-            formValidation(e);
-          }}
-        />
-        <div className="color-teal-blue font-size-12px margin-bottom-0px font-family-times-new-roman">
-          {errors[props?.name]}
-        </div>
+    <div className="display-flex flex-direction-column align-item-center">
+      <input
+        className={`${props?.className} margin-8px padding-10px border-0px border-radius-6px line-height-24px font-family-times-new-roman font-size-100-percent`}
+        disabled={props?.disabled}
+        defaultValue={props?.defaultValue}
+        value={props?.value}
+        style={props?.style}
+        name={props?.name}
+        type={props?.type}
+        placeholder={props?.placeholder}
+        data-cy={props.datacy ? props.datacy : "textBox"}
+        onChange={(e) => {
+          formValidation(e);
+        }}
+      />
+      <div
+        className="color-teal-blue font-size-12px margin-bottom-0px font-family-times-new-roman"
+        data-cy={errors[props?.name]}
+      >
+        {errors[props?.name]}
       </div>
-    </>
+    </div>
   );
 }

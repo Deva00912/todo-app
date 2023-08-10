@@ -11,7 +11,7 @@ import { useEffect } from "react";
 function App() {
   const navigate = useNavigate();
   const auth = useAuth({ navigate: navigate });
-  const task = useTasks(auth.loggedInUser);
+  const task = useTasks(auth);
 
   const ProtectedRoute = ({ children, isLogged }) => {
     if (!isLogged) {
@@ -21,17 +21,17 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    if (Object.values(auth.loggedInUser).length === 0) {
-      navigate("/login");
-    } else {
-      navigate("/");
-    }
-    if (Object.values(auth.allUser).length === 0) {
-      navigate("/login");
-    }
-    // eslint-disable-next-line
-  }, [auth.loggedInUser]);
+  // useEffect(() => {
+  //   if (Object.values(auth.loggedInUser).length === 0) {
+  //     navigate("/login");
+  //   } else {
+  //     navigate("/");
+  //   }
+  //   if (Object.values(auth.allUser).length === 0) {
+  //     navigate("/register");
+  //   }
+  //   // eslint-disable-next-line
+  // }, [auth.loggedInUser]);
 
   return (
     <>
@@ -61,7 +61,9 @@ function App() {
         />
       </Routes>
 
-      <ToastContainer />
+      <dt>
+        <ToastContainer autoClose={700} />
+      </dt>
     </>
   );
 }

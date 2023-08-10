@@ -46,18 +46,25 @@ export default function Login(props) {
         <div className="text-underline text-underline-offset-10px margin-8px color-teal-blue font-size-38px font-family-times-new-roman ">
           Log in
         </div>
-        <InputBox placeholder="Enter Username" type="text" name="userName" />
+        <InputBox
+          placeholder="Enter Username"
+          type="text"
+          name="userName"
+          datacy="userName"
+        />
         <InputBox
           placeholder="Enter Password"
           type="password"
           name="password"
+          datacy="password"
         />
-        <Button type="submit" value="Log in" />
+        <Button type="submit" value="Log in" datacy="logInButton" />
         <div
           className="cursor-pointer margin-4px color-teal-blue font-family-times-new-roman line-height-16px font-size-100-percent "
           onClick={() => {
             props.navigate("/register");
           }}
+          datacy="goToRegister"
         >
           Don't have an account?
         </div>

@@ -48,7 +48,7 @@ export function useTasks(props) {
     localStorage.setItem("Tasks", JSON.stringify(taskList));
   }
 
-  function clearAllTask() {
+  function clearUserTask() {
     const keepList = taskList.filter(
       (task) => task.userId !== props.loggedInUser.id
     );
@@ -62,6 +62,6 @@ export function useTasks(props) {
     deleteTask,
     getIndividualUserTasks,
     editTask,
-    clearAllTask,
+    clearUserTask,
   };
 }

@@ -8,25 +8,12 @@ import InputBox from "../../Components/InputBox/InputBox";
 export default function Register(props) {
   const [user, setUser] = useState({
     id: "",
+    firstName: "",
+    lastName: "",
     userName: "",
     password: "",
     confirmPassword: "",
   });
-
-  const formValidation = () => {
-    if (
-      user.userName &&
-      user.confirmPassword &&
-      user.password &&
-      user.password === user.confirmPassword &&
-      regex.userName.test(user.userName) &&
-      regex.password.test(user.password)
-    ) {
-      return true;
-    } else {
-      throw new Error("Check entered details again!");
-    }
-  };
 
   return (
     <>
@@ -37,11 +24,12 @@ export default function Register(props) {
         }}
         onSubmit={(e) => {
           e.preventDefault();
+
           try {
-            formValidation();
             props.auth.checkUsernameAvailability(user);
             props.auth.setUserData({ ...user, id: uuid() });
-            toast.success("User registered!!");
+            toast.success("Registered");
+            props.navigate("/");
           } catch (error) {
             toast.error(error?.message);
           }
@@ -51,22 +39,62 @@ export default function Register(props) {
           Create an account
         </div>
 
-        <InputBox placeholder="Username" type="text" name="userName" />
-        <InputBox placeholder="First name" type="text" name="firstName" />
-        <InputBox placeholder="Last name" type="text" name="lastName" />
-        <InputBox placeholder="New password" type="password" name="password" />
+        <InputBox
+          placeholder="Username"
+          type="text"
+          name="userName"
+          datacy="userName"
+        />
+        <InputBox
+          placeholder="First name"
+          type="text"
+          name="firstName"
+          datacy="firstName"
+        />
+        <InputBox
+          placeholder="Last name"
+          type="text"
+          name="lastName"
+          datacy="lastName"
+        />
+        <InputBox
+          placeholder="New password"
+          type="password"
+          name="password"
+          datacy="password"
+        />
         <InputBox
           placeholder="Confirm password"
           type="password"
           name="confirmPassword"
+          datacy="confirmPassword"
         />
-        <Button type="submit" value="Register" />
+        <Button
+          type="submit"
+          value="Register"
+          datacy="registerButton"
+          disabled={
+            user.userName &&
+            user.firstName &&
+            user.lastName &&
+            user.confirmPassword &&
+            user.password &&
+            user.password === user.confirmPassword &&
+            regex.userName.test(user.userName) &&
+            regex.password.test(user.password) &&
+            regex.text.test(user.firstName) &&
+            regex.text.test(user.lastName)
+              ? false
+              : true
+          }
+        />
 
         <div
           className="cursor-pointer margin-4px color-teal-blue font-family-times-new-roman line-height-16px font-size-100-percent"
           onClick={() => {
             props.navigate("/login");
           }}
+          data-cy="goToLogin"
         >
           Already have an account?
         </div>
