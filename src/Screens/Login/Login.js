@@ -33,11 +33,18 @@ export default function Login(props) {
             return toast.error("Entered details is wrong!");
           }
           try {
-            const loggedInData = props.auth.checkAndGetUserDetails(user);
-            props.auth.checkUserCredentials(user);
-            props?.auth?.logInUser(loggedInData);
-            toast.success("Logged in");
-            props.navigate("/");
+            props.auth
+              .checkUserCredentials(user)
+              .then((foundUser) => {
+                if (Object.values(foundUser).length > 0) {
+                  props.auth?.setLogInUser(foundUser?.data);
+                  toast.success("Logged in");
+                  props.navigate("/");
+                }
+              })
+              .catch((error) => {
+                toast.error(error.message);
+              });
           } catch (error) {
             toast.error(error.message);
           }

@@ -30,3 +30,10 @@ Cypress.Commands.add("validate", (data) => {
     });
   });
 });
+
+// eslint-disable-next-line
+Cypress.Commands.add("login", (user) => {
+  cy.get("[data-cy=userName]").type(`${user.userName}`);
+  cy.get("[data-cy=password]").type(`${user.password}`);
+  cy.get('[data-cy="logInButton"]').should("be.visible").click();
+});

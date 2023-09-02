@@ -1,5 +1,5 @@
 const cy = window.cy;
-describe("template spec", () => {
+describe("In login screen", () => {
   beforeEach(() => {
     const user1 = {
       userName: "abcd123",
@@ -7,6 +7,7 @@ describe("template spec", () => {
       lastName: "wxyz",
       password: "Abcd@1234",
       confirmPassword: "Abcd@1234",
+      id: "user1",
     };
     const user2 = {
       userName: "devendran0912",
@@ -14,6 +15,7 @@ describe("template spec", () => {
       lastName: "wxyz",
       password: "Dev@1234",
       confirmPassword: "Dev@1234",
+      id: "user2",
     };
     const user3 = {
       userName: "nalin1601",
@@ -21,19 +23,19 @@ describe("template spec", () => {
       lastName: "Kumar",
       password: "Nalini@1234",
       confirmPassword: "Nalini@1234",
+      id: "user3",
     };
 
     const userData = [user1, user2, user3];
     localStorage.setItem("Users", JSON.stringify(userData));
+
+    cy.visit("/login");
   });
 
-  it("login Page", () => {
-    cy.get("[data-cy=userName]").type("devendran0912");
-    cy.get("[data-cy=password]").type("Dev@1234");
-    cy.get('[data-cy="logInButton"]').click();
-    cy.contains("Logged in");
-
-    cy.url().should("include", "http://localhost:3000/");
-    cy.contains("Logout successful");
+  it("Making a user log in", () => {
+    const user1 = {};
+    cy.login(user1);
+    cy.contains("Logged in").should("be.visible");
+    cy.location("pathname").should("eq", "/");
   });
 });

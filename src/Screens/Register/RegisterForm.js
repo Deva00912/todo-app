@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
-import uuid from "react-uuid";
+// import uuid from "react-uuid";
 import { regex } from "../../Services/Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
 
 export default function Register(props) {
   const [user, setUser] = useState({
-    id: "",
     firstName: "",
     lastName: "",
     userName: "",
@@ -26,10 +25,23 @@ export default function Register(props) {
           e.preventDefault();
 
           try {
-            props.auth.checkUsernameAvailability(user);
-            props.auth.setUserData({ ...user, id: uuid() });
-            toast.success("Registered");
-            props.navigate("/");
+            props.auth
+              .checkUsernameAvailability(user?.userName, "CHECK")
+              .then(() => {
+                props.auth
+                  .createUser(user)
+                  .then((createdUser) => {
+                    toast.success("Registered");
+
+                    props.navigate("/");
+                  })
+                  .catch((error) => {
+                    toast.error(error.message);
+                  });
+              })
+              .catch((error) => {
+                toast.error(error?.message);
+              });
           } catch (error) {
             toast.error(error?.message);
           }

@@ -1,31 +1,54 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../Components/Button/Button";
 import InputBox from "../../Components/InputBox/InputBox";
-import uuid from "react-uuid";
 import "./Tasks.css";
 import { toast } from "react-toastify";
 
 export default function Tasks(props) {
   const [entry, setEntry] = useState({
-    userId: props.auth.loggedInUser?.id,
+    userId: props.auth.loggedInUser?.userId,
     entry: "",
-    taskId: "",
-    timestamp: "",
   });
-  const [showTask, setShowTask] = useState(props.task.getIndividualUserTasks());
+  const [showTask, setShowTask] = useState([]);
   const [clicked, setClicked] = useState("");
   const [create, setCreate] = useState(false);
   const [edit, setEdit] = useState(false);
 
   useEffect(() => {
+    props.task
+      .getIndividualUserTasks(props.auth.loggedInUser?.userId)
+      .then((userTasks) => {
+        setShowTask(userTasks.data);
+      });
+
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     if (create) {
-      setShowTask(props.task.getIndividualUserTasks());
+      props.task
+        .getIndividualUserTasks(props.auth.loggedInUser?.userId)
+        .then((userTasks) => {
+          setShowTask(userTasks.data);
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
       setCreate(false);
     }
     if (edit) {
+      props.task
+        .getIndividualUserTasks(props.auth.loggedInUser?.userId)
+        .then((userTasks) => {
+          setShowTask(userTasks.data);
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
       setEdit(false);
     }
-  }, [props.task, edit, create, clicked]);
+    // eslint-disable-next-line
+  }, [edit, create, clicked]);
 
   function logOut() {
     props.auth.logOut();
@@ -45,14 +68,18 @@ export default function Tasks(props) {
               setEntry({
                 ...entry,
                 [e.target.name]: e.target.value,
-                taskId: uuid(),
-                timestamp: +new Date(),
               });
             }}
             onSubmit={(e) => {
               e.preventDefault();
-              props.task.addTask(entry);
-              setCreate(true);
+              props.task
+                .addTask(entry)
+                .then((task) => {
+                  setCreate(true);
+                })
+                .catch((error) => {
+                  toast.error(error);
+                });
             }}
           >
             <InputBox
@@ -80,7 +107,7 @@ export default function Tasks(props) {
           <div className="showBox">
             {showTask.length > 0 ? (
               showTask?.map((data, index) => (
-                <div
+                <div /*className="margin-4px padding-8px width-inherit display-flex background-color-teal-blue justify-content-space-evenly height-40px border-radius-8px" */
                   style={{
                     margin: "2px",
                     height: "100%",
@@ -109,7 +136,7 @@ export default function Tasks(props) {
                   </div>
                   <div
                     value="Edit"
-                    datacy="editButton"
+                    data-cy="editButton"
                     style={{
                       cursor: "pointer",
                       textDecoration: `${
@@ -117,10 +144,16 @@ export default function Tasks(props) {
                       }`,
                     }}
                     onClick={() => {
-                      const taskDeleteId = showTask[index].taskId;
-                      props.task.editTask(taskDeleteId, entry);
-                      setEdit(true);
-                      toast.success("Task Edited");
+                      const taskEditId = showTask[index].taskId;
+                      props.task
+                        .editTask(taskEditId, entry.entry)
+                        .then((editedTask) => {
+                          setEdit(true);
+                          toast.success("Task Edited");
+                        })
+                        .catch((error) => {
+                          toast.error(error.message);
+                        });
                     }}
                     disabled={data.taskId === clicked ? true : false}
                   >
@@ -128,12 +161,18 @@ export default function Tasks(props) {
                   </div>
                   <div
                     value="Delete"
-                    datacy="deleteButton"
+                    data-cy="deleteButton"
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      props.task.deleteTask(showTask[index].taskId);
-                      setCreate(true);
-                      toast.success("Task deleted");
+                      props.task
+                        .deleteTask(showTask[index].taskId)
+                        .then((response) => {
+                          setCreate(true);
+                          toast.success("Task deleted");
+                        })
+                        .catch((error) => {
+                          toast.error(error.message);
+                        });
                     }}
                   >
                     Delete
@@ -153,6 +192,7 @@ export default function Tasks(props) {
             onClick={() => {
               props.task.clearUserTask();
               setCreate(true);
+              toast.success("Cleared all tasks");
             }}
           />
           <Button

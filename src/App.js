@@ -4,9 +4,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Login from "./Screens/Login/Login";
 import Register from "./Screens/Register/RegisterForm";
 import Tasks from "./Screens/Task/Tasks";
-import { useAuth } from "./Services/useAuthentication";
-import { useTasks } from "./Services/useTasks";
-import { useEffect } from "react";
+import { useAuth } from "./Services/Api/useAuthentication.js";
+import { useTasks } from "./Services/Api/useTasks.js";
 
 function App() {
   const navigate = useNavigate();
@@ -20,18 +19,6 @@ function App() {
       return children;
     }
   };
-
-  // useEffect(() => {
-  //   if (Object.values(auth.loggedInUser).length === 0) {
-  //     navigate("/login");
-  //   } else {
-  //     navigate("/");
-  //   }
-  //   if (Object.values(auth.allUser).length === 0) {
-  //     navigate("/register");
-  //   }
-  //   // eslint-disable-next-line
-  // }, [auth.loggedInUser]);
 
   return (
     <>
@@ -50,7 +37,8 @@ function App() {
           element={
             <ProtectedRoute
               isLogged={
-                auth.loggedInUser && typeof auth.loggedInUser.id === "string"
+                auth.loggedInUser &&
+                typeof auth.loggedInUser.userId === "string"
                   ? true
                   : false
               }
@@ -62,7 +50,7 @@ function App() {
       </Routes>
 
       <dt>
-        <ToastContainer autoClose={700} />
+        <ToastContainer autoClose={1000} />
       </dt>
     </>
   );

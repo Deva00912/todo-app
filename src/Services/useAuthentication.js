@@ -22,24 +22,6 @@ export function useAuth(props) {
     localStorage.setItem("LoggedInUsers", JSON.stringify(loggedInUser));
   }, [allUser, loggedInUser]);
 
-  const isLoggedPresent = () => {
-    if (!localStorage.getItem("LoggedInUsers")) {
-      setLoggedInUser({});
-    }
-    if (!JSON.parse(localStorage.getItem("Users"))) {
-      setLoggedInUser({});
-      setAllUser([]);
-    }
-  };
-  useEffect(() => {
-    window.addEventListener("storage", isLoggedPresent);
-
-    return () => {
-      window.removeEventListener("storage", isLoggedPresent);
-    };
-    // eslint-disable-next-line
-  }, []);
-
   function setUserData(user) {
     if (!user) {
       throw new Error("Invalid parameters");
@@ -115,7 +97,6 @@ export function useAuth(props) {
     checkAndGetUserDetails,
     logOut,
     logInUser,
-    isLoggedPresent,
     checkUserCredentials,
   };
 }
