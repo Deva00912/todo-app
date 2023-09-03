@@ -1,5 +1,5 @@
 const MONGO_URL =
-  "mongodb+srv://devendran0912:devendran0912@cluster0.haipxq7.mongodb.net/TODO-LIST-API?retryWrites=true&w=majority";
+  "mongodb+srv://<username>:<password>@<cluster-name>.haipxq7.mongodb.net/<collection-name>?retryWrites=true&w=majority";
 
 const PORT = 7000;
 
