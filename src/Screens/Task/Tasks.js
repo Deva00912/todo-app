@@ -64,17 +64,17 @@ export default function Tasks(props) {
         <div>
           <form
             className="display-flex flex-direction-row align-item-center"
-            onChange={(e) => {
+            onChange={(event) => {
               setEntry({
                 ...entry,
-                [e.target.name]: e.target.value,
+                [event.target.name]: event.target.value,
               });
             }}
-            onSubmit={(e) => {
-              e.preventDefault();
+            onSubmit={(event) => {
+              event.preventDefault();
               props.task
                 .addTask(entry)
-                .then((task) => {
+                .then(() => {
                   setCreate(true);
                 })
                 .catch((error) => {
@@ -147,7 +147,7 @@ export default function Tasks(props) {
                       const taskEditId = showTask[index].taskId;
                       props.task
                         .editTask(taskEditId, entry.entry)
-                        .then((editedTask) => {
+                        .then(() => {
                           setEdit(true);
                           toast.success("Task Edited");
                         })
@@ -166,7 +166,7 @@ export default function Tasks(props) {
                     onClick={() => {
                       props.task
                         .deleteTask(showTask[index].taskId)
-                        .then((response) => {
+                        .then(() => {
                           setCreate(true);
                           toast.success("Task deleted");
                         })

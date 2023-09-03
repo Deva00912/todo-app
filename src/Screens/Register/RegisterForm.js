@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
-// import uuid from "react-uuid";
 import { regex } from "../../Services/Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
 
@@ -18,11 +17,11 @@ export default function Register(props) {
     <>
       <form
         className="height-100-percent width-100-percent display-flex flex-direction-column justify-content-center align-item-center"
-        onChange={(e) => {
-          setUser({ ...user, [e.target.name]: e.target.value });
+        onChange={(event) => {
+          setUser({ ...user, [event.target.name]: event.target.value });
         }}
-        onSubmit={(e) => {
-          e.preventDefault();
+        onSubmit={(event) => {
+          event.preventDefault();
 
           try {
             props.auth
@@ -30,9 +29,8 @@ export default function Register(props) {
               .then(() => {
                 props.auth
                   .createUser(user)
-                  .then((createdUser) => {
+                  .then(() => {
                     toast.success("Registered");
-
                     props.navigate("/");
                   })
                   .catch((error) => {

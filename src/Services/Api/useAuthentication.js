@@ -25,7 +25,7 @@ export function useAuth() {
       method: "GET",
       headers: headersList,
     });
-    return response.text();
+    return response.json();
   };
   const allUsers = getUsers();
 

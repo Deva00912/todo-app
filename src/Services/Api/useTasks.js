@@ -4,7 +4,7 @@ const headersList = {
   "Access-Control-Allow-Origin": "*",
 };
 
-export function useTasks(props) {
+export function useTasks() {
   async function addTask(task) {
     if (!task) {
       throw new Error("Task cannot be empty");
