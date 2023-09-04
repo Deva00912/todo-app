@@ -1,4 +1,11 @@
 import { useEffect, useState } from "react";
+import {
+  addTaskApi,
+  clearUserTasksApi,
+  deleteTaskApi,
+  editTaskApi,
+  getIndividualUserTasksApi,
+} from "./Api/tasks";
 
 export function useTasks(props) {
   const [taskList, setTaskList] = useState(
@@ -11,50 +18,77 @@ export function useTasks(props) {
 
   useEffect(() => {
     localStorage.setItem("Tasks", JSON.stringify(taskList));
-    getIndividualUserTasks();
+    getIndividualUserTasks(props.auth?.loggedInUser?.userId);
 
     // eslint-disable-next-line
   }, [taskList]);
 
-  function addTask(task) {
-    if (!taskList) {
-      setTaskList(task);
-      return true;
+  const addTask = async (task) => {
+    if (process.env.REACT_APP_STAGING === "local") {
+      if (!taskList) {
+        setTaskList(task);
+        return true;
+      } else {
+        setTaskList([...taskList, task]);
+        // localStorage.setItem("Tasks", JSON.stringify(taskList));
+        return true;
+      }
     } else {
-      setTaskList([...taskList, task]);
-      localStorage.setItem("Tasks", JSON.stringify(taskList));
-      return true;
+      const response = await addTaskApi(task);
+      return response;
     }
-  }
+  };
 
-  function deleteTask(taskDeleteId) {
-    const keepList = taskList.filter((task) => task.taskId !== taskDeleteId);
-    setTaskList(keepList);
-    localStorage.setItem("Tasks", JSON.stringify(taskList));
-  }
+  const deleteTask = async (taskDeleteId) => {
+    if (process.env.REACT_APP_STAGING === "local") {
+      const keepList = taskList.filter((task) => task.taskId !== taskDeleteId);
+      setTaskList(keepList);
+      // localStorage.setItem("Tasks", JSON.stringify(taskList));
+    } else {
+      const response = await deleteTaskApi(taskDeleteId);
+      return response;
+    }
+  };
 
-  function getIndividualUserTasks() {
-    const filterTask = taskList.filter(
-      (task) => task?.userId === props.loggedInUser?.id
-    );
-    filterTask.sort((a, b) => b.timestamp - a.timestamp);
-    return filterTask;
-  }
+  const getIndividualUserTasks = async (userId) => {
+    if (userId) {
+      if (process.env.REACT_APP_STAGING === "local") {
+        if (!taskList) {
+          return [];
+        } else {
+          const filterTask = taskList.filter((task) => task?.userId === userId);
+          filterTask.sort((a, b) => b.timestamp - a.timestamp);
+          return filterTask;
+        }
+      } else {
+        const response = await getIndividualUserTasksApi(userId);
+        return response;
+      }
+    }
+  };
 
-  function editTask(editTaskId, entry) {
-    const keepList = taskList.filter((task) => task?.taskId !== editTaskId);
-    keepList.push(entry);
-    setTaskList(keepList);
-    localStorage.setItem("Tasks", JSON.stringify(taskList));
-  }
+  const editTask = async (editTaskId, entry) => {
+    if (process.env.REACT_APP_STAGING === "local") {
+      const keepList = taskList.filter((task) => task?.taskId !== editTaskId);
+      keepList.push(entry);
+      setTaskList(keepList);
+      // localStorage.setItem("Tasks", JSON.stringify(taskList));
+    } else {
+      const response = await editTaskApi(editTaskId, entry.entry);
+      return response;
+    }
+  };
 
-  function clearUserTask() {
-    const keepList = taskList.filter(
-      (task) => task.userId !== props.loggedInUser.id
-    );
-    setTaskList(keepList);
-    localStorage.setItem("Tasks", JSON.stringify(taskList));
-  }
+  const clearUserTask = async (userId) => {
+    if (process.env.REACT_APP_STAGING === "local") {
+      const keepList = taskList.filter((task) => task.userId !== userId);
+      setTaskList(keepList);
+      // localStorage.setItem("Tasks", JSON.stringify(taskList));
+    } else {
+      const response = await clearUserTasksApi(userId);
+      return response;
+    }
+  };
 
   return {
     taskList,

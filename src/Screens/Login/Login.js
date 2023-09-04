@@ -37,7 +37,7 @@ export default function Login(props) {
               .checkUserCredentials(user)
               .then((foundUser) => {
                 if (Object.values(foundUser).length > 0) {
-                  props.auth?.setLogInUser(foundUser?.data);
+                  props.auth?.setLogInUser(foundUser);
                   toast.success("Logged in");
                   props.navigate("/");
                 }

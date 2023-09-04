@@ -2,10 +2,10 @@ import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./Screens/Login/Login";
-import Register from "./Screens/Register/RegisterForm";
+import Register from "./Screens/Register/Register";
 import Tasks from "./Screens/Task/Tasks";
-import { useAuth } from "./Services/Api/useAuthentication.js";
-import { useTasks } from "./Services/Api/useTasks.js";
+import { useAuth } from "./Services/useAuthentication.js";
+import { useTasks } from "./Services/useTasks.js";
 
 function App() {
   const navigate = useNavigate();

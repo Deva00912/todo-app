@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
+import {
+  checkUserCredentialsApi,
+  checkUsernameAvailabilityApi,
+  createUserApi,
+} from "./Api/auth";
 
 export function useAuth(props) {
+  console.log("env: ", process.env.REACT_APP_STAGING);
   const [allUser, setAllUser] = useState(
     localStorage.getItem("Users")
       ? JSON.parse(localStorage.getItem("Users")).length > 0
@@ -22,81 +28,80 @@ export function useAuth(props) {
     localStorage.setItem("LoggedInUsers", JSON.stringify(loggedInUser));
   }, [allUser, loggedInUser]);
 
-  function setUserData(user) {
+  const createUser = async (user) => {
     if (!user) {
       throw new Error("Invalid parameters");
     } else {
-      setAllUser([...allUser, user]);
-      setLoggedInUser(user);
+      console.log(process.env.REACT_APP_STAGING, "env");
+      if (process.env.REACT_APP_STAGING === "local") {
+        setAllUser([...allUser, user]);
+        setLoggedInUser(user);
+      } else {
+        const response = await createUserApi(user);
+        setLoggedInUser(response.data);
+        return response;
+      }
     }
-  }
+  };
 
-  function checkUsernameAvailability(user) {
+  const checkUsernameAvailability = async (user) => {
     if (!user) {
       throw new Error("Invalid parameters");
     } else {
-      const findUser = allUser.find(
-        (userData) => userData?.userName === user.userName
-      );
-      if (findUser === null || findUser === undefined) {
-        // throw new Error("User does not exists!");
-        return true;
-      }
-      if (Object.values(findUser).length) {
-        throw new Error("User already exists!");
-      }
-    }
-  }
-
-  function checkAndGetUserDetails(user) {
-    if (!user) {
-      throw new Error("Invalid parameters");
-    } else {
-      const findUser = allUser.find(
-        (userData) => userData?.userName === user.userName
-      );
-      if (findUser === null || findUser === undefined) {
-        throw new Error("User does not exists!");
-      }
-      if (Object.values(findUser).length) {
-        return findUser;
+      if (process.env.REACT_APP_STAGING === "local") {
+        const findUser = allUser.find(
+          (userData) => userData?.userName === user.userName
+        );
+        if (findUser === null || findUser === undefined) {
+          return true;
+        }
+        if (Object.values(findUser).length) {
+          throw new Error("User already exists!");
+        }
+      } else {
+        const response = await checkUsernameAvailabilityApi(user.userName);
+        return response;
       }
     }
-  }
+  };
 
-  function logInUser(user) {
+  const setLogInUser = (user) => {
     setLoggedInUser(user);
-  }
+  };
 
-  function logOut() {
-    // localStorage.setItem("LoggedInUsers", JSON.stringify({}));
+  const logOut = () => {
     setLoggedInUser({});
-  }
+  };
 
-  function checkUserCredentials(user) {
+  const checkUserCredentials = async (user) => {
     if (!user) {
       throw new Error("Invalid parameters");
     } else {
-      const findUser = allUser.find(
-        (userData) => userData?.userName === user.userName
-      );
-      if (findUser === null || findUser === undefined) {
-        throw new Error("User does not exists!");
-      }
-      if (!(findUser?.password === user?.password)) {
-        throw new Error("Password does not match");
+      if (process.env.REACT_APP_STAGING === "local") {
+        const findUser = allUser.find(
+          (userData) => userData?.userName === user.userName
+        );
+        if (findUser === null || findUser === undefined) {
+          throw new Error("User does not exists!");
+        }
+        if (Object.values(findUser).length) {
+          return findUser;
+        }
+      } else {
+        console.log("User: ", user);
+        const response = await checkUserCredentialsApi(user);
+        return response.data;
       }
     }
-  }
+  };
 
   return {
     allUser,
     loggedInUser,
-    setUserData,
+    createUser,
     checkUsernameAvailability,
-    checkAndGetUserDetails,
     logOut,
-    logInUser,
+    setLogInUser,
     checkUserCredentials,
   };
 }

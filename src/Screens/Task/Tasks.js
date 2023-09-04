@@ -3,6 +3,7 @@ import Button from "../../Components/Button/Button";
 import InputBox from "../../Components/InputBox/InputBox";
 import "./Tasks.css";
 import { toast } from "react-toastify";
+import uuid from "react-uuid";
 
 export default function Tasks(props) {
   const [entry, setEntry] = useState({
@@ -18,7 +19,7 @@ export default function Tasks(props) {
     props.task
       .getIndividualUserTasks(props.auth.loggedInUser?.userId)
       .then((userTasks) => {
-        setShowTask(userTasks.data);
+        setShowTask(userTasks);
       });
 
     // eslint-disable-next-line
@@ -73,7 +74,11 @@ export default function Tasks(props) {
             onSubmit={(event) => {
               event.preventDefault();
               props.task
-                .addTask(entry)
+                .addTask(
+                  process.env.REACT_APP_STAGING === "local"
+                    ? { ...entry, taskId: uuid() }
+                    : entry
+                )
                 .then(() => {
                   setCreate(true);
                 })
@@ -105,7 +110,7 @@ export default function Tasks(props) {
 
         <div>
           <div className="showBox">
-            {showTask.length > 0 ? (
+            {showTask?.length > 0 ? (
               showTask?.map((data, index) => (
                 <div /*className="margin-4px padding-8px width-inherit display-flex background-color-teal-blue justify-content-space-evenly height-40px border-radius-8px" */
                   style={{
@@ -146,7 +151,7 @@ export default function Tasks(props) {
                     onClick={() => {
                       const taskEditId = showTask[index].taskId;
                       props.task
-                        .editTask(taskEditId, entry.entry)
+                        .editTask(taskEditId, entry)
                         .then(() => {
                           setEdit(true);
                           toast.success("Task Edited");

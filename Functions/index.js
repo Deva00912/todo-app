@@ -1,11 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
-// const bodyParser = require("body-parser");
 const cors = require("cors");
-const { MONGO_URL, PORT } = require("./Utils/Constants");
 const { registerRouter } = require("./Routes/RegisterRoute/Register.js");
 const { loginRouter } = require("./Routes/LoginRoute/Login");
 const { homePageRouter } = require("./Routes/HomePageRoute/HomePageRoute");
+const { MONGO_URL, PORT } = require("./Utils/Constants.js");
 
 const app = express();
 const corsOptions = {
@@ -15,7 +14,6 @@ const corsOptions = {
 };
 
 app.use(express.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors(corsOptions));
 
 mongoose

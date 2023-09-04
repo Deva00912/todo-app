@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
 import { regex } from "../../Services/Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
+import uuid from "react-uuid";
 
 export default function Register(props) {
   const [user, setUser] = useState({
@@ -25,10 +26,14 @@ export default function Register(props) {
 
           try {
             props.auth
-              .checkUsernameAvailability(user?.userName, "CHECK")
+              .checkUsernameAvailability(user)
               .then(() => {
                 props.auth
-                  .createUser(user)
+                  .createUser(
+                    process.env.REACT_APP_STAGING === "local"
+                      ? { ...user, userId: uuid() }
+                      : user
+                  )
                   .then(() => {
                     toast.success("Registered");
                     props.navigate("/");
