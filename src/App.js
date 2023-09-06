@@ -4,8 +4,9 @@ import "react-toastify/dist/ReactToastify.css";
 import Login from "./Screens/Login/Login";
 import Register from "./Screens/Register/Register";
 import Tasks from "./Screens/Task/Tasks";
-import { useAuth } from "./Services/useAuthentication.js";
-import { useTasks } from "./Services/useTasks.js";
+import { useAuth } from "./Services/Hooks/useAuthentication.js";
+import { useTasks } from "./Services/Hooks/useTasks.js";
+import ErrorBoundary from "./Components/ErrorBoundary/ErrorBoundary";
 
 function App() {
   const navigate = useNavigate();
@@ -20,38 +21,81 @@ function App() {
     }
   };
 
+  const PublicRoute = ({ children, isLogged }) => {
+    if (isLogged) {
+      return <Navigate to="/" />;
+    }
+    return children;
+  };
+
+  const logoutOnClick = () => {
+    auth.logOut();
+    window.location.reload();
+  };
+
   return (
     <>
-      <Routes>
-        <Route
-          path="/login"
-          element={<Login navigate={navigate} auth={auth} />}
-        />
-        <Route
-          path="/register"
-          element={<Register navigate={navigate} auth={auth} />}
-        />
+      <ErrorBoundary
+        logoutOnClick={() => {
+          console.log("first");
+          logoutOnClick();
+        }}
+        navigate={navigate}
+        auth={auth}
+      >
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <PublicRoute
+                isLogged={
+                  auth.loggedInUser &&
+                  typeof auth.loggedInUser.userId === "string"
+                    ? true
+                    : false
+                }
+              >
+                <Login navigate={navigate} auth={auth} />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute
+                isLogged={
+                  auth.loggedInUser &&
+                  typeof auth.loggedInUser.userId === "string"
+                    ? true
+                    : false
+                }
+              >
+                <Register navigate={navigate} auth={auth} />
+              </PublicRoute>
+            }
+          />
 
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute
-              isLogged={
-                auth.loggedInUser &&
-                typeof auth.loggedInUser.userId === "string"
-                  ? true
-                  : false
-              }
-            >
-              <Tasks navigate={navigate} auth={auth} task={task} />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute
+                isLogged={
+                  auth.loggedInUser &&
+                  typeof auth.loggedInUser.userId === "string"
+                    ? true
+                    : false
+                }
+              >
+                <Tasks navigate={navigate} auth={auth} task={task} />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
 
-      <dt>
-        <ToastContainer autoClose={1000} />
-      </dt>
+        <dt>
+          <ToastContainer autoClose={1000} />
+        </dt>
+      </ErrorBoundary>
     </>
   );
 }

@@ -14,6 +14,48 @@ export default function Register(props) {
     confirmPassword: "",
   });
 
+  const validate = () => {
+    return user.userName &&
+      user.firstName &&
+      user.lastName &&
+      user.confirmPassword &&
+      user.password &&
+      user.password === user.confirmPassword &&
+      regex.userName.test(user.userName) &&
+      regex.password.test(user.password) &&
+      regex.text.test(user.firstName) &&
+      regex.text.test(user.lastName)
+      ? false
+      : true;
+  };
+
+  const handleSubmit = () => {
+    try {
+      props.auth
+        .checkUsernameAvailability(user)
+        .then(() => {
+          props.auth
+            .createUser(
+              process.env.REACT_APP_STAGING === "local"
+                ? { ...user, userId: uuid() }
+                : user
+            )
+            .then(() => {
+              toast.success("Registered");
+              props.navigate("/");
+            })
+            .catch((error) => {
+              toast.error(error.message);
+            });
+        })
+        .catch((error) => {
+          toast.error(error?.message);
+        });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <>
       <form
@@ -23,31 +65,7 @@ export default function Register(props) {
         }}
         onSubmit={(event) => {
           event.preventDefault();
-
-          try {
-            props.auth
-              .checkUsernameAvailability(user)
-              .then(() => {
-                props.auth
-                  .createUser(
-                    process.env.REACT_APP_STAGING === "local"
-                      ? { ...user, userId: uuid() }
-                      : user
-                  )
-                  .then(() => {
-                    toast.success("Registered");
-                    props.navigate("/");
-                  })
-                  .catch((error) => {
-                    toast.error(error.message);
-                  });
-              })
-              .catch((error) => {
-                toast.error(error?.message);
-              });
-          } catch (error) {
-            toast.error(error?.message);
-          }
+          handleSubmit();
         }}
       >
         <div className="text-underline text-underline-offset-6px color-teal-blue font-size-38px font-family-times-new-roman margin-8px">
@@ -88,20 +106,7 @@ export default function Register(props) {
           type="submit"
           value="Register"
           datacy="registerButton"
-          disabled={
-            user.userName &&
-            user.firstName &&
-            user.lastName &&
-            user.confirmPassword &&
-            user.password &&
-            user.password === user.confirmPassword &&
-            regex.userName.test(user.userName) &&
-            regex.password.test(user.password) &&
-            regex.text.test(user.firstName) &&
-            regex.text.test(user.lastName)
-              ? false
-              : true
-          }
+          disabled={validate()}
         />
 
         <div

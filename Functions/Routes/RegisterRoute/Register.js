@@ -3,7 +3,7 @@ const {
   createUser,
   getAllUsers,
   checkUsernameAvailability,
-} = require("../../Controllers/RegisterController/RegisterController.js");
+} = require("../../RegisterController/RegisterController.js");
 
 const registerRouter = express.Router();
 

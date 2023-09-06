@@ -9,7 +9,7 @@ export const getUsers = async () => {
     headers: headersList,
   });
   const userData = response.json();
-  return userData;
+  return userData.data;
 };
 
 export async function createUserApi(user) {
@@ -22,7 +22,10 @@ export async function createUserApi(user) {
       headers: headersList,
     });
     const createdUser = await response.json();
-    return createdUser;
+    if (createdUser.statusCode !== 201) {
+      throw new Error(createdUser.message);
+    }
+    return createdUser.data;
   }
 }
 
@@ -39,11 +42,8 @@ export async function checkUsernameAvailabilityApi(userName) {
       }
     );
     const findUser = await response.json();
-    if (findUser?.statusCode === 500) {
+    if (findUser?.statusCode !== 200) {
       throw new Error(findUser.message);
-    }
-    if (findUser?.statusCode === 200) {
-      return findUser?.data;
     }
   }
 }
@@ -58,12 +58,16 @@ export async function checkUserCredentialsApi(user) {
       headers: headersList,
     });
     const findUser = await response.json();
-    if (!findUser) {
+    if (findUser.statusCode !== 200) {
+      throw new Error(findUser.message);
+    }
+    if (!Object.values(findUser?.data).length > 0) {
       throw new Error("User does not exists!");
     }
-    if (findUser?.password === user?.password) {
+
+    if (findUser.data.password !== user?.password) {
       throw new Error("Password does not match");
     }
-    return findUser;
+    return findUser.data;
   }
 }

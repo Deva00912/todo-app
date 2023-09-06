@@ -20,6 +20,28 @@ export default function Login(props) {
     }
   };
 
+  const handleSubmit = () => {
+    if (!validate()) {
+      return toast.error("Entered details is wrong!");
+    }
+    try {
+      props.auth
+        .checkUserCredentials(user)
+        .then((foundUser) => {
+          if (Object.values(foundUser).length > 0) {
+            props.auth?.setLogInUser(foundUser);
+            toast.success("Logged in");
+            props.navigate("/");
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <>
       <form
@@ -29,25 +51,7 @@ export default function Login(props) {
         }}
         onSubmit={(event) => {
           event.preventDefault();
-          if (!validate()) {
-            return toast.error("Entered details is wrong!");
-          }
-          try {
-            props.auth
-              .checkUserCredentials(user)
-              .then((foundUser) => {
-                if (Object.values(foundUser).length > 0) {
-                  props.auth?.setLogInUser(foundUser);
-                  toast.success("Logged in");
-                  props.navigate("/");
-                }
-              })
-              .catch((error) => {
-                toast.error(error.message);
-              });
-          } catch (error) {
-            toast.error(error.message);
-          }
+          handleSubmit();
         }}
       >
         <div className="text-underline text-underline-offset-10px margin-8px color-teal-blue font-size-38px font-family-times-new-roman ">

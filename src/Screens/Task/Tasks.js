@@ -19,7 +19,13 @@ export default function Tasks(props) {
     props.task
       .getIndividualUserTasks(props.auth.loggedInUser?.userId)
       .then((userTasks) => {
-        setShowTask(userTasks);
+        if (userTasks) {
+          setShowTask(userTasks);
+          // setCreate(true);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
       });
 
     // eslint-disable-next-line
@@ -51,10 +57,55 @@ export default function Tasks(props) {
     // eslint-disable-next-line
   }, [edit, create, clicked]);
 
-  function logOut() {
+  const logOut = () => {
     props.auth.logOut();
     props.navigate("/login");
-  }
+  };
+
+  const handleOnSubmit = () => {
+    try {
+      props.task
+        .addTask(
+          process.env.REACT_APP_STAGING === "local"
+            ? { ...entry, taskId: uuid() }
+            : entry
+        )
+        .then(() => {
+          setCreate(true);
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleEditOnClick = (index) => {
+    const taskEditId = showTask[index].taskId;
+    props.task
+      .editTask(taskEditId, entry)
+      .then(() => {
+        setEdit(true);
+        toast.success("Task Edited");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
+
+  const handleDeleteOnClick = (index) => {
+    props.task
+      .deleteTask(showTask[index].taskId)
+      .then((response) => {
+        console.log("Response: ", response);
+        setCreate(true);
+        toast.success(response);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
 
   return (
     <>
@@ -73,18 +124,7 @@ export default function Tasks(props) {
             }}
             onSubmit={(event) => {
               event.preventDefault();
-              props.task
-                .addTask(
-                  process.env.REACT_APP_STAGING === "local"
-                    ? { ...entry, taskId: uuid() }
-                    : entry
-                )
-                .then(() => {
-                  setCreate(true);
-                })
-                .catch((error) => {
-                  toast.error(error);
-                });
+              handleOnSubmit();
             }}
           >
             <InputBox
@@ -112,7 +152,8 @@ export default function Tasks(props) {
           <div className="showBox">
             {showTask?.length > 0 ? (
               showTask?.map((data, index) => (
-                <div /*className="margin-4px padding-8px width-inherit display-flex background-color-teal-blue justify-content-space-evenly height-40px border-radius-8px" */
+                <div
+                  // className="margin-4px padding-8px width-inherit display-flex background-color-teal-blue justify-content-space-evenly height-40px border-radius-8px"
                   style={{
                     margin: "2px",
                     height: "100%",
@@ -131,53 +172,34 @@ export default function Tasks(props) {
                   }}
                 >
                   <div
-                    style={{
-                      textDecoration: `${
-                        data.taskId === clicked ? "line-through" : "none"
-                      }`,
-                    }}
+                    className={`${
+                      data.taskId === clicked
+                        ? "text-decoration-line-through"
+                        : ""
+                    }`}
                   >
                     {data.entry}
                   </div>
                   <div
+                    className={`cursor-pointer`}
                     value="Edit"
                     data-cy="editButton"
                     style={{
-                      cursor: "pointer",
-                      textDecoration: `${
-                        data.taskId === clicked ? "line-through" : "none"
-                      }`,
+                      disabled: data.taskId === clicked ? true : false,
                     }}
                     onClick={() => {
-                      const taskEditId = showTask[index].taskId;
-                      props.task
-                        .editTask(taskEditId, entry)
-                        .then(() => {
-                          setEdit(true);
-                          toast.success("Task Edited");
-                        })
-                        .catch((error) => {
-                          toast.error(error.message);
-                        });
+                      handleEditOnClick(index);
                     }}
                     disabled={data.taskId === clicked ? true : false}
                   >
                     Edit
                   </div>
                   <div
+                    className={`cursor-pointer`}
                     value="Delete"
                     data-cy="deleteButton"
-                    style={{ cursor: "pointer" }}
                     onClick={() => {
-                      props.task
-                        .deleteTask(showTask[index].taskId)
-                        .then(() => {
-                          setCreate(true);
-                          toast.success("Task deleted");
-                        })
-                        .catch((error) => {
-                          toast.error(error.message);
-                        });
+                      handleDeleteOnClick(index);
                     }}
                   >
                     Delete
@@ -189,7 +211,7 @@ export default function Tasks(props) {
             )}
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div className="display-flex flex-direction-row">
           <Button
             className=" width-fit-content white-space-nowrap"
             value="Clear all Tasks"

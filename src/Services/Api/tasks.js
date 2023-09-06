@@ -5,17 +5,16 @@ const headersList = {
 };
 
 export const addTaskApi = async (task) => {
-  if (!task) {
-    throw new Error("Task cannot be empty");
-  } else {
-    const response = await fetch("http://localhost:7000/task/add", {
-      method: "POST",
-      body: JSON.stringify({ ...task }),
-      headers: headersList,
-    });
-    const data = await response.json();
-    return data;
+  const response = await fetch("http://localhost:7000/task/add", {
+    method: "POST",
+    body: JSON.stringify({ ...task }),
+    headers: headersList,
+  });
+  const responseTask = await response.json();
+  if (responseTask.statusCode !== 200) {
+    throw new Error(responseTask.message + " Enter correctly");
   }
+  return responseTask.data;
 };
 
 export const deleteTaskApi = async (taskDeleteId) => {
@@ -27,7 +26,11 @@ export const deleteTaskApi = async (taskDeleteId) => {
     }
   );
   const deletedTask = await response.json();
-  return deletedTask;
+  console.log("API - response: ", deletedTask);
+  if (deletedTask.statusCode !== 200) {
+    throw new Error(deletedTask.message);
+  }
+  return deletedTask.message;
 };
 
 export const getIndividualUserTasksApi = async (userId) => {
@@ -36,7 +39,10 @@ export const getIndividualUserTasksApi = async (userId) => {
     headers: headersList,
   });
   const data = await response.json();
-  return data;
+  if (data.statusCode !== 200) {
+    throw new Error(data.message);
+  }
+  return data.data;
 };
 
 export const editTaskApi = async (taskId, entry) => {
@@ -46,7 +52,10 @@ export const editTaskApi = async (taskId, entry) => {
     headers: headersList,
   });
   const editedTask = await response.json();
-  return editedTask;
+  if (editedTask.statusCode !== 200) {
+    throw new Error(editedTask.message);
+  }
+  return editedTask.message;
 };
 
 export const clearUserTasksApi = async (userId) => {
@@ -56,5 +65,8 @@ export const clearUserTasksApi = async (userId) => {
     headers: headersList,
   });
   const clearedTasks = await response.json();
-  return clearedTasks;
+  if (clearedTasks.statusCode !== 200) {
+    throw new Error(clearedTasks.message);
+  }
+  return clearedTasks.message;
 };

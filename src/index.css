@@ -78,6 +78,12 @@ input {
 .width-80px {
   width: 80px;
 }
+.height-16px {
+  height: 16px;
+}
+.width-16px {
+  width: 16px;
+}
 
 .text-underline {
   text-decoration: underline;
@@ -189,4 +195,8 @@ input {
 
 .background-color-pink-red {
   background-color: #f55a5a;
+}
+
+.text-decoration-line-through {
+  text-decoration: line-through;
 }

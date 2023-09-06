@@ -5,7 +5,7 @@ import {
   deleteTaskApi,
   editTaskApi,
   getIndividualUserTasksApi,
-} from "./Api/tasks";
+} from "../Api/tasks";
 
 export function useTasks(props) {
   const [taskList, setTaskList] = useState(
@@ -24,18 +24,21 @@ export function useTasks(props) {
   }, [taskList]);
 
   const addTask = async (task) => {
-    if (process.env.REACT_APP_STAGING === "local") {
-      if (!taskList) {
-        setTaskList(task);
-        return true;
-      } else {
-        setTaskList([...taskList, task]);
-        // localStorage.setItem("Tasks", JSON.stringify(taskList));
-        return true;
-      }
+    if (!task) {
+      throw new Error("Task cannot be empty");
     } else {
-      const response = await addTaskApi(task);
-      return response;
+      if (process.env.REACT_APP_STAGING === "local") {
+        if (!taskList) {
+          setTaskList(task);
+          return true;
+        } else {
+          setTaskList([...taskList, task]);
+          return true;
+        }
+      } else {
+        const response = await addTaskApi(task);
+        return response;
+      }
     }
   };
 
@@ -43,7 +46,6 @@ export function useTasks(props) {
     if (process.env.REACT_APP_STAGING === "local") {
       const keepList = taskList.filter((task) => task.taskId !== taskDeleteId);
       setTaskList(keepList);
-      // localStorage.setItem("Tasks", JSON.stringify(taskList));
     } else {
       const response = await deleteTaskApi(taskDeleteId);
       return response;
@@ -72,7 +74,6 @@ export function useTasks(props) {
       const keepList = taskList.filter((task) => task?.taskId !== editTaskId);
       keepList.push(entry);
       setTaskList(keepList);
-      // localStorage.setItem("Tasks", JSON.stringify(taskList));
     } else {
       const response = await editTaskApi(editTaskId, entry.entry);
       return response;
@@ -83,7 +84,6 @@ export function useTasks(props) {
     if (process.env.REACT_APP_STAGING === "local") {
       const keepList = taskList.filter((task) => task.userId !== userId);
       setTaskList(keepList);
-      // localStorage.setItem("Tasks", JSON.stringify(taskList));
     } else {
       const response = await clearUserTasksApi(userId);
       return response;

@@ -5,7 +5,7 @@ const {
   deleteTask,
   getUserTask,
   clearUserTasks,
-} = require("../../Controllers/HomePageController/HomePageController");
+} = require("../../HomePageController/HomePageController.js");
 
 const homePageRouter = express.Router();
 

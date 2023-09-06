@@ -3,10 +3,9 @@ import {
   checkUserCredentialsApi,
   checkUsernameAvailabilityApi,
   createUserApi,
-} from "./Api/auth";
+} from "../Api/auth";
 
 export function useAuth(props) {
-  console.log("env: ", process.env.REACT_APP_STAGING);
   const [allUser, setAllUser] = useState(
     localStorage.getItem("Users")
       ? JSON.parse(localStorage.getItem("Users")).length > 0
@@ -32,13 +31,12 @@ export function useAuth(props) {
     if (!user) {
       throw new Error("Invalid parameters");
     } else {
-      console.log(process.env.REACT_APP_STAGING, "env");
       if (process.env.REACT_APP_STAGING === "local") {
         setAllUser([...allUser, user]);
         setLoggedInUser(user);
       } else {
         const response = await createUserApi(user);
-        setLoggedInUser(response.data);
+        setLoggedInUser(response);
         return response;
       }
     }
@@ -52,7 +50,7 @@ export function useAuth(props) {
         const findUser = allUser.find(
           (userData) => userData?.userName === user.userName
         );
-        if (findUser === null || findUser === undefined) {
+        if (!findUser) {
           return true;
         }
         if (Object.values(findUser).length) {
@@ -88,9 +86,12 @@ export function useAuth(props) {
           return findUser;
         }
       } else {
-        console.log("User: ", user);
-        const response = await checkUserCredentialsApi(user);
-        return response.data;
+        try {
+          const response = await checkUserCredentialsApi(user);
+          return response;
+        } catch (error) {
+          throw new Error(error.message);
+        }
       }
     }
   };

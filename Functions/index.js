@@ -2,8 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const { registerRouter } = require("./Routes/RegisterRoute/Register.js");
-const { loginRouter } = require("./Routes/LoginRoute/Login");
-const { homePageRouter } = require("./Routes/HomePageRoute/HomePageRoute");
+const { loginRouter } = require("./Routes/LoginRoute/Login.js");
+const { homePageRouter } = require("./Routes/HomePageRoute/HomePageRoute.js");
 const { MONGO_URL, PORT } = require("./Utils/Constants.js");
 
 const app = express();
