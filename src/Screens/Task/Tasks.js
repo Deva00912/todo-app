@@ -36,7 +36,7 @@ export default function Tasks(props) {
       props.task
         .getIndividualUserTasks(props.auth.loggedInUser?.userId)
         .then((userTasks) => {
-          setShowTask(userTasks.data);
+          setShowTask(userTasks);
         })
         .catch((error) => {
           toast.error(error.message);
@@ -72,6 +72,7 @@ export default function Tasks(props) {
         )
         .then(() => {
           setCreate(true);
+          toast.success("Task Added");
         })
         .catch((error) => {
           toast.error(error.message);
