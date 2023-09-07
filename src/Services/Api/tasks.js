@@ -11,7 +11,7 @@ export const addTaskApi = async (task) => {
     headers: headersList,
   });
   const responseTask = await response.json();
-  if (responseTask.statusCode !== 200) {
+  if (responseTask.statusCode !== 201) {
     throw new Error(responseTask.message + " Enter correctly");
   }
   return responseTask.data;
