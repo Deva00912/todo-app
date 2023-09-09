@@ -20,23 +20,17 @@ export default function Login(props) {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validate()) {
       return toast.error("Entered details is wrong!");
     }
     try {
-      props.auth
-        .checkUserCredentials(user)
-        .then((foundUser) => {
-          if (Object.values(foundUser).length > 0) {
-            props.auth?.setLogInUser(foundUser);
-            toast.success("Logged in");
-            props.navigate("/");
-          }
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        });
+      const foundUser = await props.auth.checkUserCredentials(user);
+      if (Object.values(foundUser).length > 0) {
+        props.auth?.setLogInUser(foundUser);
+        toast.success("Logged in");
+        props.navigate("/");
+      }
     } catch (error) {
       toast.error(error.message);
     }

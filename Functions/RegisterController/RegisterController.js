@@ -67,9 +67,10 @@ const checkUsernameAvailability = async (req, res) => {
     if (!regex.userName.test(userName)) {
       throw new Error("Username is invalid");
     }
+
     const findUser = await User.find({ userName: userName });
     if (findUser.length > 0) {
-      throw new Error("UserName is already in use");
+      throw new Error("Username is already in use");
     }
     return res.status(200).send({
       statusCode: 200,

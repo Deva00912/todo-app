@@ -29,28 +29,16 @@ export default function Register(props) {
       : true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
-      props.auth
-        .checkUsernameAvailability(user)
-        .then(() => {
-          props.auth
-            .createUser(
-              process.env.REACT_APP_STAGING === "local"
-                ? { ...user, userId: uuid() }
-                : user
-            )
-            .then(() => {
-              toast.success("Registered");
-              props.navigate("/");
-            })
-            .catch((error) => {
-              toast.error(error.message);
-            });
-        })
-        .catch((error) => {
-          toast.error(error?.message);
-        });
+      await props.auth.checkUsernameAvailability(user);
+      await props.auth.createUser(
+        process.env.REACT_APP_STAGING === "local"
+          ? { ...user, userId: uuid() }
+          : user
+      );
+      toast.success("Registered");
+      props.navigate("/");
     } catch (error) {
       toast.error(error.message);
     }

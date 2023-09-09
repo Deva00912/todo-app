@@ -8,54 +8,55 @@ const headersList = {
 
 describe("Testing API", () => {
   describe("Register APIs", () => {
-    /*
-  it("Creating a user", async () => {
-    const user = {
-      userName: "luoZheng",
-      firstName: "Zheng",
-      lastName: "Luo",
-      password: "Zheng@1234",
-      confirmPassword: "Zheng@1234",
-    };
+    it.skip("Creating an user with valid credentials", async () => {
+      const user = {
+        userName: "luoZheng",
+        firstName: "Zheng",
+        lastName: "Luo",
+        password: "Zheng@1234",
+        confirmPassword: "Zheng@1234",
+      };
 
-    const response = await fetch("http://localhost:7000/register/create-user", {
-      method: "POST",
-      body: JSON.stringify({ ...user }),
-      headers: headersList,
+      const response = await fetch(
+        "http://localhost:7000/register/create-user",
+        {
+          method: "POST",
+          body: JSON.stringify({ ...user }),
+          headers: headersList,
+        }
+      );
+
+      const createdUser = await response.json();
+      assert.equal(createdUser.statusCode, 201);
+      assert.equal(createdUser.message, "User created");
+      assert.equal(Object.values(createdUser.data).length, 8);
     });
 
-    const createdUser = await response.json();
-    assert.equal(createdUser.statusCode, 201);
-    assert.equal(createdUser.message, "User created");
-    assert.equal(Object.values(createdUser.data).length, 8);
-  });
+    it.skip("give warning when creating an existing user", async () => {
+      const user = {
+        userName: "devendran0912",
+        firstName: "Devendran",
+        lastName: "M",
+        password: "Dev@1234",
+        confirmPassword: "Dev@1234",
+      };
 
-  */
+      const response = await fetch(
+        "http://localhost:7000/register/create-user",
+        {
+          method: "POST",
+          body: JSON.stringify({ ...user }),
+          headers: headersList,
+        }
+      );
 
-    /*
-  it("Creating an existing user", async () => {
-    const user = {
-      userName: "devendran0912",
-      firstName: "Devendran",
-      lastName: "M",
-      password: "Dev@1234",
-      confirmPassword: "Dev@1234",
-    };
-
-    const response = await fetch("http://localhost:7000/register/create-user", {
-      method: "POST",
-      body: JSON.stringify({ ...user }),
-      headers: headersList,
+      const createdUser = await response.json();
+      assert.equal(createdUser.statusCode, 400);
+      assert.equal(createdUser.message, "Username is already in use");
+      //   assert.equal(Object.values(createdUser.data).length, 8);
     });
 
-    const createdUser = await response.json();
-    assert.equal(createdUser.statusCode, 400);
-    assert.equal(createdUser.message, "Username is already in use");
-    //   assert.equal(Object.values(createdUser.data).length, 8);
-  });
-  */
-
-    it("Validating user details before creating user", async () => {
+    it("give warning for invalid user details before creating user", async () => {
       const user = {
         userName: "Devendran0912",
         firstName: "Devendran",
@@ -159,7 +160,7 @@ describe("Testing API", () => {
       const findUser = await response.json();
 
       assert.equal(findUser.statusCode, 401);
-      assert.equal(findUser.message, "Password does not match");
+      assert.equal(findUser.message, "Invalid credentials");
       assert.equal(Object.values(findUser.data).length, 0);
     });
 
@@ -177,7 +178,7 @@ describe("Testing API", () => {
       const findUser = await response.json();
 
       assert.equal(findUser.statusCode, 401);
-      assert.equal(findUser.message, "Username is invalid");
+      assert.equal(findUser.message, "Entered Username is invalid");
       assert.equal(Object.values(findUser.data).length, 0);
     });
 
@@ -195,7 +196,7 @@ describe("Testing API", () => {
       const findUser = await response.json();
 
       assert.equal(findUser.statusCode, 401);
-      assert.equal(findUser.message, "User not found");
+      assert.equal(findUser.message, "Invalid credentials");
       assert.equal(Object.values(findUser.data).length, 0);
     });
   });
@@ -310,8 +311,7 @@ describe("Testing API", () => {
         assert.equal(data.message, "Task not found");
       });
 
-      /*
-      it("deleting an Existing task", async () => {
+      it.skip("deleting an Existing task", async () => {
         const taskDeleteId = "64f341e92245ab97687076c5";
         const response = await fetch(
           `http://localhost:7000/task/delete/${taskDeleteId}`,
@@ -327,11 +327,9 @@ describe("Testing API", () => {
         assert.equal(data.statusCode, 200);
         assert.equal(data.message, "Task Deleted");
       });
-      */
 
-      /*
       // --------Need to have a discussion---------
-      it("give warning when taskId is not requested", async () => {
+      it.skip("give warning when taskId is not requested", async () => {
         const taskDeleteId = "";
         const response = await fetch(
           `http://localhost:7000/task/delete/${taskDeleteId}`,
@@ -347,7 +345,6 @@ describe("Testing API", () => {
         assert.equal(data.statusCode, 400);
         assert.equal(data.message, "Task not found!");
       });
-      */
     });
 
     describe("Getting User's tasks", () => {

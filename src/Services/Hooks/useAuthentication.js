@@ -5,7 +5,7 @@ import {
   createUserApi,
 } from "../Api/auth";
 
-export function useAuth(props) {
+export function useAuth() {
   const [allUser, setAllUser] = useState(
     localStorage.getItem("Users")
       ? JSON.parse(localStorage.getItem("Users")).length > 0

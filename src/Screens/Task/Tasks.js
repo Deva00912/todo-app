@@ -16,96 +16,79 @@ export default function Tasks(props) {
   const [edit, setEdit] = useState(false);
 
   useEffect(() => {
-    props.task
-      .getIndividualUserTasks(props.auth.loggedInUser?.userId)
-      .then((userTasks) => {
-        if (userTasks) {
-          setShowTask(userTasks);
-          // setCreate(true);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+    getUserTasksAndShowTasks();
 
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     if (create) {
-      props.task
-        .getIndividualUserTasks(props.auth.loggedInUser?.userId)
-        .then((userTasks) => {
-          setShowTask(userTasks);
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        });
+      getUserTasksAndShowTasks();
       setCreate(false);
     }
     if (edit) {
-      props.task
-        .getIndividualUserTasks(props.auth.loggedInUser?.userId)
-        .then((userTasks) => {
-          setShowTask(userTasks.data);
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        });
+      getUserTasksAndShowTasks();
       setEdit(false);
     }
     // eslint-disable-next-line
   }, [edit, create, clicked]);
+
+  const getUserTasksAndShowTasks = async () => {
+    try {
+      const getTasks = await props.task.getIndividualUserTasks(
+        props.auth.loggedInUser?.userId
+      );
+      setShowTask(getTasks);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const logOut = () => {
     props.auth.logOut();
     props.navigate("/login");
   };
 
-  const handleOnSubmit = () => {
+  const handleAddTask = async () => {
     try {
-      props.task
-        .addTask(
-          process.env.REACT_APP_STAGING === "local"
-            ? { ...entry, taskId: uuid() }
-            : entry
-        )
-        .then(() => {
-          setCreate(true);
-          toast.success("Task Added");
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        });
+      await props.task.addTask(
+        process.env.REACT_APP_STAGING === "local"
+          ? { ...entry, taskId: uuid() }
+          : entry
+      );
+      setCreate(true);
+      toast.success("Task Added");
     } catch (error) {
       toast.error(error.message);
     }
   };
 
-  const handleEditOnClick = (index) => {
-    const taskEditId = showTask[index].taskId;
-    props.task
-      .editTask(taskEditId, entry)
-      .then(() => {
-        setEdit(true);
-        toast.success("Task Edited");
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+  const handleEditTask = async (taskEditId, entry) => {
+    try {
+      await props.task.editTask(taskEditId, entry);
+      setEdit(true);
+      toast.success("Task Edited");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
-  const handleDeleteOnClick = (index) => {
-    props.task
-      .deleteTask(showTask[index].taskId)
-      .then((response) => {
-        console.log("Response: ", response);
-        setCreate(true);
-        toast.success(response);
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+  const handleDeleteTask = async (taskId) => {
+    try {
+      const response = await props.task.deleteTask(taskId);
+      setCreate(true);
+      toast.success(response);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleOnSubmit = () => {
+    try {
+      handleAddTask();
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -189,7 +172,8 @@ export default function Tasks(props) {
                       disabled: data.taskId === clicked ? true : false,
                     }}
                     onClick={() => {
-                      handleEditOnClick(index);
+                      const taskEditId = showTask[index].taskId;
+                      handleEditTask(taskEditId, entry);
                     }}
                     disabled={data.taskId === clicked ? true : false}
                   >
@@ -200,7 +184,7 @@ export default function Tasks(props) {
                     value="Delete"
                     data-cy="deleteButton"
                     onClick={() => {
-                      handleDeleteOnClick(index);
+                      handleDeleteTask(showTask[index].taskId);
                     }}
                   >
                     Delete
@@ -213,16 +197,6 @@ export default function Tasks(props) {
           </div>
         </div>
         <div className="display-flex flex-direction-row">
-          <Button
-            className=" width-fit-content white-space-nowrap"
-            value="Clear all Tasks"
-            datacy="clearAllTasksButton"
-            onClick={() => {
-              props.task.clearUserTask();
-              setCreate(true);
-              toast.success("Cleared all tasks");
-            }}
-          />
           <Button
             className="width-fit-content"
             datacy="logOutButton"
