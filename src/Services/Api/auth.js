@@ -22,7 +22,7 @@ export async function createUserApi(user) {
       headers: headersList,
     });
     const createdUser = await response.json();
-    if (createdUser.statusCode !== 201) {
+    if (createdUser?.statusCode !== 201) {
       throw new Error(createdUser.message);
     }
     return createdUser.data;
@@ -58,16 +58,16 @@ export async function checkUserCredentialsApi(user) {
       headers: headersList,
     });
     const findUser = await response.json();
-    if (findUser.statusCode !== 200) {
+    if (findUser?.statusCode !== 200) {
       throw new Error(findUser.message);
     }
     if (!Object.values(findUser?.data).length > 0) {
       throw new Error("User does not exists!");
     }
 
-    if (findUser.data.password !== user?.password) {
+    if (findUser?.data.password !== user?.password) {
       throw new Error("Password does not match");
     }
-    return findUser.data;
+    return findUser?.data;
   }
 }

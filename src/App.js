@@ -41,7 +41,6 @@ function App() {
           logoutOnClick();
         }}
         navigate={navigate}
-        auth={auth}
       >
         <Routes>
           <Route

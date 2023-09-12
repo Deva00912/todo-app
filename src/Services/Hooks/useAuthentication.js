@@ -50,9 +50,6 @@ export function useAuth() {
         const findUser = allUser.find(
           (userData) => userData?.userName === user.userName
         );
-        if (!findUser) {
-          return true;
-        }
         if (Object.values(findUser).length) {
           throw new Error("User already exists!");
         }
@@ -79,7 +76,7 @@ export function useAuth() {
         const findUser = allUser.find(
           (userData) => userData?.userName === user.userName
         );
-        if (findUser === null || findUser === undefined) {
+        if (!findUser) {
           throw new Error("User does not exists!");
         }
         if (Object.values(findUser).length) {
