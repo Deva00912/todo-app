@@ -7,7 +7,7 @@ const headersList = {
 export const addTaskApi = async (task) => {
   const response = await fetch("http://localhost:7000/task/add", {
     method: "POST",
-    body: JSON.stringify({ ...task }),
+    body: JSON.stringify(task),
     headers: headersList,
   });
   const responseTask = await response.json();

@@ -10,11 +10,11 @@ describe("Testing API", () => {
   describe("Register APIs", () => {
     it.skip("Creating an user with valid credentials", async () => {
       const user = {
-        userName: "luoZheng",
-        firstName: "Zheng",
-        lastName: "Luo",
-        password: "Zheng@1234",
-        confirmPassword: "Zheng@1234",
+        userName: "kimdokja9853",
+        firstName: "Dokja",
+        lastName: "Kim",
+        password: "Dokja@1234",
+        confirmPassword: "Dokja@1234",
       };
 
       const response = await fetch(
@@ -32,7 +32,7 @@ describe("Testing API", () => {
       assert.equal(Object.values(createdUser.data).length, 8);
     });
 
-    it.skip("give warning when creating an existing user", async () => {
+    it("give warning when creating an existing user", async () => {
       const user = {
         userName: "devendran0912",
         firstName: "Devendran",
@@ -91,7 +91,7 @@ describe("Testing API", () => {
       );
       const findUser = await response.json();
       assert.equal(findUser.statusCode, 400);
-      assert.equal(findUser.message, "UserName is already in use");
+      assert.equal(findUser.message, "Username is already in use");
     });
 
     it("allow to create a user when Checking username availability - username is available", async () => {
@@ -106,7 +106,7 @@ describe("Testing API", () => {
       );
       const findUser = await response.json();
       assert.equal(findUser.statusCode, 200);
-      assert.equal(findUser.message, "UserName is available");
+      assert.equal(findUser.message, "Username is available");
       assert.equal(Object.values(findUser.data).length, 0);
     });
 
@@ -196,7 +196,7 @@ describe("Testing API", () => {
       const findUser = await response.json();
 
       assert.equal(findUser.statusCode, 401);
-      assert.equal(findUser.message, "Invalid credentials");
+      assert.equal(findUser.message, "User does not exists");
       assert.equal(Object.values(findUser.data).length, 0);
     });
   });
@@ -205,13 +205,13 @@ describe("Testing API", () => {
     describe("Adding Tasks", () => {
       it("adding a task", async () => {
         const task = {
-          userId: "64ed9b72d276512eb609a3f4",
-          entry: "task 2 - Nalini",
+          userId: "64f341992245ab97687076a2",
+          entry: "Task 3 - Test",
         };
 
         const response = await fetch("http://localhost:7000/task/add", {
           method: "POST",
-          body: JSON.stringify({ ...task }),
+          body: JSON.stringify(task),
           headers: headersList,
         });
         const responseTask = await response.json();
@@ -243,8 +243,8 @@ describe("Testing API", () => {
     describe("Editing task", () => {
       it("editing an task", async () => {
         const task = {
-          taskId: "64f341ae2245ab97687076aa",
-          entry: "Task Edited ",
+          taskId: "650294ec34dd63c0ce3f325e",
+          entry: "Test 1 : Task Edited ",
         };
 
         const response = await fetch("http://localhost:7000/task/edit", {
@@ -322,7 +322,7 @@ describe("Testing API", () => {
         );
         //   console.log("response", response);
         const data = await response.json();
-        console.log("data", data);
+        // console.log("data", data);
 
         assert.equal(data.statusCode, 200);
         assert.equal(data.message, "Task Deleted");
