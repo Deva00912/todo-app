@@ -56,7 +56,6 @@ const getGetAllUsers = async () => {
 const postIsUsernameExist = async (username) => {
   try {
     const response = await getUserFromDB(username);
-
     const message = !response
       ? "Username is available"
       : "Username is already in use";
@@ -64,7 +63,7 @@ const postIsUsernameExist = async (username) => {
     return {
       statusCode: !response ? 200 : 400,
       message: message,
-      data: [],
+      data: !response ? [] : response,
     };
   } catch (error) {
     return { statusCode: 400, message: error.message, data: [] };

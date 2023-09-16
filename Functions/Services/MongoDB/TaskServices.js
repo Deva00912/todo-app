@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Task } = require("./Models/TaskModel");
 
+mongoose.set("bufferCommands", true);
 const addTaskInDB = async (task) => {
   const response = await Task.create({
     ...task,

@@ -27,7 +27,7 @@ const updateTask = async (taskId, entry) => {
       throw new Error("Task cannot be empty");
     }
     const taskByTaskId = await findTaskByTaskId(taskId);
-    if (!(Object.values(taskByTaskId).length > 0)) {
+    if (!Object.values(taskByTaskId).length) {
       throw new Error("Task not found!");
     }
     // eslint-disable-next-line
@@ -45,7 +45,7 @@ const deleteTaskFeature = async (taskId) => {
     }
     const response = await findTaskByTaskId(taskId);
     if (!response) {
-      throw new Error("Task not found");
+      throw new Error("Task not found!");
     }
     await deleteTaskInDB(taskId);
     return { statusCode: 200, message: "Task Deleted" };

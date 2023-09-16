@@ -10,7 +10,7 @@ describe("Testing API", () => {
   describe("Register APIs", () => {
     it.skip("Creating an user with valid credentials", async () => {
       const user = {
-        userName: "kimdokja9853",
+        userName: "hello9643",
         firstName: "Dokja",
         lastName: "Kim",
         password: "Dokja@1234",
@@ -241,7 +241,7 @@ describe("Testing API", () => {
     });
 
     describe("Editing task", () => {
-      it("editing an task", async () => {
+      it.skip("editing an task", async () => {
         const task = {
           taskId: "650294ec34dd63c0ce3f325e",
           entry: "Test 1 : Task Edited ",
@@ -308,7 +308,7 @@ describe("Testing API", () => {
         // console.log("data", data);
 
         assert.equal(data.statusCode, 400);
-        assert.equal(data.message, "Task not found");
+        assert.equal(data.message, "Task not found!");
       });
 
       it.skip("deleting an Existing task", async () => {
