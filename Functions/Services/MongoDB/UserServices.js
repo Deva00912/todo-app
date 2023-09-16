@@ -2,21 +2,18 @@ const mongoose = require("mongoose");
 const { User } = require("./Models/UsersModel");
 
 const createUserInDB = async (user) => {
-  const response = await User.create({
+  return await User.create({
     ...user,
     userId: new mongoose.Types.ObjectId(),
   });
-  return response;
 };
 
 const getAllUsersFromDB = async () => {
-  const response = await User.find({});
-  return response;
+  return await User.find({});
 };
 
 const getUserFromDB = async (username) => {
-  const response = await User.findOne({ userName: username });
-  return response;
+  return await User.findOne({ userName: username });
 };
 
 module.exports = {

@@ -3,35 +3,30 @@ const { Task } = require("./Models/TaskModel");
 
 mongoose.set("bufferCommands", true);
 const addTaskInDB = async (task) => {
-  const response = await Task.create({
+  return await Task.create({
     ...task,
     taskId: new mongoose.Types.ObjectId(),
   });
-  return response;
 };
 
 const updateTaskInDB = async (taskId, entry) => {
-  const response = await Task.findOneAndUpdate(
+  return await Task.findOneAndUpdate(
     { taskId: taskId },
     { entry: entry },
     { new: true }
   );
-  return response;
 };
 
 const deleteTaskInDB = async (taskId) => {
-  const response = await Task.findOneAndDelete({ taskId: taskId });
-  return response;
+  return await Task.findOneAndDelete({ taskId: taskId });
 };
 
 const findTaskByTaskId = async (taskId) => {
-  const response = await Task.findOne({ taskId: taskId });
-  return response;
+  return await Task.findOne({ taskId: taskId });
 };
 
 const getUserTasksFromDB = async (userId) => {
-  const response = await Task.find({ userId: userId });
-  return response;
+  return await Task.find({ userId: userId });
 };
 
 module.exports = {

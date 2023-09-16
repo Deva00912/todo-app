@@ -24,68 +24,54 @@ const validateUsername = (username) => {
   return regex?.userName.test(username) ? true : false;
 };
 
+const throwAuthError = (message, code) => {
+  const error = new Error(message);
+  error.code = code;
+  error.name = "AuthError";
+  throw error;
+};
+
 //Creating a user
 const postCreateUser = async (userData) => {
-  try {
-    const user = await createUserInDB(userData);
-    return { statusCode: 201, message: "User created", data: user };
-  } catch (error) {
-    if (error.message.includes("E11000 duplicate key")) {
-      return { statusCode: 400, message: "Username is already in use" };
-    }
-    return { message: error.message, statusCode: 400 };
-  }
+  await createUserInDB(userData);
+  return { message: "User created" };
 };
 
 const getGetAllUsers = async () => {
-  try {
-    const allUsers = await getAllUsersFromDB();
-    if (allUsers.length < 0) {
-      throw new Error("No users");
-    }
-    return {
-      statusCode: 200,
-      message: "All Users",
-      data: allUsers,
-    };
-  } catch (error) {
-    return { statusCode: 400, message: error.message, data: [] };
+  const allUsers = await getAllUsersFromDB();
+  if (!allUsers.length) {
+    throwAuthError("No users", 5220);
   }
+  return {
+    message: "All Users",
+    data: allUsers,
+  };
 };
 
 const postIsUsernameExist = async (username) => {
-  try {
-    const response = await getUserFromDB(username);
-    const message = !response
-      ? "Username is available"
-      : "Username is already in use";
+  const response = await getUserFromDB(username);
+  const message = !response
+    ? "Username is available"
+    : "Username is already in use";
 
-    return {
-      statusCode: !response ? 200 : 400,
-      message: message,
-      data: !response ? [] : response,
-    };
-  } catch (error) {
-    return { statusCode: 400, message: error.message, data: [] };
-  }
+  return {
+    message: message,
+    data: !response ? [] : response,
+  };
 };
 
 const checkPasswordAndLogin = async (username, password) => {
-  try {
-    const user = await getUserFromDB(username);
-    if (!user) {
-      throw new Error("User does not exists");
-    }
-    const statusCode = user?.password === password ? 200 : 401;
-    return {
-      message:
-        user?.password === password ? "Logged in" : "Invalid credentials",
-      data: user?.password === password ? user : {},
-      statusCode: statusCode,
-    };
-  } catch (error) {
-    return { statusCode: 401, message: error.message, data: {} };
+  const user = await getUserFromDB(username);
+  if (!user) {
+    throwAuthError("User does not exists", 5310);
   }
+  if (user?.password !== password) {
+    throwAuthError("Invalid credentials", 5400);
+  }
+  return {
+    message: "Logged in",
+    data: user,
+  };
 };
 
 module.exports = {

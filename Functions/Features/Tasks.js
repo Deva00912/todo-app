@@ -6,64 +6,54 @@ const {
   getUserTasksFromDB,
 } = require("../Services/MongoDB/TaskServices");
 
+const throwTaskError = (message, code) => {
+  const error = new Error(message);
+  error.code = code;
+  error.name = "TypeError";
+  throw error;
+};
+
 const addTaskFeature = async (task) => {
-  try {
-    if (!task || !task.entry) {
-      throw new Error("Task cannot be empty");
-    }
-    const response = await addTaskInDB(task);
-    return { statusCode: 201, message: "Task Added!", data: response };
-  } catch (error) {
-    return { statusCode: 400, message: error.message, data: {} };
+  if (!task || !task.entry) {
+    throwTaskError("Task cannot be empty", 3330);
   }
+  await addTaskInDB(task);
+  return { message: "Task Added!" };
 };
 
 const updateTask = async (taskId, entry) => {
-  try {
-    if (!taskId) {
-      throw new Error("Task not found!");
-    }
-    if (!entry) {
-      throw new Error("Task cannot be empty");
-    }
-    const taskByTaskId = await findTaskByTaskId(taskId);
-    if (!Object.values(taskByTaskId).length) {
-      throw new Error("Task not found!");
-    }
-    // eslint-disable-next-line
-    const response = await updateTaskInDB(taskId, entry);
-    return { statusCode: 200, message: "Task edited" };
-  } catch (error) {
-    return { statusCode: 400, message: error.message };
+  if (!taskId) {
+    throwTaskError("Task not found!", 3321);
   }
+  if (!entry) {
+    throwTaskError("Task cannot be empty", 3330);
+  }
+  const taskByTaskId = await findTaskByTaskId(taskId);
+  if (!Object.values(taskByTaskId).length) {
+    throwTaskError("Task not found!", 3321);
+  }
+  await updateTaskInDB(taskId, entry);
+  return { message: "Task edited" };
 };
 
 const deleteTaskFeature = async (taskId) => {
-  try {
-    if (!taskId) {
-      throw new Error("Task not found!");
-    }
-    const response = await findTaskByTaskId(taskId);
-    if (!response) {
-      throw new Error("Task not found!");
-    }
-    await deleteTaskInDB(taskId);
-    return { statusCode: 200, message: "Task Deleted" };
-  } catch (error) {
-    return { statusCode: 400, message: error.message };
+  if (!taskId) {
+    throwTaskError("Task not found!", 3321);
   }
+  const response = await findTaskByTaskId(taskId);
+  if (!response) {
+    throwTaskError("Task not found!", 3321);
+  }
+  await deleteTaskInDB(taskId);
+  return { message: "Task Deleted" };
 };
 
 const getUserTasksFeature = async (userId) => {
-  try {
-    const response = await getUserTasksFromDB(userId);
-    if (!response.length) {
-      throw new Error("No Tasks");
-    }
-    return { statusCode: 200, message: "User Tasks", data: response };
-  } catch (error) {
-    return { statusCode: 400, message: error.message };
+  const response = await getUserTasksFromDB(userId);
+  if (!response.length) {
+    throwTaskError("No Tasks", 3402);
   }
+  return { message: "User Tasks", data: response };
 };
 
 module.exports = {

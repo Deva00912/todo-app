@@ -8,9 +8,9 @@ const headersList = {
 
 describe("Testing API", () => {
   describe("Register APIs", () => {
-    it.skip("Creating an user with valid credentials", async () => {
+    it("Creating an user with valid credentials", async () => {
       const user = {
-        userName: "hello9643",
+        userName: "hello1985",
         firstName: "Dokja",
         lastName: "Kim",
         password: "Dokja@1234",
