@@ -77,7 +77,7 @@ export default function Tasks(props) {
     try {
       await props.task.deleteTask(taskId);
       setCreate(true);
-      toast.success("Task Deleted");
+      toast.success("Task deleted");
     } catch (error) {
       toast.error(error.message);
     }

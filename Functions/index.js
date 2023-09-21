@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const { MONGO_URL, PORT } = require("./Services/Constants.js");
+const { MONGO_URL, PORT } = require("./Services/Utils/Constants.js");
 const { registerRouter } = require("./Routes/Register.js");
 const { loginRouter } = require("./Routes/Login.js");
 const { tasksRouter } = require("./Routes/Tasks.js");

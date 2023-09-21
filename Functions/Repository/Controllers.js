@@ -1,10 +1,10 @@
-const { validate } = require("uuid");
 const {
   validateUsername,
   checkPasswordAndLogin,
   postCreateUser,
   getGetAllUsers,
   postIsUsernameExist,
+  validate,
 } = require("../Features/Auth");
 const {
   addTaskFeature,
@@ -42,6 +42,7 @@ const isUsernameExist = async (username) => {
   if (!validateUsername(username)) {
     throwError("Invalid username", 5301, "AuthError");
   }
+
   return await postIsUsernameExist(username);
 };
 

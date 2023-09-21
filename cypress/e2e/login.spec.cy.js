@@ -2,7 +2,7 @@ const cy = window.cy;
 describe("In login screen", () => {
   beforeEach(() => {
     const user1 = {
-      userName: "abcd123",
+      username: "abcd123",
       firstName: "abcd",
       lastName: "wxyz",
       password: "Abcd@1234",
@@ -10,7 +10,7 @@ describe("In login screen", () => {
       id: "user1",
     };
     const user2 = {
-      userName: "devendran0912",
+      username: "devendran0912",
       firstName: "abcd",
       lastName: "wxyz",
       password: "Dev@1234",
@@ -18,7 +18,7 @@ describe("In login screen", () => {
       id: "user2",
     };
     const user3 = {
-      userName: "nalin1601",
+      username: "nalin1601",
       firstName: "Nalini",
       lastName: "Kumar",
       password: "Nalini@1234",

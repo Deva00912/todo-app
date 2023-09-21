@@ -29,7 +29,7 @@ const updateTask = async (taskId, entry) => {
     throwTaskError("Task cannot be empty", 3330);
   }
   const taskByTaskId = await findTaskByTaskId(taskId);
-  if (!Object.values(taskByTaskId).length) {
+  if (!taskByTaskId) {
     throwTaskError("Task not found!", 3321);
   }
   await updateTaskInDB(taskId, entry);
@@ -45,7 +45,7 @@ const deleteTaskFeature = async (taskId) => {
     throwTaskError("Task not found!", 3321);
   }
   await deleteTaskInDB(taskId);
-  return { message: "Task Deleted" };
+  return { message: "Task deleted" };
 };
 
 const getUserTasksFeature = async (userId) => {

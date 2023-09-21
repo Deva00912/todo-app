@@ -7,7 +7,7 @@ describe("Testing the app APIS", () => {
     });
 
     it("success in user login", () => {
-      const user1 = { userName: "devendran0912", password: "Dev@1234" };
+      const user1 = { username: "devendran0912", password: "Dev@1234" };
       cy.login(user1);
       cy.contains("Logged in").should("be.visible");
       cy.location("pathname").should("eq", "/");
@@ -15,7 +15,7 @@ describe("Testing the app APIS", () => {
 
     it("give warning with invalid credentials (username - invalid)", () => {
       const user = {
-        userName: "Devendran0912",
+        username: "Devendran0912",
         password: "Dev@1234",
       };
       cy.login(user);
@@ -25,7 +25,7 @@ describe("Testing the app APIS", () => {
 
     it("give warning with invalid credentials (password - invalid)", () => {
       const user = {
-        userName: "devendran0912",
+        username: "devendran0912",
         password: "Dev@123433",
       };
       cy.login(user);
@@ -34,7 +34,7 @@ describe("Testing the app APIS", () => {
 
     it("give warning - 'User does not exists' ", () => {
       const user = {
-        userName: "goku1234",
+        username: "goku1234",
         password: "Dev@123433",
       };
       cy.login(user);
@@ -49,7 +49,7 @@ describe("Testing the app APIS", () => {
 
     it.skip("creating a user", () => {
       const user = {
-        userName: "qinwentian99",
+        username: "qinwentian99",
         firstName: "Wentian",
         lastName: "Qin",
         password: "Wentian@1234",
@@ -65,7 +65,7 @@ describe("Testing the app APIS", () => {
       cy.visit("/register");
 
       const user = {
-        userName: "qinwentian99",
+        username: "qinwentian99",
         firstName: "Wentian",
         lastName: "Qin",
         password: "Wentian@1234",
@@ -81,7 +81,7 @@ describe("Testing the app APIS", () => {
       cy.visit("/register");
 
       const user = {
-        userName: "Qinwentian99",
+        username: "Qinwentian99",
         firstName: "Wentian",
         lastName: "Qin",
         password: "Wentian@1234",
@@ -102,7 +102,7 @@ describe("Testing the app APIS", () => {
         userId: "64f341992245ab97687076a2",
         firstName: "Devendran",
         lastName: "M",
-        userName: "devendran0912",
+        username: "devendran0912",
         password: "Dev@1234",
         confirmPassword: "Dev@1234",
       };
@@ -134,7 +134,7 @@ describe("Testing the app APIS", () => {
       cy.get('[data-cy="editButton"]').should("be.visible");
       cy.get('[data-cy="deleteButton"]').should("be.visible");
       cy.get('[data-cy="deleteButton"]').should("be.visible").first().click();
-      cy.contains("Task Deleted").should("be.visible");
+      cy.contains("Task deleted").should("be.visible");
     });
   });
 });

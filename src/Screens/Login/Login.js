@@ -5,13 +5,13 @@ import { regex } from "../../Services/Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
 
 export default function Login(props) {
-  const [user, setUser] = useState({ userName: "", password: "" });
+  const [user, setUser] = useState({ username: "", password: "" });
 
   const validate = () => {
     if (
-      user.userName &&
+      user.username &&
       user.password &&
-      regex.userName.test(user.userName) &&
+      regex.username.test(user.username) &&
       regex.password.test(user.password)
     ) {
       return true;
@@ -54,8 +54,8 @@ export default function Login(props) {
         <InputBox
           placeholder="Enter Username"
           type="text"
-          name="userName"
-          datacy="userName"
+          name="username"
+          datacy="username"
         />
         <InputBox
           placeholder="Enter Password"

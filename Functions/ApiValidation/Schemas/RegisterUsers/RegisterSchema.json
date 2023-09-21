@@ -1,0 +1,43 @@
+{
+  "title": "Register user",
+  "description": "describes properties required to register a user",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "pattern": "^[a-z0-9]{6,}$",
+      "description": "unique identity key created by user to access user's account"
+    },
+
+    "firstName": {
+      "type": "string",
+      "pattern": "^[a-zA-Z]{1,}$",
+      "description": "first name of the account user"
+    },
+
+    "lastName": {
+      "type": "string",
+      "pattern": "^[a-zA-Z]{1,}$",
+      "description": "last name of the account user"
+    },
+
+    "password": {
+      "type": "string",
+      "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,}$",
+      "description": "user's password to authenticate"
+    },
+
+    "confirmPassword": {
+      "type": "string",
+      "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,}$",
+      "description": "user's password to authenticate"
+    }
+  },
+  "required": [
+    "username",
+    "firstName",
+    "lastName",
+    "password",
+    "confirmPassword"
+  ]
+}

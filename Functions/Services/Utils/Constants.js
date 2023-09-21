@@ -4,7 +4,7 @@ const MONGO_URL =
 const PORT = 7000;
 
 const regex = {
-  userName: /^[a-z0-9]{6,}$/,
+  username: /^[a-z0-9]{6,}$/,
   password:
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/,
   text: /^[a-zA-Z]{1,}$/,

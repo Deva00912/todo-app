@@ -1,0 +1,12 @@
+{
+  "title": "isUsernameExists",
+  "description": "describes the properties required to check the username is existing in database or not",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "pattern": "^[a-z0-9]{6,}$"
+    }
+  },
+  "required": ["username"]
+}

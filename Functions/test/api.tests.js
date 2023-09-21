@@ -10,7 +10,7 @@ describe("Testing API", () => {
   describe("Register APIs", () => {
     it("Creating an user with valid credentials", async () => {
       const user = {
-        userName: "hello1985",
+        username: "hello1985",
         firstName: "Dokja",
         lastName: "Kim",
         password: "Dokja@1234",
@@ -34,7 +34,7 @@ describe("Testing API", () => {
 
     it("give warning when creating an existing user", async () => {
       const user = {
-        userName: "devendran0912",
+        username: "devendran0912",
         firstName: "Devendran",
         lastName: "M",
         password: "Dev@1234",
@@ -58,7 +58,7 @@ describe("Testing API", () => {
 
     it("give warning for invalid user details before creating user", async () => {
       const user = {
-        userName: "Devendran0912",
+        username: "Devendran0912",
         firstName: "Devendran",
         lastName: "M",
         password: "Dev@1234",
@@ -80,12 +80,12 @@ describe("Testing API", () => {
     });
 
     it("give warning when Checking username availability - username is already used", async () => {
-      const userName = "devendran0912";
+      const username = "devendran0912";
       const response = await fetch(
         "http://localhost:7000/register/username-check",
         {
           method: "POST",
-          body: JSON.stringify({ userName: userName }),
+          body: JSON.stringify({ username: username }),
           headers: headersList,
         }
       );
@@ -95,12 +95,12 @@ describe("Testing API", () => {
     });
 
     it("allow to create a user when Checking username availability - username is available", async () => {
-      const userName = "abc1234";
+      const username = "abc1234";
       const response = await fetch(
         "http://localhost:7000/register/username-check",
         {
           method: "POST",
-          body: JSON.stringify({ userName: userName }),
+          body: JSON.stringify({ username: username }),
           headers: headersList,
         }
       );
@@ -111,12 +111,12 @@ describe("Testing API", () => {
     });
 
     it("give warning when Checking username availability - incorrect username", async () => {
-      const userName = "Abc1234";
+      const username = "Abc1234";
       const response = await fetch(
         "http://localhost:7000/register/username-check",
         {
           method: "POST",
-          body: JSON.stringify({ userName: userName }),
+          body: JSON.stringify({ username: username }),
           headers: headersList,
         }
       );
@@ -130,7 +130,7 @@ describe("Testing API", () => {
   describe("Login APIs", () => {
     it("With Valid credentials", async () => {
       const user = {
-        userName: "devendran0912",
+        username: "devendran0912",
         password: "Dev@1234",
       };
 
@@ -148,7 +148,7 @@ describe("Testing API", () => {
 
     it("give warning With invalid credentials (password)", async () => {
       const user = {
-        userName: "devendran0912",
+        username: "devendran0912",
         password: "Dev@123466",
       };
 
@@ -166,7 +166,7 @@ describe("Testing API", () => {
 
     it("give warning With invalid credentials (username (invalid one) )", async () => {
       const user = {
-        userName: "Devendran0912",
+        username: "Devendran0912",
         password: "Dev@1234",
       };
 
@@ -184,7 +184,7 @@ describe("Testing API", () => {
 
     it("With no existing user", async () => {
       const user = {
-        userName: "goku1234",
+        username: "goku1234",
         password: "Dev@1234",
       };
 
@@ -303,9 +303,7 @@ describe("Testing API", () => {
             headers: headersList,
           }
         );
-        //   console.log("response", response);
         const data = await response.json();
-        // console.log("data", data);
 
         assert.equal(data.statusCode, 400);
         assert.equal(data.message, "Task not found!");
@@ -320,9 +318,7 @@ describe("Testing API", () => {
             headers: headersList,
           }
         );
-        //   console.log("response", response);
         const data = await response.json();
-        // console.log("data", data);
 
         assert.equal(data.statusCode, 200);
         assert.equal(data.message, "Task Deleted");
@@ -338,9 +334,7 @@ describe("Testing API", () => {
             headers: headersList,
           }
         );
-        //   console.log("response", response);
         const data = await response.json();
-        console.log("data", data);
 
         assert.equal(data.statusCode, 400);
         assert.equal(data.message, "Task not found!");

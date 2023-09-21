@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   addTaskApi,
-  clearUserTasksApi,
   deleteTaskApi,
   editTaskApi,
   getIndividualUserTasksApi,
@@ -80,22 +79,11 @@ export function useTasks(props) {
     }
   };
 
-  const clearUserTask = async (userId) => {
-    if (process.env.REACT_APP_STAGING === "local") {
-      const keepList = taskList.filter((task) => task.userId !== userId);
-      setTaskList(keepList);
-    } else {
-      const response = await clearUserTasksApi(userId);
-      return response;
-    }
-  };
-
   return {
     taskList,
     addTask,
     deleteTask,
     getIndividualUserTasks,
     editTask,
-    clearUserTask,
   };
 }

@@ -5,7 +5,6 @@ const {
   getAllUsersFromDB,
   getUserFromDB,
 } = require("../Services/MongoDB/UserServices");
-const { MONGO_URL } = require("../Services/Constants");
 const {
   addTaskInDB,
   updateTaskInDB,
@@ -13,6 +12,7 @@ const {
   findTaskByTaskId,
   getUserTasksFromDB,
 } = require("../Services/MongoDB/TaskServices");
+const { MONGO_URL } = require("../Services/Utils/Constants");
 
 const expect = require("chai").expect;
 
@@ -32,7 +32,7 @@ describe("Testing services", () => {
 
     it.skip("Creating a user", async () => {
       const user = {
-        userName: "kimdokja9813ee3492",
+        username: "kimdokja9813ee3492",
         firstName: "Dokja",
         lastName: "Kim",
         password: "Dokja@1234",
@@ -45,7 +45,7 @@ describe("Testing services", () => {
 
     it("Throw error - Duplicate user", async () => {
       const user = {
-        userName: "kimdokja9813ee3492",
+        username: "kimdokja9813ee3492",
         firstName: "Dokja",
         lastName: "Kim",
         password: "Dokja@1234",

@@ -1,7 +1,6 @@
 /* eslint-disable jest/valid-expect */
 const mongoose = require("mongoose");
 const expect = require("chai").expect;
-const { MONGO_URL } = require("../Services/Constants");
 const {
   validate,
   postCreateUser,
@@ -17,6 +16,8 @@ const {
   getUserTasksFeature,
 } = require("../Features/Tasks");
 
+const { MONGO_URL } = require("../Services/Utils/Constants");
+
 mongoose
   .connect(MONGO_URL)
   .then(() => {
@@ -28,7 +29,7 @@ describe("Testing Features", () => {
   describe("Users", () => {
     it("Validating user - valid details", () => {
       const user = {
-        userName: "devendran0912",
+        username: "devendran0912",
         firstName: "Devendran",
         lastName: "M",
         password: "Dev@1234",
@@ -40,7 +41,7 @@ describe("Testing Features", () => {
     describe("Validating user - Invalid details", () => {
       it("Incorrect username", () => {
         const user = {
-          userName: "Devendran0912",
+          username: "Devendran0912",
           firstName: "Devendran",
           lastName: "M",
           password: "Dev@1234",
@@ -51,7 +52,7 @@ describe("Testing Features", () => {
       });
       it("Invalid password", () => {
         const user = {
-          userName: "Devendran0912",
+          username: "Devendran0912",
           firstName: "Devendran",
           lastName: "M",
           password: "dev1234",
@@ -62,7 +63,7 @@ describe("Testing Features", () => {
       });
       it("Mismatch password & confirm password", () => {
         const user = {
-          userName: "Devendran0912",
+          username: "Devendran0912",
           firstName: "Devendran",
           lastName: "M",
           password: "Dev@1dd234",
@@ -73,7 +74,7 @@ describe("Testing Features", () => {
       });
       it("Empty first name", () => {
         const user = {
-          userName: "devendran0912",
+          username: "devendran0912",
           firstName: "",
           lastName: "M",
           password: "Dev@1234",
@@ -84,7 +85,7 @@ describe("Testing Features", () => {
       });
       it("Empty last name", () => {
         const user = {
-          userName: "devendran0912",
+          username: "devendran0912",
           firstName: "Devendran",
           lastName: "",
           password: "Dev@1234",
@@ -95,7 +96,7 @@ describe("Testing Features", () => {
       });
       it("Empty first &  last name", () => {
         const user = {
-          userName: "devendran0912",
+          username: "devendran0912",
           firstName: "",
           lastName: "",
           password: "Dev@1234",
@@ -106,7 +107,7 @@ describe("Testing Features", () => {
       });
       it("Empty password & confirmPassword", () => {
         const user = {
-          userName: "devendran0912",
+          username: "devendran0912",
           firstName: "Devendran",
           lastName: "M",
           password: "",
@@ -120,7 +121,7 @@ describe("Testing Features", () => {
     describe("Creating User", () => {
       it.skip("Creating a user with Valid details", async () => {
         const user = {
-          userName: "harrystyles33332",
+          username: "harrystyles33332",
           firstName: "Harry",
           lastName: "Styles",
           password: "Dev@1234",
@@ -135,7 +136,7 @@ describe("Testing Features", () => {
       });
       it.skip("Creating an existing user", async () => {
         const user = {
-          userName: "harrystyles33332",
+          username: "harrystyles33332",
           firstName: "Harry",
           lastName: "Styles",
           password: "Dev@1234",

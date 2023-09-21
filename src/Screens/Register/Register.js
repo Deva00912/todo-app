@@ -9,19 +9,19 @@ export default function Register(props) {
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
-    userName: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
 
   const validate = () => {
-    return user.userName &&
+    return user.username &&
       user.firstName &&
       user.lastName &&
       user.confirmPassword &&
       user.password &&
       user.password === user.confirmPassword &&
-      regex.userName.test(user.userName) &&
+      regex.username.test(user.username) &&
       regex.password.test(user.password) &&
       regex.text.test(user.firstName) &&
       regex.text.test(user.lastName)
@@ -63,8 +63,8 @@ export default function Register(props) {
         <InputBox
           placeholder="Username"
           type="text"
-          name="userName"
-          datacy="userName"
+          name="username"
+          datacy="username"
         />
         <InputBox
           placeholder="First name"

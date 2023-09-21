@@ -32,6 +32,7 @@ export function useAuth() {
       throw new Error("Invalid parameters");
     } else {
       if (process.env.REACT_APP_STAGING === "local") {
+        console.log("user - create", user);
         setAllUser([...allUser, user]);
         setLoggedInUser(user);
       } else {
@@ -47,14 +48,16 @@ export function useAuth() {
       throw new Error("Invalid parameters");
     } else {
       if (process.env.REACT_APP_STAGING === "local") {
+        console.log("user - username", user);
         const findUser = allUser.find(
-          (userData) => userData?.userName === user.userName
+          (userData) => userData?.username === user.username
         );
-        if (Object.values(findUser).length) {
+        console.log("findUser", findUser);
+        if (findUser && Object.values(findUser).length) {
           throw new Error("User already exists!");
         }
       } else {
-        const response = await checkUsernameAvailabilityApi(user.userName);
+        const response = await checkUsernameAvailabilityApi(user.username);
         return response;
       }
     }
@@ -74,7 +77,7 @@ export function useAuth() {
     } else {
       if (process.env.REACT_APP_STAGING === "local") {
         const findUser = allUser.find(
-          (userData) => userData?.userName === user.userName
+          (userData) => userData?.username === user.username
         );
         if (!findUser) {
           throw new Error("User does not exists!");

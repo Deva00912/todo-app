@@ -6,7 +6,7 @@ describe("checking everything", () => {
 
   it("Allows user to enter details", () => {
     //register
-    cy.get("[data-cy=userName]").type("devendran0912");
+    cy.get("[data-cy=username]").type("devendran0912");
     cy.get('[data-cy="firstName"]').type("Devendran");
     cy.get('[data-cy="lastName"]').type("M");
     cy.get("[data-cy=password]").type("Dev@1234");
@@ -20,7 +20,7 @@ describe("checking everything", () => {
     cy.get('[data-cy="logOutButton"]').click();
 
     //login
-    cy.get("[data-cy=userName]").type("devendran0912");
+    cy.get("[data-cy=username]").type("devendran0912");
     cy.get("[data-cy=password]").type("Dev@1234");
     cy.get('[data-cy="logInButton"]').click();
 

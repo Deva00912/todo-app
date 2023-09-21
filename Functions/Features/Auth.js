@@ -1,4 +1,4 @@
-const { regex } = require("../Services/Constants");
+const { regex } = require("../Services/Utils/Constants");
 const {
   createUserInDB,
   getAllUsersFromDB,
@@ -6,13 +6,13 @@ const {
 } = require("../Services/MongoDB/UserServices");
 
 const validate = (userData) => {
-  return userData.userName &&
+  return userData.username &&
     userData.firstName &&
     userData.lastName &&
     userData.confirmPassword &&
     userData.password &&
     userData.password === userData.confirmPassword &&
-    regex.userName.test(userData.userName) &&
+    regex.username.test(userData.username) &&
     regex.password.test(userData.password) &&
     regex.text.test(userData.firstName) &&
     regex.text.test(userData.lastName)
@@ -21,7 +21,7 @@ const validate = (userData) => {
 };
 
 const validateUsername = (username) => {
-  return regex?.userName.test(username) ? true : false;
+  return regex?.username.test(username) ? true : false;
 };
 
 const throwAuthError = (message, code) => {
@@ -53,7 +53,6 @@ const postIsUsernameExist = async (username) => {
   const message = !response
     ? "Username is available"
     : "Username is already in use";
-
   return {
     message: message,
     data: !response ? [] : response,

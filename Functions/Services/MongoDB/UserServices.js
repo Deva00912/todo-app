@@ -13,7 +13,7 @@ const getAllUsersFromDB = async () => {
 };
 
 const getUserFromDB = async (username) => {
-  return await User.findOne({ userName: username });
+  return await User.findOne({ username: username });
 };
 
 module.exports = {
