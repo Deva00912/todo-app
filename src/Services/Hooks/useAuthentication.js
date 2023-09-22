@@ -32,7 +32,6 @@ export function useAuth() {
       throw new Error("Invalid parameters");
     } else {
       if (process.env.REACT_APP_STAGING === "local") {
-        console.log("user - create", user);
         setAllUser([...allUser, user]);
         setLoggedInUser(user);
       } else {
@@ -48,11 +47,9 @@ export function useAuth() {
       throw new Error("Invalid parameters");
     } else {
       if (process.env.REACT_APP_STAGING === "local") {
-        console.log("user - username", user);
         const findUser = allUser.find(
           (userData) => userData?.username === user.username
         );
-        console.log("findUser", findUser);
         if (findUser && Object.values(findUser).length) {
           throw new Error("User already exists!");
         }

@@ -24,7 +24,10 @@ class ErrorBoundary extends Component {
       return (
         <div className="display-flex flex-direction-column align-item-center justify-content-center color-white height-inherit width-inherit ">
           <div className="font-size-38px ">Something went wrong!</div>
-          <Button onClick={this.props.logoutOnClick} value="Logout" />
+          <Button
+            onClick={this.props.handleErrorBoundaryOnClick}
+            value="Logout"
+          />
         </div>
       );
     }

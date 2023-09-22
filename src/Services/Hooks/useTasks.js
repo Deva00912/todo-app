@@ -30,10 +30,9 @@ export function useTasks(props) {
         if (!taskList) {
           setTaskList(task);
           return true;
-        } else {
-          setTaskList([...taskList, task]);
-          return true;
         }
+        setTaskList([...taskList, task]);
+        return true;
       } else {
         const response = await addTaskApi(task);
         return response;
@@ -56,11 +55,10 @@ export function useTasks(props) {
       if (process.env.REACT_APP_STAGING === "local") {
         if (!taskList) {
           return [];
-        } else {
-          const filterTask = taskList.filter((task) => task?.userId === userId);
-          filterTask.sort((a, b) => b.timestamp - a.timestamp);
-          return filterTask;
         }
+        const filterTask = taskList.filter((task) => task?.userId === userId);
+        filterTask.sort((a, b) => b.timestamp - a.timestamp);
+        return filterTask;
       } else {
         const response = await getIndividualUserTasksApi(userId);
         return response;

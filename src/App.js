@@ -25,10 +25,10 @@ const PublicRoute = ({ children, isLogged }) => {
 
 function App() {
   const navigate = useNavigate();
-  const auth = useAuth({ navigate: navigate });
+  const auth = useAuth();
   const task = useTasks(auth);
 
-  const logoutOnClick = () => {
+  const handleErrorBoundaryOnClick = () => {
     auth.logOut();
     window.location.reload();
   };
@@ -36,9 +36,8 @@ function App() {
   return (
     <>
       <ErrorBoundary
-        logoutOnClick={() => {
-          console.log("first");
-          logoutOnClick();
+        handleErrorBoundaryOnClick={() => {
+          handleErrorBoundaryOnClick();
         }}
         navigate={navigate}
       >
