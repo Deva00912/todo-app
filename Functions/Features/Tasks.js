@@ -6,16 +6,15 @@ const {
   getUserTasksFromDB,
 } = require("../Services/MongoDB/TaskServices");
 
-const throwTaskError = (message, code) => {
+const throwTaskError = (message) => {
   const error = new Error(message);
-  error.code = code;
-  error.name = "TypeError";
+  error.name = "TaskError";
   throw error;
 };
 
 const addTaskFeature = async (task) => {
   if (!task || !task.entry) {
-    throwTaskError("Task cannot be empty", 3330);
+    throwTaskError("Task cannot be empty");
   }
   await addTaskInDB(task);
   return { message: "Task Added!" };
@@ -23,35 +22,35 @@ const addTaskFeature = async (task) => {
 
 const updateTask = async (taskId, entry) => {
   if (!taskId) {
-    throwTaskError("Task not found!", 3321);
+    throwTaskError("Task not found!");
   }
   if (!entry) {
-    throwTaskError("Task cannot be empty", 3330);
+    throwTaskError("Task cannot be empty");
   }
   const taskByTaskId = await findTaskByTaskId(taskId);
   if (!taskByTaskId) {
-    throwTaskError("Task not found!", 3321);
+    throwTaskError("Task not found!");
   }
-  await updateTaskInDB(taskId, entry);
-  return { message: "Task edited" };
+  const updatedTask = await updateTaskInDB(taskId, entry);
+  return { message: "Task edited", data: updatedTask };
 };
 
 const deleteTaskFeature = async (taskId) => {
   if (!taskId) {
-    throwTaskError("Task not found!", 3321);
+    throwTaskError("Task not found!");
   }
   const response = await findTaskByTaskId(taskId);
   if (!response) {
-    throwTaskError("Task not found!", 3321);
+    throwTaskError("Task not found!");
   }
-  await deleteTaskInDB(taskId);
-  return { message: "Task deleted" };
+  const deletedTask = await deleteTaskInDB(taskId);
+  return { message: "Task deleted", data: deletedTask };
 };
 
 const getUserTasksFeature = async (userId) => {
   const response = await getUserTasksFromDB(userId);
   if (!response.length) {
-    throwTaskError("No Tasks", 3402);
+    throwTaskError("No Tasks");
   }
   return { message: "User Tasks", data: response };
 };

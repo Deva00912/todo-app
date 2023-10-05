@@ -24,9 +24,8 @@ const validateUsername = (username) => {
   return regex?.username.test(username) ? true : false;
 };
 
-const throwAuthError = (message, code) => {
+const throwAuthError = (message) => {
   const error = new Error(message);
-  error.code = code;
   error.name = "AuthError";
   throw error;
 };
@@ -40,7 +39,7 @@ const postCreateUser = async (userData) => {
 const getGetAllUsers = async () => {
   const allUsers = await getAllUsersFromDB();
   if (!allUsers.length) {
-    throwAuthError("No users", 5220);
+    throwAuthError("No users");
   }
   return {
     message: "All Users",
@@ -62,10 +61,10 @@ const postIsUsernameExist = async (username) => {
 const checkPasswordAndLogin = async (username, password) => {
   const user = await getUserFromDB(username);
   if (!user) {
-    throwAuthError("User does not exists", 5310);
+    throwAuthError("User does not exists");
   }
   if (user?.password !== password) {
-    throwAuthError("Invalid credentials", 5400);
+    throwAuthError("Invalid credentials");
   }
   return {
     message: "Logged in",

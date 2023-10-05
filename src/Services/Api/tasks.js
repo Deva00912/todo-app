@@ -19,9 +19,9 @@ export const addTaskApi = async (task) => {
   }
 };
 
-export const deleteTaskApi = async (taskDeleteId) => {
+export const deleteTaskApi = async (taskId) => {
   const response = await fetch(
-    `http://localhost:7000/task/deleteTask/${taskDeleteId}`,
+    `http://localhost:7000/task/deleteTask/${taskId}`,
     {
       method: `DELETE`,
       headers: headersList,
@@ -68,5 +68,5 @@ export const editTaskApi = async (taskId, entry) => {
   if (response.status !== 200) {
     throw new Error(editedTask.message);
   }
-  return editedTask.message;
+  return editedTask;
 };

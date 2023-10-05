@@ -7,6 +7,7 @@ import Tasks from "./Screens/Task/Tasks";
 import { useAuth } from "./Services/Hooks/useAuthentication.js";
 import { useTasks } from "./Services/Hooks/useTasks.js";
 import ErrorBoundary from "./Components/ErrorBoundary/ErrorBoundary";
+import { connect } from "react-redux";
 
 const ProtectedRoute = ({ children, isLogged }) => {
   if (!isLogged) {
@@ -23,7 +24,7 @@ const PublicRoute = ({ children, isLogged }) => {
   return children;
 };
 
-function App() {
+function App(props) {
   const navigate = useNavigate();
   const auth = useAuth();
   const task = useTasks(auth);
@@ -91,11 +92,21 @@ function App() {
         </Routes>
 
         <dt>
-          <ToastContainer autoClose={1000} />
+          <ToastContainer autoClose={1000} theme="dark" />
         </dt>
       </ErrorBoundary>
     </>
   );
 }
 
-export default App;
+const mapStateToProps = function (state) {
+  return {
+    data: state.data,
+  };
+};
+
+const mapDispatchToProps = function () {
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

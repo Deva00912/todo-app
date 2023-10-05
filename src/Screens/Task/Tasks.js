@@ -4,6 +4,8 @@ import InputBox from "../../Components/InputBox/InputBox";
 import "./Tasks.css";
 import { toast } from "react-toastify";
 import uuid from "react-uuid";
+import { taskActions } from "../../Redux/Saga/tasksSaga";
+import { useSelector } from "react-redux";
 
 export default function Tasks(props) {
   const [entry, setEntry] = useState({
@@ -14,6 +16,9 @@ export default function Tasks(props) {
   const [clicked, setClicked] = useState("");
   const [create, setCreate] = useState(false);
   const [edit, setEdit] = useState(false);
+
+  //Redux - Saga
+  const userId = useSelector((state) => state.auth?.data.userId);
 
   useEffect(() => {
     getUserTasksAndShowTasks();
@@ -207,6 +212,39 @@ export default function Tasks(props) {
             }}
           />
         </div>
+      </div>
+      <div>
+        <Button
+          value="Add Task"
+          onClick={() => {
+            taskActions.addTask({
+              userId: userId,
+              entry: "Testing Saga",
+            });
+          }}
+        />
+
+        <Button
+          value="Get User Tasks"
+          onClick={() => {
+            taskActions.getUserTasks(userId);
+          }}
+        />
+        <Button
+          value="Edit Task"
+          onClick={() => {
+            taskActions.editTask({
+              taskId: "651e85504a819a20809e9f4b",
+              entry: "Testing Saga - edit",
+            });
+          }}
+        />
+        <Button
+          value="Delete Task"
+          onClick={() => {
+            taskActions.deleteTask("651e92d4f1c078dc366dda35");
+          }}
+        />
       </div>
     </>
   );

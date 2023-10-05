@@ -13,23 +13,22 @@ const {
   getUserTasksFeature,
 } = require("../Features/Tasks");
 
-const throwError = (message, code, name) => {
+const throwError = (message, name) => {
   const error = new Error(message);
-  error.code = code;
   error.name = name;
   throw error;
 };
 
 const validateLogin = async (username, password) => {
   if (!validateUsername(username)) {
-    throwError("Entered Username is invalid", 5211, "AuthError");
+    throwError("Entered Username is invalid", "AuthError");
   }
   return await checkPasswordAndLogin(username, password);
 };
 
 const createUser = async (userData) => {
   if (!validate(userData)) {
-    throwError("Enter details correctly", 5130, "AuthError");
+    throwError("Enter details correctly", "AuthError");
   }
   return await postCreateUser(userData);
 };
@@ -40,7 +39,7 @@ const getAllUsers = async () => {
 
 const isUsernameExist = async (username) => {
   if (!validateUsername(username)) {
-    throwError("Invalid username", 5301, "AuthError");
+    throwError("Invalid username", "AuthError");
   }
 
   return await postIsUsernameExist(username);

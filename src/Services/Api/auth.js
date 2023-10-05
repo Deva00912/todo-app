@@ -53,6 +53,7 @@ export async function checkUsernameAvailabilityApi(username) {
     if (response.status !== 200) {
       throw new Error(findUser.message);
     }
+    return findUser;
   }
 }
 

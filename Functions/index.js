@@ -30,3 +30,14 @@ mongoose
 app.use("/register", registerRouter);
 app.use("/login", loginRouter);
 app.use("/task", tasksRouter);
+app.use("/random", (req, res) => {
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
+  res
+    .status(200)
+    .json({
+      randomValue: getRandomInt(3),
+    })
+    .end();
+});

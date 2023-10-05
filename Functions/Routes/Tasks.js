@@ -6,12 +6,7 @@ const { getUserTask } = require("../Repository/Controllers.js");
 const { validateSchema } = require("../ApiValidation/ApiValidator.js");
 
 const identifyTasksErrors = (error) => {
-  if (
-    error.code === 3330 ||
-    error.code === 3321 ||
-    error.code === 3402 ||
-    error.code === 3600
-  ) {
+  if (error.name === "TaskError") {
     return { statusCode: 400, message: error.message };
   } else {
     return { statusCode: 500, message: error.message };

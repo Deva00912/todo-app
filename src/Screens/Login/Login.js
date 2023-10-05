@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
 import { regex } from "../../Services/Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
+import { authActions } from "../../Redux/Saga/authSaga";
 
 export default function Login(props) {
   const [user, setUser] = useState({ username: "", password: "" });
@@ -74,6 +75,44 @@ export default function Login(props) {
           Don't have an account?
         </div>
       </form>
+      <div>
+        <Button
+          type="button"
+          value="Creating User"
+          onClick={() => {
+            console.log(
+              "dispatching an action : ",
+              authActions.registerUser({
+                username: "linming09",
+                firstName: "Ming",
+                lastName: "Lin",
+                password: "Dev@*0912",
+                confirmPassword: "Dev@*0912",
+              })
+            );
+          }}
+          datacy="logInButton"
+        />
+        <Button
+          type="button"
+          value="Log in User"
+          onClick={() => {
+            authActions.logInUser({
+              username: "devendran0912",
+              password: "Dev@1234",
+            });
+          }}
+          datacy="logInButton"
+        />
+        <Button
+          type="button"
+          value="Log Out"
+          onClick={() => {
+            authActions.logOut();
+          }}
+          datacy="logInButton"
+        />
+      </div>
     </>
   );
 }

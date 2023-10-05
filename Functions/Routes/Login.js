@@ -3,15 +3,7 @@ const { validateLogin } = require("../Repository/Controllers.js");
 const { validateSchema } = require("../ApiValidation/ApiValidator.js");
 
 const identifyAuthError = (error) => {
-  if (
-    error.code === 11000 ||
-    error.code === 5220 ||
-    error.code === 5310 ||
-    error.code === 5400 ||
-    error.code === 5211 ||
-    error.code === 5130 ||
-    error.code === 5301
-  ) {
+  if (error.name === "AuthError") {
     return { statusCode: 400, message: error.message };
   } else {
     return { statusCode: 500, message: error.message };
