@@ -2,12 +2,13 @@ import { all, put, takeEvery } from "redux-saga/effects";
 import store from "../Store/store";
 import {
   checkUserCredentialsApi,
+  checkUsernameAvailabilityApi,
   createUserApi,
 } from "../../Services/Api/auth";
 import { toast } from "react-toastify";
 
 export const actionTypes = {
-  REGISTER_USER: "REGISTER_USER",
+  REGISTER: "REGISTER",
   LOGIN: "LOGIN",
   LOGOUT: "LOGOUT",
 };
@@ -21,9 +22,9 @@ export const authActions = {
       },
     });
   },
-  registerUser: (user) => {
+  register: (user) => {
     store.dispatch({
-      type: actionTypes.REGISTER_USER,
+      type: actionTypes.REGISTER,
       payload: {
         user: { ...user },
       },
@@ -32,9 +33,6 @@ export const authActions = {
   logOut: () => {
     store.dispatch({
       type: actionTypes.LOGOUT,
-      payload: {
-        data: {},
-      },
     });
   },
 };
@@ -61,21 +59,28 @@ function* logInUserWorker(action) {
   }
 }
 
-function* registerUserWorker(action) {
+function* registerWorker(action) {
   try {
-    yield createUserApi(action.payload.user);
+    yield checkUsernameAvailabilityApi(action.payload.user.username);
+    const response = yield createUserApi(action.payload.user);
+    yield put({
+      type: "SET_LOGGED_USER",
+      payload: {
+        data: response,
+      },
+    });
     toast.success("Registered");
   } catch (error) {
     toast.error(error.message);
   }
 }
 
-function* logOutWorker(action) {
+function* logOutWorker() {
   try {
     yield put({
       type: "SET_LOGGED_USER",
       payload: {
-        data: action.payload.data,
+        data: {},
       },
     });
     toast.success("Logout successful");
@@ -87,7 +92,7 @@ function* logOutWorker(action) {
 export function* authWatcher() {
   yield all([
     takeEvery("LOGIN", logInUserWorker),
-    takeEvery("REGISTER_USER", registerUserWorker),
+    takeEvery("REGISTER", registerWorker),
     takeEvery("LOGOUT", logOutWorker),
   ]);
 }

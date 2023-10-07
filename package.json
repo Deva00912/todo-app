@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@reduxjs/toolkit": "^1.9.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
     "react": "^18.2.0",
@@ -17,15 +16,13 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.2.3",
-    "redux-thunk": "^2.4.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "start:local": "set PORT=3000 && cross-env REACT_APP_STAGING=local react-scripts start",
+    "start:saga": "set PORT=3000 && cross-env REACT_APP_STAGING=saga react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "cypress:open": "cypress open"
   },
   "eslintConfig": {

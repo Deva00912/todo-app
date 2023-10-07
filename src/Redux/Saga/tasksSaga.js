@@ -13,6 +13,7 @@ export const actionTypes = {
   EDIT_TASK: "EDIT_TASK",
   DELETE_TASK: "DELETE_TASK",
   GET_USER_TASKS: "GET_USER_TASKS",
+  CLEAR_USER_TASKS: "CLEAR_USER_TASKS",
 };
 
 export const taskActions = {
@@ -51,6 +52,12 @@ export const taskActions = {
       },
     });
   },
+
+  clearUserTasks: () => {
+    store.dispatch({
+      type: actionTypes.CLEAR_USER_TASKS,
+    });
+  },
 };
 
 function* addTaskWorker(action) {
@@ -65,13 +72,14 @@ function* addTaskWorker(action) {
 function* getUserTasksWorker(action) {
   try {
     const userTasks = yield getIndividualUserTasksApi(action.payload.userId);
-    // console.log("userTasks", userTasks);
-    yield put({
-      type: "SET_USER_TASKS",
-      payload: {
-        userTasks: userTasks,
-      },
-    });
+    if (userTasks.length) {
+      yield put({
+        type: "SET_USER_TASKS",
+        payload: {
+          userTasks: userTasks,
+        },
+      });
+    }
   } catch (error) {
     toast.error(error.message);
   }
@@ -84,6 +92,7 @@ function* editTaskWorker(action) {
       action.payload.editTask.entry
     );
     console.log("response", response);
+    toast.success("Task Edited");
   } catch (error) {
     toast.error(error.message);
   }
@@ -98,11 +107,25 @@ function* deleteTaskWorker(action) {
   }
 }
 
+function* clearUserTasksWorker(action) {
+  try {
+    yield put({
+      type: "SET_USER_TASKS",
+      payload: {
+        userTasks: [],
+      },
+    });
+  } catch (error) {
+    toast.error(error.message);
+  }
+}
+
 export function* taskWatcher() {
   yield all([
     takeEvery("GET_USER_TASKS", getUserTasksWorker),
     takeEvery("ADD_TASK", addTaskWorker),
     takeEvery("EDIT_TASK", editTaskWorker),
     takeEvery("DELETE_TASK", deleteTaskWorker),
+    takeEvery("CLEAR_USER_TASKS", clearUserTasksWorker),
   ]);
 }

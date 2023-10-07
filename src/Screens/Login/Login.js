@@ -25,15 +25,20 @@ export default function Login(props) {
     if (!validate()) {
       return toast.error("Entered details is wrong!");
     }
-    try {
-      const foundUser = await props.auth.checkUserCredentials(user);
-      if (Object.values(foundUser).length > 0) {
-        props.auth?.setLogInUser(foundUser);
-        toast.success("Logged in");
-        props.navigate("/");
+    if (process.env.REACT_APP_STAGING === "saga") {
+      authActions.logInUser(user);
+      props.navigate("/");
+    } else {
+      try {
+        const foundUser = await props.auth.checkUserCredentials(user);
+        if (Object.values(foundUser).length > 0) {
+          props.auth?.setLogInUser(foundUser);
+          toast.success("Logged in");
+          props.navigate("/");
+        }
+      } catch (error) {
+        toast.error(error.message);
       }
-    } catch (error) {
-      toast.error(error.message);
     }
   };
 
@@ -75,44 +80,6 @@ export default function Login(props) {
           Don't have an account?
         </div>
       </form>
-      <div>
-        <Button
-          type="button"
-          value="Creating User"
-          onClick={() => {
-            console.log(
-              "dispatching an action : ",
-              authActions.registerUser({
-                username: "linming09",
-                firstName: "Ming",
-                lastName: "Lin",
-                password: "Dev@*0912",
-                confirmPassword: "Dev@*0912",
-              })
-            );
-          }}
-          datacy="logInButton"
-        />
-        <Button
-          type="button"
-          value="Log in User"
-          onClick={() => {
-            authActions.logInUser({
-              username: "devendran0912",
-              password: "Dev@1234",
-            });
-          }}
-          datacy="logInButton"
-        />
-        <Button
-          type="button"
-          value="Log Out"
-          onClick={() => {
-            authActions.logOut();
-          }}
-          datacy="logInButton"
-        />
-      </div>
     </>
   );
 }

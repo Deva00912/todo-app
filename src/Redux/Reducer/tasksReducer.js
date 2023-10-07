@@ -11,12 +11,6 @@ const tasksReducer = (
         userTasks: action.payload.userTasks,
       };
 
-    case "UPDATE_USER_TASKS":
-      return {
-        ...state.userTasks,
-        userTasks: action.payload.userTasks,
-      };
-
     default:
       return state;
   }

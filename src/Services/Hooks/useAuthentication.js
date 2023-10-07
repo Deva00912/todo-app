@@ -37,7 +37,6 @@ export function useAuth() {
       } else {
         const response = await createUserApi(user);
         setLoggedInUser(response);
-        return response;
       }
     }
   };

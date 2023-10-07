@@ -32,8 +32,8 @@ const throwAuthError = (message) => {
 
 //Creating a user
 const postCreateUser = async (userData) => {
-  await createUserInDB(userData);
-  return { message: "User created" };
+  const data = await createUserInDB(userData);
+  return { message: "User created", data: data };
 };
 
 const getGetAllUsers = async () => {

@@ -5,86 +5,115 @@ import "./Tasks.css";
 import { toast } from "react-toastify";
 import uuid from "react-uuid";
 import { taskActions } from "../../Redux/Saga/tasksSaga";
-import { useSelector } from "react-redux";
+import { authActions } from "../../Redux/Saga/authSaga";
 
 export default function Tasks(props) {
   const [entry, setEntry] = useState({
-    userId: props.auth.loggedInUser?.userId,
+    userId:
+      process.env.REACT_APP_STAGING === "saga"
+        ? props.auth.data.userId
+        : props.auth.loggedInUser?.userId,
     entry: "",
   });
   const [showTask, setShowTask] = useState([]);
   const [clicked, setClicked] = useState("");
   const [create, setCreate] = useState(false);
-  const [edit, setEdit] = useState(false);
 
   //Redux - Saga
-  const userId = useSelector((state) => state.auth?.data.userId);
 
   useEffect(() => {
     getUserTasksAndShowTasks();
-
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     if (create) {
+      console.log("delete - create");
       getUserTasksAndShowTasks();
       setCreate(false);
+      console.log(props.task.userTasks);
     }
-    if (edit) {
-      getUserTasksAndShowTasks();
-      setEdit(false);
-    }
+
     // eslint-disable-next-line
-  }, [edit, create, clicked]);
+  }, [create, clicked]);
+
+  //Saga
+  useEffect(() => {
+    setShowTask(props.task.userTasks);
+  }, [props.task.userTasks]);
 
   const getUserTasksAndShowTasks = async () => {
-    try {
-      const getTasks = await props.task.getIndividualUserTasks(
-        props.auth.loggedInUser?.userId
-      );
-      setShowTask(getTasks);
-    } catch (error) {
-      toast.error(error.message);
+    if (process.env.REACT_APP_STAGING === "saga") {
+      taskActions.getUserTasks(props.auth.data.userId);
+    } else {
+      try {
+        const getTasks = await props.task.getIndividualUserTasks(
+          props.auth.loggedInUser?.userId
+        );
+        setShowTask(getTasks);
+      } catch (error) {
+        toast.error(error.message);
+      }
     }
   };
 
   const logOut = () => {
-    props.auth.logOut();
+    if (process.env.REACT_APP_STAGING === "saga") {
+      authActions.logOut();
+    } else {
+      props.auth.logOut();
+      toast.success("Logout successful");
+    }
     props.navigate("/login");
   };
 
   const handleAddTask = async () => {
-    try {
-      await props.task.addTask(
-        process.env.REACT_APP_STAGING === "local"
-          ? { ...entry, taskId: uuid() }
-          : entry
-      );
+    if (process.env.REACT_APP_STAGING === "saga") {
+      taskActions.addTask(entry);
       setCreate(true);
-      toast.success("Task Added");
-    } catch (error) {
-      toast.error(error.message);
+    } else {
+      try {
+        await props.task.addTask(
+          process.env.REACT_APP_STAGING === "local"
+            ? { ...entry, taskId: uuid() }
+            : entry
+        );
+        setCreate(true);
+        toast.success("Task Added");
+      } catch (error) {
+        toast.error(error.message);
+      }
     }
   };
 
   const handleEditTask = async (taskEditId, entry) => {
-    try {
-      await props.task.editTask(taskEditId, entry);
-      setEdit(true);
-      toast.success("Task Edited");
-    } catch (error) {
-      toast.error(error.message);
+    if (process.env.REACT_APP_STAGING === "saga") {
+      taskActions.editTask({ taskId: taskEditId, entry: entry.entry });
+      setCreate(true);
+    } else {
+      try {
+        await props.task.editTask(taskEditId, entry);
+        setCreate(true);
+        toast.success("Task Edited");
+      } catch (error) {
+        toast.error(error.message);
+      }
     }
   };
 
   const handleDeleteTask = async (taskId) => {
-    try {
-      await props.task.deleteTask(taskId);
+    if (process.env.REACT_APP_STAGING === "saga") {
+      console.log("delete - saga");
+      taskActions.deleteTask(taskId);
       setCreate(true);
-      toast.success("Task deleted");
-    } catch (error) {
-      toast.error(error.message);
+    } else {
+      try {
+        await props.task.deleteTask(taskId);
+        setCreate(true);
+        toast.success("Task deleted");
+      } catch (error) {
+        toast.error(error.message);
+      }
     }
   };
 
@@ -140,7 +169,7 @@ export default function Tasks(props) {
         <div>
           <div className="showBox">
             {showTask?.length > 0 ? (
-              showTask?.map((data, index) => (
+              showTask.map((data, index) => (
                 <div
                   // className="margin-4px padding-8px width-inherit display-flex background-color-teal-blue justify-content-space-evenly height-40px border-radius-8px"
                   style={{
@@ -173,9 +202,6 @@ export default function Tasks(props) {
                     className={`cursor-pointer`}
                     value="Edit"
                     data-cy="editButton"
-                    style={{
-                      disabled: data.taskId === clicked ? true : false,
-                    }}
                     onClick={() => {
                       const taskEditId = showTask[index].taskId;
                       handleEditTask(taskEditId, entry);
@@ -191,6 +217,7 @@ export default function Tasks(props) {
                     onClick={() => {
                       handleDeleteTask(showTask[index].taskId);
                     }}
+                    disabled={data.taskId === clicked ? true : false}
                   >
                     Delete
                   </div>
@@ -207,8 +234,8 @@ export default function Tasks(props) {
             datacy="logOutButton"
             value="Logout"
             onClick={() => {
+              taskActions.clearUserTasks();
               logOut();
-              toast.success("Logout successful");
             }}
           />
         </div>
@@ -218,7 +245,7 @@ export default function Tasks(props) {
           value="Add Task"
           onClick={() => {
             taskActions.addTask({
-              userId: userId,
+              // userId: userId,
               entry: "Testing Saga",
             });
           }}
@@ -227,7 +254,7 @@ export default function Tasks(props) {
         <Button
           value="Get User Tasks"
           onClick={() => {
-            taskActions.getUserTasks(userId);
+            // taskActions.getUserTasks(userId);
           }}
         />
         <Button

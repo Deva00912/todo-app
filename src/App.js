@@ -34,6 +34,25 @@ function App(props) {
     window.location.reload();
   };
 
+  const checkedLoggedUser = (from) => {
+    if (process.env.REACT_APP_STAGING === "saga") {
+      console.log(
+        from,
+        "first",
+        props.auth.data && typeof props.auth.data.userId === "string"
+          ? true
+          : false
+      );
+      return props.auth.data && typeof props.auth.data.userId === "string"
+        ? true
+        : false;
+    } else {
+      return auth.loggedInUser && typeof auth.loggedInUser.userId === "string"
+        ? true
+        : false;
+    }
+  };
+
   return (
     <>
       <ErrorBoundary
@@ -46,14 +65,7 @@ function App(props) {
           <Route
             path="/login"
             element={
-              <PublicRoute
-                isLogged={
-                  auth.loggedInUser &&
-                  typeof auth.loggedInUser.userId === "string"
-                    ? true
-                    : false
-                }
-              >
+              <PublicRoute isLogged={checkedLoggedUser("login")}>
                 <Login navigate={navigate} auth={auth} />
               </PublicRoute>
             }
@@ -61,14 +73,7 @@ function App(props) {
           <Route
             path="/register"
             element={
-              <PublicRoute
-                isLogged={
-                  auth.loggedInUser &&
-                  typeof auth.loggedInUser.userId === "string"
-                    ? true
-                    : false
-                }
-              >
+              <PublicRoute isLogged={checkedLoggedUser("register")}>
                 <Register navigate={navigate} auth={auth} />
               </PublicRoute>
             }
@@ -77,15 +82,18 @@ function App(props) {
           <Route
             path="/"
             element={
-              <ProtectedRoute
-                isLogged={
-                  auth.loggedInUser &&
-                  typeof auth.loggedInUser.userId === "string"
-                    ? true
-                    : false
-                }
-              >
-                <Tasks navigate={navigate} auth={auth} task={task} />
+              <ProtectedRoute isLogged={checkedLoggedUser("tasks")}>
+                <Tasks
+                  navigate={navigate}
+                  auth={
+                    process.env.REACT_APP_STAGING === "saga" ? props.auth : auth
+                  }
+                  task={
+                    process.env.REACT_APP_STAGING === "saga"
+                      ? props.tasks
+                      : task
+                  }
+                />
               </ProtectedRoute>
             }
           />
@@ -101,7 +109,8 @@ function App(props) {
 
 const mapStateToProps = function (state) {
   return {
-    data: state.data,
+    auth: state.auth,
+    tasks: state.tasks,
   };
 };
 

@@ -31,6 +31,7 @@ export async function createUserApi(user) {
     if (response.status !== 201) {
       throw new Error(createdUser.message);
     }
+    return createdUser?.data;
   }
 }
 
@@ -53,7 +54,6 @@ export async function checkUsernameAvailabilityApi(username) {
     if (response.status !== 200) {
       throw new Error(findUser.message);
     }
-    return findUser;
   }
 }
 

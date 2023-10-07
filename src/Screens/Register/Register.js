@@ -4,6 +4,7 @@ import Button from "../../Components/Button/Button";
 import { regex } from "../../Services/Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
 import uuid from "react-uuid";
+import { authActions } from "../../Redux/Saga/authSaga";
 
 export default function Register(props) {
   const [user, setUser] = useState({
@@ -30,17 +31,22 @@ export default function Register(props) {
   };
 
   const handleSubmit = async () => {
-    try {
-      await props.auth.checkUsernameAvailability(user);
-      await props.auth.createUser(
-        process.env.REACT_APP_STAGING === "local"
-          ? { ...user, userId: uuid() }
-          : user
-      );
-      toast.success("Registered");
+    if (process.env.REACT_APP_STAGING === "saga") {
+      authActions.register(user);
       props.navigate("/");
-    } catch (error) {
-      toast.error(error.message);
+    } else {
+      try {
+        await props.auth.checkUsernameAvailability(user);
+        await props.auth.createUser(
+          process.env.REACT_APP_STAGING === "local"
+            ? { ...user, userId: uuid() }
+            : user
+        );
+        toast.success("Registered");
+        props.navigate("/");
+      } catch (error) {
+        toast.error(error.message);
+      }
     }
   };
 
