@@ -39,7 +39,6 @@ export const authActions = {
 
 function* logInUserWorker(action) {
   try {
-    console.log("Worker - action.payload: ", action.payload);
     const response = yield checkUserCredentialsApi({
       username: action.payload.username,
       password: action.payload.password,

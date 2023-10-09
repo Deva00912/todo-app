@@ -18,6 +18,7 @@ export default function Tasks(props) {
   const [showTask, setShowTask] = useState([]);
   const [clicked, setClicked] = useState("");
   const [create, setCreate] = useState(false);
+  const [edit, setEdit] = useState(false);
 
   //Redux - Saga
 
@@ -28,14 +29,18 @@ export default function Tasks(props) {
 
   useEffect(() => {
     if (create) {
-      console.log("delete - create");
       getUserTasksAndShowTasks();
       setCreate(false);
       console.log(props.task.userTasks);
     }
+    if (edit) {
+      getUserTasksAndShowTasks();
+      setEdit(false);
+      console.log(props.task.userTasks);
+    }
 
     // eslint-disable-next-line
-  }, [create, clicked]);
+  }, [create, edit, clicked]);
 
   //Saga
   useEffect(() => {
@@ -89,11 +94,11 @@ export default function Tasks(props) {
   const handleEditTask = async (taskEditId, entry) => {
     if (process.env.REACT_APP_STAGING === "saga") {
       taskActions.editTask({ taskId: taskEditId, entry: entry.entry });
-      setCreate(true);
+      taskActions.getUserTasks(props.auth.data.userId);
     } else {
       try {
         await props.task.editTask(taskEditId, entry);
-        setCreate(true);
+        setEdit(true);
         toast.success("Task Edited");
       } catch (error) {
         toast.error(error.message);
@@ -105,7 +110,6 @@ export default function Tasks(props) {
     if (process.env.REACT_APP_STAGING === "saga") {
       console.log("delete - saga");
       taskActions.deleteTask(taskId);
-      setCreate(true);
     } else {
       try {
         await props.task.deleteTask(taskId);
@@ -239,39 +243,6 @@ export default function Tasks(props) {
             }}
           />
         </div>
-      </div>
-      <div>
-        <Button
-          value="Add Task"
-          onClick={() => {
-            taskActions.addTask({
-              // userId: userId,
-              entry: "Testing Saga",
-            });
-          }}
-        />
-
-        <Button
-          value="Get User Tasks"
-          onClick={() => {
-            // taskActions.getUserTasks(userId);
-          }}
-        />
-        <Button
-          value="Edit Task"
-          onClick={() => {
-            taskActions.editTask({
-              taskId: "651e85504a819a20809e9f4b",
-              entry: "Testing Saga - edit",
-            });
-          }}
-        />
-        <Button
-          value="Delete Task"
-          onClick={() => {
-            taskActions.deleteTask("651e92d4f1c078dc366dda35");
-          }}
-        />
       </div>
     </>
   );

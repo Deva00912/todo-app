@@ -36,13 +36,6 @@ function App(props) {
 
   const checkedLoggedUser = (from) => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      console.log(
-        from,
-        "first",
-        props.auth.data && typeof props.auth.data.userId === "string"
-          ? true
-          : false
-      );
       return props.auth.data && typeof props.auth.data.userId === "string"
         ? true
         : false;

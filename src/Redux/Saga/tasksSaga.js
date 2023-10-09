@@ -87,11 +87,10 @@ function* getUserTasksWorker(action) {
 
 function* editTaskWorker(action) {
   try {
-    const response = yield editTaskApi(
+    yield editTaskApi(
       action.payload.editTask.taskId,
       action.payload.editTask.entry
     );
-    console.log("response", response);
     toast.success("Task Edited");
   } catch (error) {
     toast.error(error.message);
