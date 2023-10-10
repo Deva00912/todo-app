@@ -35,11 +35,12 @@ export const taskActions = {
     });
   },
 
-  deleteTask: (taskId) => {
+  deleteTask: (task) => {
     store.dispatch({
       type: actionTypes.DELETE_TASK,
       payload: {
-        taskId: taskId,
+        taskId: task.taskId,
+        userId: task.userId,
       },
     });
   },
@@ -64,6 +65,7 @@ function* addTaskWorker(action) {
   try {
     yield addTaskApi(action.payload.task);
     toast.success("Task Added");
+    yield taskActions.getUserTasks(action.payload.task.userId);
   } catch (error) {
     toast.error(error.message);
   }
@@ -92,6 +94,7 @@ function* editTaskWorker(action) {
       action.payload.editTask.entry
     );
     toast.success("Task Edited");
+    yield taskActions.getUserTasks(action.payload.editTask.userId);
   } catch (error) {
     toast.error(error.message);
   }
@@ -101,6 +104,7 @@ function* deleteTaskWorker(action) {
   try {
     yield deleteTaskApi(action.payload.taskId);
     toast.success("Task deleted");
+    yield taskActions.getUserTasks(action.payload.userId);
   } catch (error) {
     toast.error(error.message);
   }

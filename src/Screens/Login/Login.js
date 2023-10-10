@@ -4,21 +4,18 @@ import Button from "../../Components/Button/Button";
 import { regex } from "../../Services/Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
 import { authActions } from "../../Redux/Saga/authSaga";
+import { connect } from "react-redux";
 
-export default function Login(props) {
+function Login(props) {
   const [user, setUser] = useState({ username: "", password: "" });
 
   const validate = () => {
-    if (
+    return (
       user.username &&
       user.password &&
       regex.username.test(user.username) &&
       regex.password.test(user.password)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    );
   };
 
   const handleSubmit = async () => {
@@ -83,3 +80,15 @@ export default function Login(props) {
     </>
   );
 }
+
+const mapStateToProps = function (state) {
+  return {
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = function () {
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

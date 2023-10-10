@@ -6,8 +6,10 @@ import { toast } from "react-toastify";
 import uuid from "react-uuid";
 import { taskActions } from "../../Redux/Saga/tasksSaga";
 import { authActions } from "../../Redux/Saga/authSaga";
+import { connect } from "react-redux";
 
-export default function Tasks(props) {
+function Tasks(props) {
+  console.log("props", props);
   const [entry, setEntry] = useState({
     userId:
       process.env.REACT_APP_STAGING === "saga"
@@ -31,12 +33,10 @@ export default function Tasks(props) {
     if (create) {
       getUserTasksAndShowTasks();
       setCreate(false);
-      console.log(props.task.userTasks);
     }
     if (edit) {
       getUserTasksAndShowTasks();
       setEdit(false);
-      console.log(props.task.userTasks);
     }
 
     // eslint-disable-next-line
@@ -93,12 +93,15 @@ export default function Tasks(props) {
 
   const handleEditTask = async (taskEditId, entry) => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      taskActions.editTask({ taskId: taskEditId, entry: entry.entry });
-      taskActions.getUserTasks(props.auth.data.userId);
+      taskActions.editTask({
+        taskId: taskEditId,
+        entry: entry.entry,
+        userId: props.auth.data.userId,
+      });
     } else {
       try {
         await props.task.editTask(taskEditId, entry);
-        setEdit(true);
+        // setEdit(true);
         toast.success("Task Edited");
       } catch (error) {
         toast.error(error.message);
@@ -108,8 +111,10 @@ export default function Tasks(props) {
 
   const handleDeleteTask = async (taskId) => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      console.log("delete - saga");
-      taskActions.deleteTask(taskId);
+      taskActions.deleteTask({
+        taskId: taskId,
+        userId: props.auth.data.userId,
+      });
     } else {
       try {
         await props.task.deleteTask(taskId);
@@ -247,3 +252,15 @@ export default function Tasks(props) {
     </>
   );
 }
+
+const mapStateToProps = function (state) {
+  return {
+    tasks: state.tasks,
+  };
+};
+
+const mapDispatchToProps = function () {
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tasks);

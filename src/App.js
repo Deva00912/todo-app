@@ -34,7 +34,7 @@ function App(props) {
     window.location.reload();
   };
 
-  const checkedLoggedUser = (from) => {
+  const checkedLoggedUser = () => {
     if (process.env.REACT_APP_STAGING === "saga") {
       return props.auth.data && typeof props.auth.data.userId === "string"
         ? true
@@ -58,7 +58,7 @@ function App(props) {
           <Route
             path="/login"
             element={
-              <PublicRoute isLogged={checkedLoggedUser("login")}>
+              <PublicRoute isLogged={checkedLoggedUser()}>
                 <Login navigate={navigate} auth={auth} />
               </PublicRoute>
             }
@@ -66,7 +66,7 @@ function App(props) {
           <Route
             path="/register"
             element={
-              <PublicRoute isLogged={checkedLoggedUser("register")}>
+              <PublicRoute isLogged={checkedLoggedUser()}>
                 <Register navigate={navigate} auth={auth} />
               </PublicRoute>
             }
@@ -75,7 +75,7 @@ function App(props) {
           <Route
             path="/"
             element={
-              <ProtectedRoute isLogged={checkedLoggedUser("tasks")}>
+              <ProtectedRoute isLogged={checkedLoggedUser()}>
                 <Tasks
                   navigate={navigate}
                   auth={
@@ -91,10 +91,7 @@ function App(props) {
             }
           />
         </Routes>
-
-        <dt>
-          <ToastContainer autoClose={1000} theme="dark" />
-        </dt>
+        <ToastContainer autoClose={1000} theme="dark" />
       </ErrorBoundary>
     </>
   );
@@ -103,7 +100,6 @@ function App(props) {
 const mapStateToProps = function (state) {
   return {
     auth: state.auth,
-    tasks: state.tasks,
   };
 };
 

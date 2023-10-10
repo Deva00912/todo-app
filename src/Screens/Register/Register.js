@@ -5,8 +5,9 @@ import { regex } from "../../Services/Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
 import uuid from "react-uuid";
 import { authActions } from "../../Redux/Saga/authSaga";
+import { connect } from "react-redux";
 
-export default function Register(props) {
+function Register(props) {
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -116,3 +117,15 @@ export default function Register(props) {
     </>
   );
 }
+
+const mapStateToProps = function (state) {
+  return {
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = function () {
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
