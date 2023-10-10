@@ -9,7 +9,6 @@ import { authActions } from "../../Redux/Saga/authSaga";
 import { connect } from "react-redux";
 
 function Tasks(props) {
-  console.log("props", props);
   const [entry, setEntry] = useState({
     userId:
       process.env.REACT_APP_STAGING === "saga"
@@ -44,8 +43,8 @@ function Tasks(props) {
 
   //Saga
   useEffect(() => {
-    setShowTask(props.task.userTasks);
-  }, [props.task.userTasks]);
+    setShowTask(props.tasks.userTasks);
+  }, [props.tasks.userTasks]);
 
   const getUserTasksAndShowTasks = async () => {
     if (process.env.REACT_APP_STAGING === "saga") {
