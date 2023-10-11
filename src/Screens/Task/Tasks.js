@@ -22,7 +22,6 @@ function Tasks(props) {
   const [edit, setEdit] = useState(false);
 
   //Redux - Saga
-
   useEffect(() => {
     getUserTasksAndShowTasks();
     // eslint-disable-next-line
@@ -48,7 +47,7 @@ function Tasks(props) {
 
   const getUserTasksAndShowTasks = async () => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      props.getUserTasks(props.auth.data.userId);
+      props.getUserTasks(props.auth.data.userId, props.authToken);
     } else {
       try {
         const getTasks = await props.task.getIndividualUserTasks(
@@ -73,7 +72,7 @@ function Tasks(props) {
 
   const handleAddTask = async () => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      props.addTask(entry);
+      props.addTask(entry, props.authToken);
       setCreate(true);
     } else {
       try {
@@ -92,11 +91,14 @@ function Tasks(props) {
 
   const handleEditTask = async (taskEditId, entry) => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      props.editTask({
-        taskId: taskEditId,
-        entry: entry.entry,
-        userId: props.auth.data.userId,
-      });
+      props.editTask(
+        {
+          taskId: taskEditId,
+          entry: entry.entry,
+          userId: props.auth.data.userId,
+        },
+        props.authToken
+      );
     } else {
       try {
         await props.task.editTask(taskEditId, entry);
@@ -110,10 +112,13 @@ function Tasks(props) {
 
   const handleDeleteTask = async (taskId) => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      props.deleteTask({
-        taskId: taskId,
-        userId: props.auth.data.userId,
-      });
+      props.deleteTask(
+        {
+          taskId: taskId,
+          userId: props.auth.data.userId,
+        },
+        props.authToken
+      );
     } else {
       try {
         await props.task.deleteTask(taskId);
@@ -255,15 +260,16 @@ function Tasks(props) {
 const mapStateToProps = function (state) {
   return {
     tasks: state.tasks,
+    authToken: state.auth.data.token,
   };
 };
 
 const mapDispatchToProps = function () {
   return {
-    addTask: (entry) => taskActions.addTask(entry),
-    editTask: (task) => taskActions.editTask(task),
-    deleteTask: (task) => taskActions.deleteTask(task),
-    getUserTasks: (userId) => taskActions.getUserTasks(userId),
+    addTask: (entry, token) => taskActions.addTask(entry, token),
+    editTask: (task, token) => taskActions.editTask(task, token),
+    deleteTask: (task, token) => taskActions.deleteTask(task, token),
+    getUserTasks: (userId, token) => taskActions.getUserTasks(userId, token),
     clearUserTasks: () => taskActions.clearUserTasks(),
     logOut: () => authActions.logOut(),
   };

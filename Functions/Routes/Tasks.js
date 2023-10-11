@@ -1,4 +1,5 @@
 const express = require("express");
+const jwtAuth = require("../ApiValidation/Auth/authJwt.js");
 const { addTask } = require("../Repository/Controllers.js");
 const { editTask } = require("../Repository/Controllers.js");
 const { deleteTask } = require("../Repository/Controllers.js");
@@ -15,41 +16,52 @@ const identifyTasksErrors = (error) => {
 
 const tasksRouter = express.Router();
 
-tasksRouter.put("/addTask", validateSchema("newTasks"), async (req, res) => {
-  try {
-    const task = req.body;
-    const response = await addTask(task);
-    res
-      .status(201)
-      .json({ ...response, ackStatus: "completed" })
-      .end();
-  } catch (error) {
-    const result = identifyTasksErrors(error);
-    res
-      .status(result.statusCode)
-      .json({ message: result.message, ackStatus: "completed" })
-      .end();
+tasksRouter.put(
+  "/addTask",
+  validateSchema("newTasks"),
+  jwtAuth,
+  async (req, res) => {
+    try {
+      console.log("req.user", req.user);
+      const task = req.body;
+      const response = await addTask(task);
+      res
+        .status(201)
+        .json({ ...response, ackStatus: "completed" })
+        .end();
+    } catch (error) {
+      const result = identifyTasksErrors(error);
+      res
+        .status(result.statusCode)
+        .json({ message: result.message, ackStatus: "completed" })
+        .end();
+    }
   }
-});
+);
 
-tasksRouter.patch("/editTask", validateSchema("editTask"), async (req, res) => {
-  try {
-    const { taskId, entry } = req.body;
-    const response = await editTask(taskId, entry);
-    res
-      .status(200)
-      .json({ ...response, ackStatus: "completed" })
-      .end();
-  } catch (error) {
-    const result = identifyTasksErrors(error);
-    res
-      .status(result.statusCode)
-      .json({ message: result.message, ackStatus: "completed" })
-      .end();
+tasksRouter.patch(
+  "/editTask",
+  validateSchema("editTask"),
+  jwtAuth,
+  async (req, res) => {
+    try {
+      const { taskId, entry } = req.body;
+      const response = await editTask(taskId, entry);
+      res
+        .status(200)
+        .json({ ...response, ackStatus: "completed" })
+        .end();
+    } catch (error) {
+      const result = identifyTasksErrors(error);
+      res
+        .status(result.statusCode)
+        .json({ message: result.message, ackStatus: "completed" })
+        .end();
+    }
   }
-});
+);
 
-tasksRouter.delete("/deleteTask/:id", async (req, res) => {
+tasksRouter.delete("/deleteTask/:id", jwtAuth, async (req, res) => {
   try {
     const taskId = req.params.id;
     const response = await deleteTask(taskId);
@@ -66,7 +78,7 @@ tasksRouter.delete("/deleteTask/:id", async (req, res) => {
   }
 });
 
-tasksRouter.get("/findUserTasks/:id", async (req, res) => {
+tasksRouter.get("/findUserTasks/:id", jwtAuth, async (req, res) => {
   try {
     const userId = req.params.id;
     const response = await getUserTask(userId);

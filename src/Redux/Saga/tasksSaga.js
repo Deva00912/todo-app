@@ -17,39 +17,43 @@ export const actionTypes = {
 };
 
 export const taskActions = {
-  addTask: (task) => {
+  addTask: (task, token) => {
     store.dispatch({
       type: actionTypes.ADD_TASK,
       payload: {
         task: { ...task },
+        token: token,
       },
     });
   },
 
-  editTask: (task) => {
+  editTask: (task, token) => {
     store.dispatch({
       type: actionTypes.EDIT_TASK,
       payload: {
         editTask: { ...task },
+        token: token,
       },
     });
   },
 
-  deleteTask: (task) => {
+  deleteTask: (task, token) => {
     store.dispatch({
       type: actionTypes.DELETE_TASK,
       payload: {
         taskId: task.taskId,
         userId: task.userId,
+        token: token,
       },
     });
   },
 
-  getUserTasks: (userId) => {
+  getUserTasks: (userId, token) => {
     store.dispatch({
       type: actionTypes.GET_USER_TASKS,
       payload: {
         userId: userId,
+        token: token,
       },
     });
   },
@@ -63,9 +67,12 @@ export const taskActions = {
 
 function* addTaskWorker(action) {
   try {
-    yield addTaskApi(action.payload.task);
+    yield addTaskApi(action.payload.task, action.payload.token);
     toast.success("Task Added");
-    yield taskActions.getUserTasks(action.payload.task.userId);
+    yield taskActions.getUserTasks(
+      action.payload.task.userId,
+      action.payload.token
+    );
   } catch (error) {
     toast.error(error.message);
   }
@@ -73,7 +80,10 @@ function* addTaskWorker(action) {
 
 function* getUserTasksWorker(action) {
   try {
-    const userTasks = yield getIndividualUserTasksApi(action.payload.userId);
+    const userTasks = yield getIndividualUserTasksApi(
+      action.payload.userId,
+      action.payload.token
+    );
     if (userTasks.length) {
       yield put({
         type: "SET_USER_TASKS",
@@ -91,7 +101,8 @@ function* editTaskWorker(action) {
   try {
     yield editTaskApi(
       action.payload.editTask.taskId,
-      action.payload.editTask.entry
+      action.payload.editTask.entry,
+      action.payload.token
     );
     toast.success("Task Edited");
     yield taskActions.getUserTasks(action.payload.editTask.userId);
@@ -102,9 +113,9 @@ function* editTaskWorker(action) {
 
 function* deleteTaskWorker(action) {
   try {
-    yield deleteTaskApi(action.payload.taskId);
+    yield deleteTaskApi(action.payload.taskId, action.payload.token);
     toast.success("Task deleted");
-    yield taskActions.getUserTasks(action.payload.userId);
+    yield taskActions.getUserTasks(action.payload.userId, action.payload.token);
   } catch (error) {
     toast.error(error.message);
   }

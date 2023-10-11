@@ -8,6 +8,7 @@ export const getUsers = async () => {
     method: "GET",
     headers: headersList,
   });
+
   const userData = response.json();
   if (userData.ackStatus !== "completed") {
     throw new Error("Something went wrong!");

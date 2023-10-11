@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const { regex } = require("../Services/Utils/Constants");
 const {
   createUserInDB,
@@ -32,8 +34,14 @@ const throwAuthError = (message) => {
 
 //Creating a user
 const postCreateUser = async (userData) => {
-  const data = await createUserInDB(userData);
-  return { message: "User created", data: data };
+  const encryptedPassword = await bcrypt.hash(userData.password, 10);
+  userData.password = encryptedPassword;
+
+  const user = await createUserInDB(userData);
+
+  user.token = generateJwtToken(user.userId, user.username);
+
+  return { message: "User created", data: user };
 };
 
 const getGetAllUsers = async () => {
@@ -63,13 +71,23 @@ const checkPasswordAndLogin = async (username, password) => {
   if (!user) {
     throwAuthError("User does not exists");
   }
-  if (user?.password !== password) {
+
+  if (user && (await bcrypt.compare(password, user.password))) {
+    user.token = generateJwtToken(user.userId, user.username);
+  } else {
     throwAuthError("Invalid credentials");
   }
   return {
     message: "Logged in",
     data: user,
   };
+};
+
+const generateJwtToken = (userId, username) => {
+  const token = jwt.sign({ userId, username }, process.env.TOKEN_KEY, {
+    expiresIn: "1h",
+  });
+  return token;
 };
 
 module.exports = {

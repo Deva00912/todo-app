@@ -1,14 +1,17 @@
-const headersList = {
-  "Content-Type": "application/json",
-  Accept: "application/json",
-  "Access-Control-Allow-Origin": "*",
+const headersList = (token) => {
+  return {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "x-access-token": token,
+  };
 };
 
-export const addTaskApi = async (task) => {
+export const addTaskApi = async (task, token) => {
   const response = await fetch("http://localhost:7000/task/addTask", {
     method: "PUT",
     body: JSON.stringify(task),
-    headers: headersList,
+    headers: headersList(token),
   });
   const responseTask = await response.json();
   if (responseTask.ackStatus !== "completed") {
@@ -19,12 +22,12 @@ export const addTaskApi = async (task) => {
   }
 };
 
-export const deleteTaskApi = async (taskId) => {
+export const deleteTaskApi = async (taskId, token) => {
   const response = await fetch(
     `http://localhost:7000/task/deleteTask/${taskId}`,
     {
       method: `DELETE`,
-      headers: headersList,
+      headers: headersList(token),
     }
   );
 
@@ -37,12 +40,12 @@ export const deleteTaskApi = async (taskId) => {
   }
 };
 
-export const getIndividualUserTasksApi = async (userId) => {
+export const getIndividualUserTasksApi = async (userId, token) => {
   const response = await fetch(
     `http://localhost:7000/task/findUserTasks/${userId}`,
     {
       method: `GET`,
-      headers: headersList,
+      headers: headersList(token),
     }
   );
   const data = await response.json();
@@ -55,11 +58,11 @@ export const getIndividualUserTasksApi = async (userId) => {
   return data.data;
 };
 
-export const editTaskApi = async (taskId, entry) => {
+export const editTaskApi = async (taskId, entry, token) => {
   const response = await fetch("http://localhost:7000/task/editTask", {
     method: `PATCH`,
     body: JSON.stringify({ taskId, entry }),
-    headers: headersList,
+    headers: headersList(token),
   });
   const editedTask = await response.json();
   if (editedTask.ackStatus !== "completed") {

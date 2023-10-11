@@ -38,6 +38,7 @@ registerRouter.put(
         .json({ ...response, ackStatus: "completed" })
         .end();
     } catch (error) {
+      console.log("error", error);
       const result = identifyAuthError(error);
       res
         .status(result.statusCode)

@@ -23,9 +23,8 @@ const userModel = mongoose.Schema({
     type: String,
     required: true,
   },
-  confirmPassword: {
+  token: {
     type: String,
-    required: true,
   },
 });
 
