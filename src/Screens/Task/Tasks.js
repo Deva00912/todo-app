@@ -48,7 +48,7 @@ function Tasks(props) {
 
   const getUserTasksAndShowTasks = async () => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      taskActions.getUserTasks(props.auth.data.userId);
+      props.getUserTasks(props.auth.data.userId);
     } else {
       try {
         const getTasks = await props.task.getIndividualUserTasks(
@@ -63,7 +63,7 @@ function Tasks(props) {
 
   const logOut = () => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      authActions.logOut();
+      props.logOut();
     } else {
       props.auth.logOut();
       toast.success("Logout successful");
@@ -73,7 +73,7 @@ function Tasks(props) {
 
   const handleAddTask = async () => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      taskActions.addTask(entry);
+      props.addTask(entry);
       setCreate(true);
     } else {
       try {
@@ -92,7 +92,7 @@ function Tasks(props) {
 
   const handleEditTask = async (taskEditId, entry) => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      taskActions.editTask({
+      props.editTask({
         taskId: taskEditId,
         entry: entry.entry,
         userId: props.auth.data.userId,
@@ -100,7 +100,7 @@ function Tasks(props) {
     } else {
       try {
         await props.task.editTask(taskEditId, entry);
-        // setEdit(true);
+        setEdit(true);
         toast.success("Task Edited");
       } catch (error) {
         toast.error(error.message);
@@ -110,7 +110,7 @@ function Tasks(props) {
 
   const handleDeleteTask = async (taskId) => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      taskActions.deleteTask({
+      props.deleteTask({
         taskId: taskId,
         userId: props.auth.data.userId,
       });
@@ -242,7 +242,7 @@ function Tasks(props) {
             datacy="logOutButton"
             value="Logout"
             onClick={() => {
-              taskActions.clearUserTasks();
+              props.clearUserTasks();
               logOut();
             }}
           />
@@ -259,7 +259,14 @@ const mapStateToProps = function (state) {
 };
 
 const mapDispatchToProps = function () {
-  return {};
+  return {
+    addTask: (entry) => taskActions.addTask(entry),
+    editTask: (task) => taskActions.editTask(task),
+    deleteTask: (task) => taskActions.deleteTask(task),
+    getUserTasks: (userId) => taskActions.getUserTasks(userId),
+    clearUserTasks: () => taskActions.clearUserTasks(),
+    logOut: () => authActions.logOut(),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tasks);

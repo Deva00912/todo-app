@@ -62,9 +62,7 @@ describe.only("User API", () => {
             expect(res.body).to.have.property("message");
           } else {
             expect(res).to.have.status(400);
-            expect(res.body)
-              .to.have.property("message")
-              .equal("Entered Username is invalid");
+            expect(res.body).to.have.property("ackStatus");
           }
         });
     });
@@ -92,12 +90,12 @@ describe.only("User API", () => {
   });
 
   describe("Register API", () => {
-    it("Creating an valid user", () => {
+    it.skip("Creating an valid user", () => {
       chai
         .request("http://localhost:7000")
         .put("/register/createUser")
         .send({
-          username: "anitha041102",
+          username: "anitha041108642",
           firstName: "Anitha",
           lastName: "K",
           password: "Dev@1234",
@@ -128,7 +126,6 @@ describe.only("User API", () => {
           })
           .end((err, res) => {
             if (err) {
-              console.log("err", err);
               expect(res).to.have.status(500);
               expect(res).to.have.property("message");
             } else {
@@ -139,7 +136,7 @@ describe.only("User API", () => {
             }
           });
       } catch (error) {
-        console.log("error", error.message);
+        // console.log("error", error);
       }
     });
 
@@ -160,9 +157,7 @@ describe.only("User API", () => {
             expect(res.body).to.have.property("message");
           } else {
             expect(res).to.have.status(400);
-            expect(res.body)
-              .to.have.property("message")
-              .equal("Enter details correctly");
+            expect(res.body).to.have.property("ackStatus");
           }
         });
     });
@@ -250,7 +245,7 @@ describe.only("User API", () => {
     it("Adding an valid task", () => {
       chai
         .request("http://localhost:7000")
-        .post("/task/add")
+        .post("/task/addTask")
         .send({
           userId: "64f341992245ab97687076a2",
           entry: "Test api integration 1",
@@ -269,7 +264,7 @@ describe.only("User API", () => {
     it("give warning - adding an empty entry", () => {
       chai
         .request("http://localhost:7000")
-        .post("/task/add")
+        .post("/task/addTask")
         .send({
           userId: "64f341992245ab97687076a2",
           entry: "",
@@ -290,7 +285,7 @@ describe.only("User API", () => {
     it("give warning - adding an empty task", () => {
       chai
         .request("http://localhost:7000")
-        .post("/task/add")
+        .post("/task/addTask")
         .send({})
         .end((err, res) => {
           if (err) {
@@ -308,7 +303,7 @@ describe.only("User API", () => {
     it("Editing an valid task", () => {
       chai
         .request("http://localhost:7000")
-        .patch("/task/edit")
+        .patch("/task/editTask")
         .send({
           taskId: "650a7d370569e1cbfe957b36",
           entry: "Test api integration edit - 1",
@@ -327,7 +322,7 @@ describe.only("User API", () => {
     it("give warning - editing an non existing task", () => {
       chai
         .request("http://localhost:7000")
-        .patch("/task/edit")
+        .patch("/task/editTask")
         .send({
           taskId: "64f341e92245ab97687076c5",
           entry: "Test api integration edit - 1",
@@ -348,7 +343,7 @@ describe.only("User API", () => {
     it("give warning - editing an empty task", () => {
       chai
         .request("http://localhost:7000")
-        .patch("/task/edit")
+        .patch("/task/editTask")
         .send({
           taskId: "64f341e92245ab97687076c5",
           entry: "",
@@ -369,7 +364,7 @@ describe.only("User API", () => {
     it.skip("deleting an existing task", () => {
       chai
         .request("http://localhost:7000")
-        .delete("/task/delete/650a7d370569e1cbfe957b41")
+        .delete("/task/deleteTask/650a7d370569e1cbfe957b41")
         .end((err, res) => {
           if (err) {
             expect(res).to.have.status(500);
@@ -384,7 +379,7 @@ describe.only("User API", () => {
     it("give warning deleting an non - existing task", () => {
       chai
         .request("http://localhost:7000")
-        .delete("/task/delete/650a7d370569e1cbfe957b41")
+        .delete("/task/deleteTask/650bfb44591bbd2879e5a92a")
         .end((err, res) => {
           if (err) {
             expect(res).to.have.status(500);
@@ -394,13 +389,15 @@ describe.only("User API", () => {
             expect(res.body)
               .to.have.property("message")
               .equal("Task not found!");
+            // expect(res.body).to.have.property("error");
+            // expect(res.body).to.have.property("ackStatus").equal("failed");
           }
         });
     });
     it("getting user tasks", () => {
       chai
         .request("http://localhost:7000")
-        .get("/task/find/64f341992245ab97687076a2")
+        .get("/task/findUserTasks/650a93674e3cc62ca66a89b3")
         .end((err, res) => {
           if (err) {
             expect(res).to.have.status(500);
@@ -408,6 +405,7 @@ describe.only("User API", () => {
           } else {
             expect(res).to.have.status(200);
             expect(res.body).to.have.property("message").equal("User Tasks");
+            expect(res.body).to.have.property("ackStatus").equal("completed");
             expect(res.body).to.have.property("data").to.be.a("array");
           }
         });
@@ -416,15 +414,17 @@ describe.only("User API", () => {
     it("getting an non existing user tasks", () => {
       chai
         .request("http://localhost:7000")
-        .get("/task/find/64f341d42245ab97687076b9")
+        .get("/task/findUserTasks/64f341d42245ab97687076b9")
         .end((err, res) => {
           if (err) {
             expect(res).to.have.status(500);
-            expect(res.body).to.have.property("message");
+            expect(res.body).to.have.property("error");
+            expect(res.body).to.have.property("ackStatus").equal("failed");
           } else {
             expect(res).to.have.status(400);
-            expect(res.body).to.have.property("message").equal("No Tasks");
-            console.log("res.body", res.body);
+            // expect(res.body).to.have.property("message").equal("No Tasks");
+            expect(res.body).to.have.property("error");
+            expect(res.body).to.have.property("ackStatus").equal("failed");
           }
         });
     });

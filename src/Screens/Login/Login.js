@@ -23,7 +23,7 @@ function Login(props) {
       return toast.error("Entered details is wrong!");
     }
     if (process.env.REACT_APP_STAGING === "saga") {
-      authActions.logInUser(user);
+      props.logInUser(user);
       props.navigate("/");
     } else {
       try {
@@ -88,7 +88,9 @@ const mapStateToProps = function (state) {
 };
 
 const mapDispatchToProps = function () {
-  return {};
+  return {
+    logInUser: (user) => authActions.logInUser(user),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
