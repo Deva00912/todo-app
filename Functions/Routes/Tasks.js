@@ -22,7 +22,6 @@ tasksRouter.put(
   jwtAuth,
   async (req, res) => {
     try {
-      console.log("req.user", req.user);
       const task = req.body;
       const response = await addTask(task);
       res

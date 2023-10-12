@@ -1,3 +1,6 @@
+import bcrypt from "bcryptjs-react";
+// import * as bcrypt from "bcrypt";
+
 const headersList = {
   "Content-Type": "application/json",
   Accept: "application/json",
@@ -80,10 +83,12 @@ export async function checkUserCredentialsApi(user) {
     if (!Object.values(findUser?.data).length > 0) {
       throw new Error("User does not exists!");
     }
-
-    if (findUser?.data.password !== user?.password) {
-      throw new Error("Password does not match");
+    if (
+      findUser &&
+      (await bcrypt.compare(user.password, findUser?.data.password))
+    ) {
+      return findUser?.data;
     }
-    return findUser?.data;
+    throw new Error("Invalid credentials");
   }
 }

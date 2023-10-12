@@ -71,6 +71,7 @@ const checkPasswordAndLogin = async (username, password) => {
   if (!user) {
     throwAuthError("User does not exists");
   }
+  console.log("bcrypt", await bcrypt.compare(password, user.password));
 
   if (user && (await bcrypt.compare(password, user.password))) {
     user.token = generateJwtToken(user.userId, user.username);

@@ -105,7 +105,10 @@ function* editTaskWorker(action) {
       action.payload.token
     );
     toast.success("Task Edited");
-    yield taskActions.getUserTasks(action.payload.editTask.userId);
+    yield taskActions.getUserTasks(
+      action.payload.editTask.userId,
+      action.payload.token
+    );
   } catch (error) {
     toast.error(error.message);
   }
