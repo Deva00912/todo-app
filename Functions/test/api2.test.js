@@ -7,7 +7,7 @@ chai.use(chaiHttp);
 
 const expect = chai.expect;
 
-describe.only("User API", () => {
+describe("User API", () => {
   describe("POST login/check", () => {
     it("should handle existing user", () => {
       chai

@@ -8,7 +8,7 @@ const headersList = (token) => {
 };
 
 export const addTaskApi = async (task, token) => {
-  const response = await fetch("http://localhost:7000/task/addTask", {
+  const response = await fetch("http://192.168.0.106:7000/task/addTask", {
     method: "PUT",
     body: JSON.stringify(task),
     headers: headersList(token),
@@ -24,7 +24,7 @@ export const addTaskApi = async (task, token) => {
 
 export const deleteTaskApi = async (taskId, token) => {
   const response = await fetch(
-    `http://localhost:7000/task/deleteTask/${taskId}`,
+    `http://192.168.0.106:7000/task/deleteTask/${taskId}`,
     {
       method: `DELETE`,
       headers: headersList(token),
@@ -42,7 +42,7 @@ export const deleteTaskApi = async (taskId, token) => {
 
 export const getIndividualUserTasksApi = async (userId, token) => {
   const response = await fetch(
-    `http://localhost:7000/task/findUserTasks/${userId}`,
+    `http://192.168.0.106:7000/task/findUserTasks/${userId}`,
     {
       method: `GET`,
       headers: headersList(token),
@@ -59,7 +59,7 @@ export const getIndividualUserTasksApi = async (userId, token) => {
 };
 
 export const editTaskApi = async (taskId, entry, token) => {
-  const response = await fetch("http://localhost:7000/task/editTask", {
+  const response = await fetch("http://192.168.0.106:7000/task/editTask", {
     method: `PATCH`,
     body: JSON.stringify({ taskId, entry }),
     headers: headersList(token),

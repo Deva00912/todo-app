@@ -12,7 +12,7 @@ const authPersistConfig = {
 const tasksPersistConfig = {
   key: "tasks",
   storage: storage,
-  blacklist: [],
+  blacklist: ["userTasks"],
 };
 
 const rootPersistConfig = {

@@ -24,7 +24,7 @@ mongoose
   .catch((error) => console.log(error.message));
 
 describe("Testing services", () => {
-  describe("Users", () => {
+  describe("User services", () => {
     it("Getting all user", async () => {
       const response = await getAllUsersFromDB();
       expect(response).to.be.a("array");
@@ -32,7 +32,7 @@ describe("Testing services", () => {
 
     it.skip("Creating a user", async () => {
       const user = {
-        username: "kimdokja9813ee3492",
+        username: "kimdokja9853",
         firstName: "Dokja",
         lastName: "Kim",
         password: "Dokja@1234",
@@ -72,15 +72,14 @@ describe("Testing services", () => {
       const username = "devendrassn0912";
       const response = await getUserFromDB(username);
       expect(response).to.be.a("null");
-      // expect(response).to.be.above(1);
     });
   });
 
   describe("Tasks", () => {
     it.skip("Adding an task", async () => {
       const task = {
-        userId: "64f341992245ab97687076a2",
-        entry: "Test Service - 2",
+        userId: "652789dcb1be297de3aa58de",
+        entry: "Test Service - 1",
       };
 
       const response = await addTaskInDB(task);
@@ -90,7 +89,7 @@ describe("Testing services", () => {
 
     it.skip("Update a task", async () => {
       const { taskId, entry } = {
-        taskId: "6503e8fd55b6cf122a09e825",
+        taskId: "6526b13f4a1c58ed2f7a9964",
         entry: "Updated on Test Service - 1",
       };
       const response = await updateTaskInDB(taskId, entry);
@@ -99,21 +98,21 @@ describe("Testing services", () => {
     });
 
     it.skip("Delete an task by taskId", async () => {
-      const taskId = "6503e8fd55b6cf122a09e825";
+      const taskId = "6526b13f4a1c58ed2f7a9964";
       const response = await deleteTaskInDB(taskId);
 
       expect(response).to.be.a("object");
     });
 
     it("Find a task by taskId", async () => {
-      const taskId = "64ff15977ca546e62c154869";
+      const taskId = "6526b217e1833f48484023ce";
       const response = await findTaskByTaskId(taskId);
 
       expect(response).to.be.a("object");
     });
 
     it("Getting user tasks", async () => {
-      const userId = "64ff15847ca546e62c154865";
+      const userId = "6526b0814a1c58ed2f7a9953";
       const response = await getUserTasksFromDB(userId);
 
       expect(response).to.be.a("array");

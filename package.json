@@ -2,11 +2,13 @@
   "name": "todo-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs-react": "^2.4.6",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
+    "node-gyp": "^9.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.2",
@@ -18,13 +20,14 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.2.3",
+    "serve": "^14.2.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "start:local": "set PORT=3000 && cross-env REACT_APP_STAGING=local react-scripts start",
     "start:saga": "set PORT=3000 && cross-env REACT_APP_STAGING=saga react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && serve -s build",
     "cypress:open": "cypress open"
   },
   "eslintConfig": {
