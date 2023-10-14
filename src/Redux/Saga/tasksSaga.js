@@ -85,7 +85,6 @@ function* getUserTasksWorker(action) {
       action.payload.token
     );
     if (userTasks.length) {
-      console.log("Not empty");
       yield put({
         type: "SET_USER_TASKS",
         payload: {
