@@ -85,6 +85,7 @@ function* getUserTasksWorker(action) {
       action.payload.token
     );
     if (userTasks.length) {
+      console.log("Not empty");
       yield put({
         type: "SET_USER_TASKS",
         payload: {
@@ -93,6 +94,14 @@ function* getUserTasksWorker(action) {
       });
     }
   } catch (error) {
+    if (error.message === "No Tasks") {
+      yield put({
+        type: "SET_USER_TASKS",
+        payload: {
+          userTasks: [],
+        },
+      });
+    }
     toast.error(error.message);
   }
 }

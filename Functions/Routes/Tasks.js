@@ -89,7 +89,7 @@ tasksRouter.get("/findUserTasks/:id", jwtAuth, async (req, res) => {
     const result = identifyTasksErrors(error);
     res
       .status(result.statusCode)
-      .json({ message: result.message, ackStatus: "completed" })
+      .json({ message: result.message, data: [], ackStatus: "completed" })
       .end();
   }
 });
