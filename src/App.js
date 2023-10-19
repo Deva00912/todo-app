@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./Screens/Login/Login";
 import Register from "./Screens/Register/Register";
