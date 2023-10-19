@@ -82,15 +82,19 @@ function Login(props) {
 }
 
 const mapStateToProps = function (state) {
-  return {
-    auth: state.auth,
-  };
+  if (process.env.REACT_APP_STAGING === "saga") {
+    return {
+      auth: state.auth,
+    };
+  }
 };
 
 const mapDispatchToProps = function () {
-  return {
-    logInUser: (user) => authActions.logInUser(user),
-  };
+  if (process.env.REACT_APP_STAGING === "saga") {
+    return {
+      logInUser: (user) => authActions.logInUser(user),
+    };
+  }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

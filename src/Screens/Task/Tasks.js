@@ -41,9 +41,9 @@ function Tasks(props) {
   }, [create, edit, clicked]);
 
   //Saga
-  useEffect(() => {
-    setShowTask(props.tasks.userTasks);
-  }, [props.tasks.userTasks]);
+  // useEffect(() => {
+  //   setShowTask(props.tasks.userTasks);
+  // }, [props.tasks.userTasks]);
 
   const getUserTasksAndShowTasks = async () => {
     if (process.env.REACT_APP_STAGING === "saga") {
@@ -51,7 +51,8 @@ function Tasks(props) {
     } else {
       try {
         const getTasks = await props.task.getIndividualUserTasks(
-          props.auth.loggedInUser?.userId
+          props.auth.loggedInUser?.userId,
+          props.auth.loggedInUser?.token
         );
         setShowTask(getTasks);
       } catch (error) {
@@ -79,7 +80,8 @@ function Tasks(props) {
         await props.task.addTask(
           process.env.REACT_APP_STAGING === "local"
             ? { ...entry, taskId: uuid() }
-            : entry
+            : entry,
+          props.auth.loggedInUser?.token
         );
         setCreate(true);
         toast.success("Task Added");
@@ -101,7 +103,11 @@ function Tasks(props) {
       );
     } else {
       try {
-        await props.task.editTask(taskEditId, entry);
+        await props.task.editTask(
+          taskEditId,
+          entry,
+          props.auth.loggedInUser?.token
+        );
         setEdit(true);
         toast.success("Task Edited");
       } catch (error) {
@@ -121,7 +127,7 @@ function Tasks(props) {
       );
     } else {
       try {
-        await props.task.deleteTask(taskId);
+        await props.task.deleteTask(taskId, props.auth.loggedInUser?.token);
         setCreate(true);
         toast.success("Task deleted");
       } catch (error) {
@@ -247,7 +253,9 @@ function Tasks(props) {
             datacy="logOutButton"
             value="Logout"
             onClick={() => {
-              props.clearUserTasks();
+              if (process.env.REACT_APP_STAGING === "saga") {
+                props.clearUserTasks();
+              }
               logOut();
             }}
           />
@@ -258,21 +266,25 @@ function Tasks(props) {
 }
 
 const mapStateToProps = function (state) {
-  return {
-    tasks: state.tasks,
-    authToken: state.auth.data.token,
-  };
+  if (process.env.REACT_APP_STAGING === "saga") {
+    return {
+      tasks: state.tasks,
+      authToken: state.auth.data.token,
+    };
+  }
 };
 
 const mapDispatchToProps = function () {
-  return {
-    addTask: (entry, token) => taskActions.addTask(entry, token),
-    editTask: (task, token) => taskActions.editTask(task, token),
-    deleteTask: (task, token) => taskActions.deleteTask(task, token),
-    getUserTasks: (userId, token) => taskActions.getUserTasks(userId, token),
-    clearUserTasks: () => taskActions.clearUserTasks(),
-    logOut: () => authActions.logOut(),
-  };
+  if (process.env.REACT_APP_STAGING === "saga") {
+    return {
+      addTask: (entry, token) => taskActions.addTask(entry, token),
+      editTask: (task, token) => taskActions.editTask(task, token),
+      deleteTask: (task, token) => taskActions.deleteTask(task, token),
+      getUserTasks: (userId, token) => taskActions.getUserTasks(userId, token),
+      clearUserTasks: () => taskActions.clearUserTasks(),
+      logOut: () => authActions.logOut(),
+    };
+  }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tasks);

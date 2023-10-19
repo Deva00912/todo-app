@@ -119,13 +119,17 @@ function Register(props) {
 }
 
 const mapStateToProps = function (state) {
-  return {
-    auth: state.auth,
-  };
+  if (process.env.REACT_APP_STAGING === "saga") {
+    return {
+      auth: state.auth,
+    };
+  }
 };
 
 const mapDispatchToProps = function () {
-  return {};
+  if (process.env.REACT_APP_STAGING === "saga") {
+    return {};
+  }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

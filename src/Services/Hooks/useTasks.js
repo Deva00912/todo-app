@@ -22,7 +22,7 @@ export function useTasks(props) {
     // eslint-disable-next-line
   }, [taskList]);
 
-  const addTask = async (task) => {
+  const addTask = async (task, token) => {
     if (!task) {
       throw new Error("Task cannot be empty");
     } else {
@@ -34,23 +34,23 @@ export function useTasks(props) {
         setTaskList([...taskList, task]);
         return true;
       } else {
-        const response = await addTaskApi(task);
+        const response = await addTaskApi(task, token);
         return response;
       }
     }
   };
 
-  const deleteTask = async (taskDeleteId) => {
+  const deleteTask = async (taskDeleteId, token) => {
     if (process.env.REACT_APP_STAGING === "local") {
       const keepList = taskList.filter((task) => task.taskId !== taskDeleteId);
       setTaskList(keepList);
     } else {
-      const response = await deleteTaskApi(taskDeleteId);
+      const response = await deleteTaskApi(taskDeleteId, token);
       return response;
     }
   };
 
-  const getIndividualUserTasks = async (userId) => {
+  const getIndividualUserTasks = async (userId, token) => {
     if (userId) {
       if (process.env.REACT_APP_STAGING === "local") {
         if (!taskList) {
@@ -60,19 +60,19 @@ export function useTasks(props) {
         filterTask.sort((a, b) => b.timestamp - a.timestamp);
         return filterTask;
       } else {
-        const response = await getIndividualUserTasksApi(userId);
+        const response = await getIndividualUserTasksApi(userId, token);
         return response;
       }
     }
   };
 
-  const editTask = async (editTaskId, entry) => {
+  const editTask = async (editTaskId, entry, token) => {
     if (process.env.REACT_APP_STAGING === "local") {
       const keepList = taskList.filter((task) => task?.taskId !== editTaskId);
       keepList.push(entry);
       setTaskList(keepList);
     } else {
-      const response = await editTaskApi(editTaskId, entry.entry);
+      const response = await editTaskApi(editTaskId, entry.entry, token);
       return response;
     }
   };

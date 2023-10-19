@@ -6,7 +6,7 @@ const headersList = {
 };
 
 export const getUsers = async () => {
-  const response = await fetch("http://192.168.0.106:7000/register/getUsers", {
+  const response = await fetch("http://localhost:7000/register/getUsers", {
     method: "GET",
     headers: headersList,
   });
@@ -22,14 +22,11 @@ export async function createUserApi(user) {
   if (!user) {
     throw new Error("Invalid parameters");
   } else {
-    const response = await fetch(
-      "http://192.168.0.106:7000/register/createUser",
-      {
-        method: "PUT",
-        body: JSON.stringify({ ...user }),
-        headers: headersList,
-      }
-    );
+    const response = await fetch("http://localhost:7000/register/createUser", {
+      method: "PUT",
+      body: JSON.stringify({ ...user }),
+      headers: headersList,
+    });
     const createdUser = await response.json();
     if (createdUser.ackStatus !== "completed") {
       throw new Error("Something went wrong!");
@@ -46,7 +43,7 @@ export async function checkUsernameAvailabilityApi(username) {
     throw new Error("Invalid parameters");
   } else {
     const response = await fetch(
-      "http://192.168.0.106:7000/register/isUsernameExists",
+      "http://localhost:7000/register/isUsernameExists",
       {
         method: "POST",
         body: JSON.stringify({ username: username }),
@@ -68,7 +65,7 @@ export async function checkUserCredentialsApi(user) {
     throw new Error("Invalid parameters");
   } else {
     const response = await fetch(
-      "http://192.168.0.106:7000/login/authUserAndLogin",
+      "http://localhost:7000/login/authUserAndLogin",
       {
         method: "POST",
         body: JSON.stringify({ ...user }),
