@@ -40,14 +40,15 @@ function Tasks(props) {
     // eslint-disable-next-line
   }, [create, edit, clicked]);
 
-  //Saga
-  // useEffect(() => {
-  //   setShowTask(props.tasks.userTasks);
-  // }, [props.tasks.userTasks]);
+  // Saga
+  useEffect(() => {
+    setShowTask(props.tasks?.userTasks);
+  }, [props.tasks?.userTasks]);
 
   const getUserTasksAndShowTasks = async () => {
     if (process.env.REACT_APP_STAGING === "saga") {
       props.getUserTasks(props.auth.data.userId, props.authToken);
+      // setShowTask(props.tasks.userTasks);
     } else {
       try {
         const getTasks = await props.task.getIndividualUserTasks(
@@ -74,7 +75,7 @@ function Tasks(props) {
   const handleAddTask = async () => {
     if (process.env.REACT_APP_STAGING === "saga") {
       props.addTask(entry, props.authToken);
-      setCreate(true);
+      // setCreate(true);
     } else {
       try {
         await props.task.addTask(
@@ -101,6 +102,7 @@ function Tasks(props) {
         },
         props.authToken
       );
+      // setEdit(true);
     } else {
       try {
         await props.task.editTask(
@@ -125,6 +127,7 @@ function Tasks(props) {
         },
         props.authToken
       );
+      // setCreate(true);
     } else {
       try {
         await props.task.deleteTask(taskId, props.auth.loggedInUser?.token);

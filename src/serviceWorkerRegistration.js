@@ -65,6 +65,10 @@ function registerValidSW(swUrl, config) {
         }
         installingWorker.onstatechange = () => {
           if (installingWorker.state === "installed") {
+            console.log(
+              "navigator.serviceWorker.controller",
+              navigator.serviceWorker.controller
+            );
             if (navigator.serviceWorker.controller) {
               // At this point, the updated precached content has been fetched,
               // but the previous service worker will still serve the older
@@ -76,7 +80,10 @@ function registerValidSW(swUrl, config) {
 
               // Execute callback
               if (config && config.onUpdate) {
-                config.onUpdate(registration);
+                config.onUpdate(registration); // from the index.js
+                //checking stateChange - version 2
+                console.log("checking with async-await");
+                console.log("Testing - 5");
               }
             } else {
               // At this point, everything has been precached.

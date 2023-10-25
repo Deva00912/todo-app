@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./Screens/Login/Login";
 import Register from "./Screens/Register/Register";
@@ -8,6 +8,8 @@ import { useAuth } from "./Services/Hooks/useAuthentication.js";
 import { useTasks } from "./Services/Hooks/useTasks.js";
 import ErrorBoundary from "./Components/ErrorBoundary/ErrorBoundary";
 import { connect } from "react-redux";
+
+console.log("Latest build - SW");
 
 const ProtectedRoute = ({ children, isLogged }) => {
   if (!isLogged) {
@@ -82,9 +84,7 @@ function App(props) {
                     process.env.REACT_APP_STAGING === "saga" ? props.auth : auth
                   }
                   task={
-                    process.env.REACT_APP_STAGING === "saga"
-                      ? props.tasks
-                      : task
+                    process.env.REACT_APP_STAGING === "saga" ? props.task : task
                   }
                 />
               </ProtectedRoute>

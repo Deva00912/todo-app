@@ -64,22 +64,19 @@ registerRoute(
 
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
-self.addEventListener("message", (event) => {
+self.addEventListener("message", async (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
+    await self.skipWaiting();
   }
 });
 
 // Any other custom service worker logic can go here.
+
 registerRoute(
   ({ url }) =>
     url.origin === "http://localhost:7000" && url.pathname.startsWith("/task/"),
   new NetworkFirst({
     cacheName: "tasks-api-cache",
-    // plugins: [
-    //   new CacheableResponsePlugin({
-    //     statuses: [0, 200],
-    //   }),
-    // ],
+    maxEntries: 1,
   })
 );
