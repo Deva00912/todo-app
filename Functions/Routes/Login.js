@@ -12,6 +12,51 @@ const identifyAuthError = (error) => {
 
 const loginRouter = express.Router();
 
+/**
+ * @api {post} /authUserAndLogin Authenticate User and Login
+ * @apiName AuthUserAndLogin
+ * @apiGroup Authentication
+ *
+ * @apiParam {String} username User's username.
+ * @apiParam {String} password User's password.
+ *
+ * @apiSuccess {String} message Success message.
+ * @apiSuccess {String} ackStatus Acknowledgment status.
+ * @apiSuccess {String} token User's authentication token.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Logged in",
+ *   "ackStatus": "completed",
+ *   "token": "User authentication token"
+ * }
+ *
+ * @apiError (Error 400) InvalidUsername The provided username is invalid.
+ * @apiError (Error 400) InvalidCredentials The provided credentials are invalid.
+ * @apiError (Error 500) InternalServerError An internal server error occurred.
+ *
+ * @apiErrorExample {json} Error-Response (InvalidUsername):
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "message": "Invalid username",
+ *   "ackStatus": "completed"
+ * }
+ *
+ * @apiErrorExample {json} Error-Response (InvalidCredentials):
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "message": "Invalid credentials",
+ *   "ackStatus": "completed"
+ * }
+ *
+ * @apiErrorExample {json} Error-Response (InternalServerError):
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *   "message": "Internal server error message",
+ *   "ackStatus": "completed"
+ * }
+ */
 loginRouter.post(
   "/authUserAndLogin",
   validateSchema("loginUser"),

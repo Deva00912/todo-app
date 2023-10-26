@@ -1,3 +1,7 @@
+/**
+ * @module Saga-Tasks
+ */
+
 import { all, put, takeEvery } from "redux-saga/effects";
 import store from "../Store/store";
 import {
@@ -8,6 +12,10 @@ import {
 } from "../../Services/Api/tasks";
 import { toast } from "react-toastify";
 
+/**
+ * Action types for tasks.
+ * @enum {string}
+ */
 export const actionTypes = {
   ADD_TASK: "ADD_TASK",
   EDIT_TASK: "EDIT_TASK",
@@ -16,7 +24,17 @@ export const actionTypes = {
   CLEAR_USER_TASKS: "CLEAR_USER_TASKS",
 };
 
+/**
+ * Actions for task management.
+ * @namespace
+ */
 export const taskActions = {
+  /**
+   * Dispatches an action to add a task.
+   * @function
+   * @param {Object} task - The task to be added.
+   * @param {string} token - User authentication token.
+   */
   addTask: (task, token) => {
     store.dispatch({
       type: actionTypes.ADD_TASK,
@@ -27,6 +45,12 @@ export const taskActions = {
     });
   },
 
+  /**
+   * Dispatches an action to edit a task.
+   * @function
+   * @param {Object} task - The task to be edited.
+   * @param {string} token - User authentication token.
+   */
   editTask: (task, token) => {
     store.dispatch({
       type: actionTypes.EDIT_TASK,
@@ -37,6 +61,12 @@ export const taskActions = {
     });
   },
 
+  /**
+   * Dispatches an action to delete a task.
+   * @function
+   * @param {Object} task - The task to be deleted.
+   * @param {string} token - User authentication token.
+   */
   deleteTask: (task, token) => {
     store.dispatch({
       type: actionTypes.DELETE_TASK,
@@ -48,6 +78,12 @@ export const taskActions = {
     });
   },
 
+  /**
+   * Dispatches an action to get tasks for a user.
+   * @function
+   * @param {string} userId - The user's ID.
+   * @param {string} token - User authentication token.
+   */
   getUserTasks: (userId, token) => {
     store.dispatch({
       type: actionTypes.GET_USER_TASKS,
@@ -58,6 +94,10 @@ export const taskActions = {
     });
   },
 
+  /**
+   * Dispatches an action to clear user tasks.
+   * @function
+   */
   clearUserTasks: () => {
     store.dispatch({
       type: actionTypes.CLEAR_USER_TASKS,

@@ -42,7 +42,8 @@
     "start:local": "set PORT=3003 && cross-env REACT_APP_STAGING=local react-scripts start",
     "start:saga": "set PORT=3001 && cross-env REACT_APP_STAGING=saga react-scripts start",
     "build": " react-scripts build && serve -s build",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "jsDoc": "jsdoc -c jsDocConfig.json"
   },
   "eslintConfig": {
     "extends": [

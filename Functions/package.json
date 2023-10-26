@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "mocha --timeout 30000"
+    "test": "mocha --timeout 30000",
+    "jsDoc": "jsdoc -c ./jsDocConfig.json"
   },
   "keywords": [
     "API",
