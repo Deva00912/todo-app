@@ -2,8 +2,8 @@
   "source": {
     "includePattern": ".+\\.js(doc|x)?$",
     "include": [
-      "./src/Redux/Saga/authSaga.js",
-      "./src/Redux/Saga/tasksSaga.js"
+      "./src/Redux/Authentication/action.js",
+      "./src/Redux/Tasks/action.js"
     ],
     "exclude": ["node_modules"]
   },

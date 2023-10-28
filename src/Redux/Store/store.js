@@ -1,9 +1,11 @@
-import { persistedReducer } from "../Reducer/rootReducer";
-import rootSaga from "../Saga/rootSaga";
 import persistStore from "redux-persist/es/persistStore";
 import createSagaMiddleware from "@redux-saga/core";
 import { applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
+
+import { persistedReducer } from "../Root/rootReducer";
+import rootSaga from "../Root/rootSaga";
+
 const sagaMiddleWare = createSagaMiddleware();
 
 const store = createStore(

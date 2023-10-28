@@ -4,9 +4,15 @@ import InputBox from "../../Components/InputBox/InputBox";
 import "./Tasks.css";
 import { toast } from "react-toastify";
 import uuid from "react-uuid";
-import { taskActions } from "../../Redux/Saga/tasksSaga";
-import { authActions } from "../../Redux/Saga/authSaga";
 import { connect } from "react-redux";
+import { logOut } from "../../Redux/Authentication/action";
+import {
+  addTask,
+  clearUserTasks,
+  deleteTask,
+  editTask,
+  getUserTasks,
+} from "../../Redux/Tasks/action";
 
 function Tasks(props) {
   const [entry, setEntry] = useState({
@@ -280,12 +286,12 @@ const mapStateToProps = function (state) {
 const mapDispatchToProps = function () {
   if (process.env.REACT_APP_STAGING === "saga") {
     return {
-      addTask: (entry, token) => taskActions.addTask(entry, token),
-      editTask: (task, token) => taskActions.editTask(task, token),
-      deleteTask: (task, token) => taskActions.deleteTask(task, token),
-      getUserTasks: (userId, token) => taskActions.getUserTasks(userId, token),
-      clearUserTasks: () => taskActions.clearUserTasks(),
-      logOut: () => authActions.logOut(),
+      addTask: (entry, token) => addTask(entry, token),
+      editTask: (task, token) => editTask(task, token),
+      deleteTask: (task, token) => deleteTask(task, token),
+      getUserTasks: (userId, token) => getUserTasks(userId, token),
+      clearUserTasks: () => clearUserTasks(),
+      logOut: () => logOut(),
     };
   }
 };

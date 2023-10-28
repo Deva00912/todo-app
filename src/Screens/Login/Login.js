@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
 import { regex } from "../../Services/Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
-import { authActions } from "../../Redux/Saga/authSaga";
 import { connect } from "react-redux";
+import { logInUser } from "../../Redux/Authentication/action";
 
 function Login(props) {
   const [user, setUser] = useState({ username: "", password: "" });
@@ -92,7 +92,7 @@ const mapStateToProps = function (state) {
 const mapDispatchToProps = function () {
   if (process.env.REACT_APP_STAGING === "saga") {
     return {
-      logInUser: (user) => authActions.logInUser(user),
+      logInUser: (user) => logInUser(user),
     };
   }
 };

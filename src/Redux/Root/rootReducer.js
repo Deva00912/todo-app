@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import authReducer from "./authReducer";
-import tasksReducer from "./tasksReducer";
+import authReducer from "../Authentication/reducer";
+import tasksReducer from "../Tasks/reducer";
 
 const authPersistConfig = {
   key: "auth",

@@ -4,8 +4,8 @@ import Button from "../../Components/Button/Button";
 import { regex } from "../../Services/Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
 import uuid from "react-uuid";
-import { authActions } from "../../Redux/Saga/authSaga";
 import { connect } from "react-redux";
+import { register } from "../../Redux/Authentication/action";
 
 function Register(props) {
   const [user, setUser] = useState({
@@ -33,7 +33,7 @@ function Register(props) {
 
   const handleSubmit = async () => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      authActions.register(user);
+      props.register(user);
       props.navigate("/");
     } else {
       try {
@@ -128,7 +128,9 @@ const mapStateToProps = function (state) {
 
 const mapDispatchToProps = function () {
   if (process.env.REACT_APP_STAGING === "saga") {
-    return {};
+    return {
+      register: (user) => register(user),
+    };
   }
 };
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { regex } from "../../Services/Utils/Constants";
 
 export default function InputBox(props) {
@@ -76,3 +77,80 @@ export default function InputBox(props) {
     </div>
   );
 }
+
+InputBox.propTypes = {
+  /**
+   * string for className
+   */
+  className: PropTypes.string,
+  /**
+   * boolean for disabled
+   */
+  disabled: PropTypes.bool,
+  /**
+   * string for defaultValue
+   */
+  defaultValue: PropTypes.string,
+  /**
+   * string for value
+   */
+  value: PropTypes.string,
+  /**
+   * object for style
+   */
+  style: PropTypes.object,
+  /**
+   * string for name
+   */
+  name: PropTypes.string,
+  /**
+   * string for type
+   */
+  type: PropTypes.string,
+  /**
+   * string for placeholder
+   */
+  placeholder: PropTypes.string,
+  /**
+   * string for data-cy
+   */
+  datacy: PropTypes.string,
+};
+
+InputBox.defaultProps = {
+  /**
+   * Default empty string for className
+   */
+  className: "",
+  /**
+   * Default false for disabled
+   */
+  disabled: false,
+  /**
+   * Default empty string for defaultValue
+   */
+  defaultValue: "",
+  /**
+   * Default empty string for value
+   */
+  value: "",
+  /**   * Default empty object for style
+   */
+  style: {},
+  /**
+   * Default empty string for name
+   */
+  name: "",
+  /**
+   * Default "text" for type
+   */
+  type: "text",
+  /**
+   * Default empty string for placeholder
+   */
+  placeholder: "",
+  /**
+   * Default empty string for data-cy
+   */
+  datacy: "",
+};

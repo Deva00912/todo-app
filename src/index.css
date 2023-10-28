@@ -169,8 +169,14 @@ input {
 .font-size-100-percent {
   font-size: 100%;
 }
+
 .font-family-times-new-roman {
   font-family: "Times New Roman", Times, serif;
+}
+
+.font-family-courier-new-size-26px {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 26px;
 }
 
 .margin-5px {
