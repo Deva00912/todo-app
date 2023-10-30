@@ -17,8 +17,9 @@ const loginRouter = express.Router();
  * @apiName AuthUserAndLogin
  * @apiGroup Authentication
  *
- * @apiParam {String} username User's username.
- * @apiParam {String} password User's password.
+ * @apiParam {Object} req.body User's credentials.
+ * @apiParam {String} req.body.username User's username.
+ * @apiParam {String} req.body.password User's password.
  *
  * @apiSuccess {String} message Success message.
  * @apiSuccess {String} ackStatus Acknowledgment status.

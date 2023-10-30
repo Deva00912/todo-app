@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Repository/Controllers.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Repository/Controllers.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module API
+ */
+
+const {
+  validateUsername,
+  checkPasswordAndLogin,
+  postCreateUser,
+  getGetAllUsers,
+  postIsUsernameExist,
+  validate,
+} = require("../Features/Auth");
+const {
+  addTaskFeature,
+  updateTask,
+  deleteTaskFeature,
+  getUserTasksFeature,
+} = require("../Features/Tasks");
+
+/**
+ * Throws an error with a custom name.
+ *
+ * @param {String} message - The error message.
+ * @param {String} name - The custom error name.
+ * @throws {TypeError} An error with the provided message and name.
+ */
+const throwError = (message, name) => {
+  const error = new Error(message);
+  error.name = name;
+  throw error;
+};
+
+/**
+ * Validates user login and returns user data.
+ *
+ * @param {String} username - The user's username.
+ * @param {String} password - The user's password.
+ * @throws {AuthError} Throws an AuthError if the entered username is invalid.
+ * @returns {Object} An object containing a message and user data if login is successful.
+ */
+const validateLogin = async (username, password) => {
+  if (!validateUsername(username)) {
+    throwError("Entered Username is invalid", "AuthError");
+  }
+  return await checkPasswordAndLogin(username, password);
+};
+
+/**
+ * Creates a new user with the provided user data.
+ *
+ * @param {Object} userData - User data including { username, firstName, lastName, password, confirmPassword }.
+ * @throws {AuthError} Throws an AuthError if the entered details are not valid.
+ * @returns {Object} An object containing a message and user data if the user creation is successful.
+ */
+const createUser = async (userData) => {
+  if (!validate(userData)) {
+    throwError("Enter details correctly", "AuthError");
+  }
+  return await postCreateUser(userData);
+};
+
+/**
+ * Retrieves all existing users from the database.
+ *
+ * @returns {Object} An object containing a message and an array of user data.
+ */
+const getAllUsers = async () => {
+  return await getGetAllUsers();
+};
+
+/**
+ * Checks if a username already exists in the database.
+ *
+ * @param {String} username - The username to check.
+ * @throws {AuthError} Throws an AuthError if the provided username is invalid.
+ * @returns {Object} An object with a message and data indicating the availability of the username.
+ */
+const isUsernameExist = async (username) => {
+  if (!validateUsername(username)) {
+    throwError("Invalid username", "AuthError");
+  }
+
+  return await postIsUsernameExist(username);
+};
+
+/**
+ * Adds a new task to the database.
+ *
+ * @param {Object} task - The task object to be added to the database.
+ * @returns {Object} An object containing a message indicating success.
+ */
+const addTask = async (task) => {
+  return await addTaskFeature(task);
+};
+
+/**
+ * Updates a task in the database by task ID.
+ *
+ * @param {String} taskId - The ID of the task to be updated.
+ * @param {String} entry - The new entry for the task.
+ * @returns {Object} An object containing a message and updated task data if successful.
+ */
+const editTask = async (taskId, entry) => {
+  return await updateTask(taskId, entry);
+};
+
+/**
+ * Deletes a task from the database by task ID.
+ *
+ * @param {String} taskId - The ID of the task to be deleted.
+ * @returns {Object} An object containing a message and data indicating success.
+ */
+const deleteTask = async (taskId) => {
+  return await deleteTaskFeature(taskId);
+};
+
+/**
+ * Retrieves all tasks of a user from the database.
+ *
+ * @param {String} userId - The ID of the user whose tasks are to be retrieved.
+ * @returns {Object} An object containing a message and an array of task data.
+ */
+const getUserTask = async (userId) => {
+  return await getUserTasksFeature(userId);
+};
+
+module.exports = {
+  createUser,
+  getAllUsers,
+  isUsernameExist,
+  validateLogin,
+  addTask,
+  editTask,
+  deleteTask,
+  getUserTask,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-API.html">API</a></li><li><a href="module-Authentication.html">Authentication</a></li><li><a href="module-Task-Service.html">Task-Service</a></li><li><a href="module-Tasks.html">Tasks</a></li><li><a href="module-User-Service.html">User-Service</a></li></ul><h3>Namespaces</h3><ul><li><a href="-_anonymous_-qa.3003-r.html">r</a></li></ul><h3>Global</h3><ul><li><a href="global.html#identifyAuthError">identifyAuthError</a></li><li><a href="global.html#identifyTasksErrors">identifyTasksErrors</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Oct 30 2023 10:15:41 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

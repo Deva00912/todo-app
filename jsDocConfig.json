@@ -9,7 +9,7 @@
   },
   "recurseDepth": 10,
   "opts": {
-    "destination": "./docs/",
+    "destination": "./Documentation/jsDocs",
     "recurse": true
   }
 }

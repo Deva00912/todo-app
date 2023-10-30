@@ -45,7 +45,8 @@
     "cypress:open": "cypress open",
     "jsDoc": "jsdoc -c jsDocConfig.json",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "generate-docs": "npm run build-storybook -o 'D:/react/todo-app/Documentation/' && npm run jsDoc"
   },
   "eslintConfig": {
     "extends": [
@@ -81,6 +82,7 @@
     "eslint-plugin-cypress": "^2.14.0",
     "eslint-plugin-storybook": "^0.6.15",
     "prop-types": "15.8.1",
+    "react-test-renderer": "^18.2.0",
     "storybook": "7.5.1",
     "webpack": "5.89.0"
   }

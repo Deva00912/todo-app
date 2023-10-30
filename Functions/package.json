@@ -6,7 +6,9 @@
   "scripts": {
     "start": "nodemon index.js",
     "test": "mocha --timeout 30000",
-    "jsDoc": "jsdoc -c ./jsDocConfig.json"
+    "jsDoc": "jsdoc -c ./jsDocConfig.json",
+    "generate-apidoc": "apidoc -i ./ -o ./Documentation/apidoc/",
+    "generate-docs": "npm run generate-apidoc && npm run jsDoc"
   },
   "keywords": [
     "API",

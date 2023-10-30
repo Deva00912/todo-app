@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Routes/Register.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Routes/Register.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const express = require("express");
+const { createUser } = require("../Repository/Controllers.js");
+const { getAllUsers } = require("../Repository/Controllers.js");
+const { isUsernameExist } = require("../Repository/Controllers.js");
+const { validateSchema } = require("../ApiValidation/ApiValidator.js");
+
+/**
+ * Identify and format authentication-related errors for response.
+ *
+ * @function
+ * @name identifyAuthError
+ * @param {object} error - The error object to be identified and formatted.
+ * @returns {object} An object containing the status code and error message.
+ *
+ * @throws {object} Returns an object with a status code and error message based on the provided error object.
+ *
+ * @apiExample {js} Example usage:
+ * const error = new Error("Authentication error");
+ * error.name = "AuthError";
+ * const result = identifyAuthError(error);
+ * // Returns: { statusCode: 400, message: "Authentication error" }
+ */
+const identifyAuthError = (error) => {
+  if (error.code === 11000) {
+    return { statusCode: 400, message: "User already exists" };
+  }
+  if (error.name === "AuthError") {
+    return { statusCode: 400, message: error.message };
+  } else {
+    return { statusCode: 500, message: error.message };
+  }
+};
+
+const registerRouter = express.Router();
+
+/**
+ * @api {put} /createUser Create User
+ * @apiName CreateUser
+ * @apiGroup Authentication
+ *
+ * @apiParam {String} username User's unique username.
+ * @apiParam {String} password User's password.
+ * @apiParam {String} firstName User's first name.
+ * @apiParam {String} lastName User's last name.
+ * @apiParam {String} confirmPassword User's password confirmation.
+ *
+ * @apiSuccess {String} message Success message.
+ * @apiSuccess {String} ackStatus Acknowledgment status.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ * HTTP/1.1 201 Created
+ * {
+ *   "message": "User created",
+ *   "ackStatus": "completed"
+ * }
+ *
+ * @apiError (Error 400) InvalidUserDetails The provided user details are invalid.
+ * @apiError (Error 400) UserAlreadyExists The user with the provided username already exists.
+ * @apiError (Error 500) InternalServerError An internal server error occurred.
+ *
+ * @apiErrorExample {json} Error-Response (InvalidUserDetails):
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "message": "Enter details correctly",
+ *   "ackStatus": "completed"
+ * }
+ *
+ * @apiErrorExample {json} Error-Response (UserAlreadyExists):
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "message": "User already exists",
+ *   "ackStatus": "completed"
+ * }
+ *
+ * @apiErrorExample {json} Error-Response (InternalServerError):
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *   "message": "Internal server error message",
+ *   "ackStatus": "completed"
+ * }
+ */
+registerRouter.put(
+  "/createUser",
+  validateSchema("registerUser"),
+  async (req, res) => {
+    try {
+      const { username, password, firstName, lastName, confirmPassword } =
+        req.body;
+
+      const response = await createUser({
+        username,
+        password,
+        confirmPassword,
+        firstName,
+        lastName,
+      });
+
+      return res
+        .status(201)
+        .json({ ...response, ackStatus: "completed" })
+        .end();
+    } catch (error) {
+      const result = identifyAuthError(error);
+      res
+        .status(result.statusCode)
+        .json({ message: result.message, ackStatus: "completed" })
+        .end();
+    }
+  }
+);
+
+/**
+ * @api {get} /getUsers Get Users
+ * @apiName GetUsers
+ * @apiGroup Authentication
+ *
+ * @apiSuccess {String} message Success message.
+ * @apiSuccess {String} ackStatus Acknowledgment status.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "All Users",
+ *   "ackStatus": "completed"
+ * }
+ *
+ * @apiError (Error 500) InternalServerError An internal server error occurred.
+ *
+ * @apiErrorExample {json} Error-Response (InternalServerError):
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *   "message": "Internal server error message",
+ *   "ackStatus": "completed"
+ * }
+ */
+registerRouter.get("/getUsers", async (req, res) => {
+  try {
+    const response = await getAllUsers();
+    res
+      .status(200)
+      .json({ ...response, ackStatus: "completed" })
+      .end();
+  } catch (error) {
+    res.status(500).json(error.message).end();
+  }
+});
+
+/**
+ * @api {post} /isUsernameExists Check Username Availability
+ * @apiName IsUsernameExists
+ * @apiGroup Authentication
+ *
+ * @apiParam {String} username User's username to check.
+ *
+ * @apiSuccess {String} message Success message.
+ * @apiSuccess {String} ackStatus Acknowledgment status.
+ *
+ * @apiSuccessExample {json} Success-Response (Username is available):
+ * HTTP/1.1 200 OK
+ * {
+ *   "message": "Username is available",
+ *   "ackStatus": "completed"
+ * }
+ *
+ * @apiSuccessExample {json} Success-Response (Username is not available):
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "message": "Username is already in use",
+ *   "ackStatus": "completed"
+ * }
+ *
+ * @apiError (Error 400) InvalidUsername The provided username is invalid.
+ * @apiError (Error 500) InternalServerError An internal server error occurred.
+ *
+ * @apiErrorExample {json} Error-Response (InvalidUsername):
+ * HTTP/1.1 400 Bad Request
+ * {
+ *   "message": "Invalid username",
+ *   "ackStatus": "completed"
+ * }
+ *
+ * @apiErrorExample {json} Error-Response (InternalServerError):
+ * HTTP/1.1 500 Internal Server Error
+ * {
+ *   "message": "Internal server error message",
+ *   "ackStatus": "completed"
+ * }
+ */
+registerRouter.post(
+  "/isUsernameExists",
+  validateSchema("isUsernameAvailable"),
+  async (req, res) => {
+    try {
+      const { username } = req.body;
+      const response = await isUsernameExist(username);
+      const statusCode =
+        response.message === "Username is available" ? 200 : 400;
+      res
+        .status(statusCode)
+        .json({ ...response, ackStatus: "completed" })
+        .end();
+    } catch (error) {
+      const result = identifyAuthError(error);
+      res
+        .status(result.statusCode)
+        .json({ message: result.message, ackStatus: "completed" })
+        .end();
+    }
+  }
+);
+
+module.exports = { registerRouter };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-API.html">API</a></li><li><a href="module-Authentication.html">Authentication</a></li><li><a href="module-Task-Service.html">Task-Service</a></li><li><a href="module-Tasks.html">Tasks</a></li><li><a href="module-User-Service.html">User-Service</a></li></ul><h3>Namespaces</h3><ul><li><a href="-_anonymous_-qa.3003-r.html">r</a></li></ul><h3>Global</h3><ul><li><a href="global.html#identifyAuthError">identifyAuthError</a></li><li><a href="global.html#identifyTasksErrors">identifyTasksErrors</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Oct 30 2023 10:15:41 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

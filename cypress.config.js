@@ -9,4 +9,11 @@ module.exports = defineConfig({
     baseUrl: "http://localhost:3000",
     experimentalRunAllSpecs: true,
   },
+
+  component: {
+    devServer: {
+      framework: "create-react-app",
+      bundler: "webpack",
+    },
+  },
 });

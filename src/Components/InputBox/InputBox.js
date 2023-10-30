@@ -129,18 +129,18 @@ InputBox.defaultProps = {
   /**
    * Default empty string for defaultValue
    */
-  defaultValue: "",
+  defaultValue: undefined,
   /**
    * Default empty string for value
    */
-  value: "",
+  value: undefined,
   /**   * Default empty object for style
    */
-  style: {},
+  style: undefined,
   /**
    * Default empty string for name
    */
-  name: "",
+  name: undefined,
   /**
    * Default "text" for type
    */
@@ -148,9 +148,9 @@ InputBox.defaultProps = {
   /**
    * Default empty string for placeholder
    */
-  placeholder: "",
+  placeholder: undefined,
   /**
    * Default empty string for data-cy
    */
-  datacy: "",
+  datacy: undefined,
 };

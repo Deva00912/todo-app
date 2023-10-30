@@ -68,9 +68,9 @@ Button.defaultProps = {
   /**
    * Default "buttonString" string for data-cy
    */
-  datacy: "buttonType",
+  datacy: undefined,
   /**
    * Default "Click Me" string for value
    */
-  value: "Click Me",
+  value: undefined,
 };
