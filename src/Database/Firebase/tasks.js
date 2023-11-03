@@ -31,7 +31,6 @@ export const getUserTasksFDB = async (userId) => {
     snapshot.forEach((doc) => {
       userTasks.push({ taskId: doc.id, ...doc.data() });
     });
-    console.log("userTasks - firebase", userTasks);
     putUserTasks(userTasks);
   });
 };
