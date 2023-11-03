@@ -10,6 +10,7 @@ const actionTypes = {
   DELETE_TASK: "DELETE_TASK",
   GET_USER_TASKS: "GET_USER_TASKS",
   CLEAR_USER_TASKS: "CLEAR_USER_TASKS",
+  PUT_USER_TASKS: "PUT_USER_TASKS",
 };
 
 /**
@@ -71,12 +72,21 @@ export const deleteTask = (task, token) => {
  * @param {string} userId - The user's ID.
  * @param {string} token - User authentication token.
  */
-export const getUserTasks = (userId, token) => {
+export const getUserTasks = (userId, token, mode) => {
   store.dispatch({
     type: actionTypes.GET_USER_TASKS,
     payload: {
       userId: userId,
       token: token,
+      mode: mode,
+    },
+  });
+};
+export const putUserTasks = (userTasks) => {
+  store.dispatch({
+    type: actionTypes.PUT_USER_TASKS,
+    payload: {
+      userTasks: userTasks,
     },
   });
 };

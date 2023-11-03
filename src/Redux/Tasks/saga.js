@@ -7,12 +7,22 @@ import {
 } from "../../Services/Api/tasks";
 import { toast } from "react-toastify";
 import { getUserTasks } from "./action";
+import {
+  addTaskFDB,
+  deleteTaskFDB,
+  getUserTasksFDB,
+  updateTaskFDB,
+} from "../../Database/Firebase/tasks";
 
 function* addTaskWorker(action) {
   try {
-    yield addTaskApi(action.payload.task, action.payload.token);
-    toast.success("Task Added");
-    yield getUserTasks(action.payload.task.userId, action.payload.token);
+    if (process.env.REACT_APP_DATABASE === "firebase") {
+      yield addTaskFDB(action.payload.task);
+    } else {
+      yield addTaskApi(action.payload.task, action.payload.token);
+      toast.success("Task Added");
+      yield getUserTasks(action.payload.task.userId, action.payload.token);
+    }
   } catch (error) {
     toast.error(error.message);
   }
@@ -20,17 +30,22 @@ function* addTaskWorker(action) {
 
 function* getUserTasksWorker(action) {
   try {
-    const userTasks = yield getIndividualUserTasksApi(
-      action.payload.userId,
-      action.payload.token
-    );
-    if (userTasks.length) {
-      yield put({
-        type: "SET_USER_TASKS",
-        payload: {
-          userTasks: userTasks,
-        },
-      });
+    var userTasks = [];
+    if (process.env.REACT_APP_DATABASE === "firebase") {
+      yield getUserTasksFDB(action.payload.userId);
+    } else {
+      userTasks = yield getIndividualUserTasksApi(
+        action.payload.userId,
+        action.payload.token
+      );
+      if (userTasks.length) {
+        yield put({
+          type: "SET_USER_TASKS",
+          payload: {
+            userTasks: userTasks,
+          },
+        });
+      }
     }
   } catch (error) {
     if (error.message === "No Tasks") {
@@ -47,13 +62,20 @@ function* getUserTasksWorker(action) {
 
 function* editTaskWorker(action) {
   try {
-    yield editTaskApi(
-      action.payload.editTask.taskId,
-      action.payload.editTask.entry,
-      action.payload.token
-    );
+    if (process.env.REACT_APP_DATABASE === "firebase") {
+      yield updateTaskFDB(
+        action.payload.editTask.taskId,
+        action.payload.editTask.entry
+      );
+    } else {
+      yield editTaskApi(
+        action.payload.editTask.taskId,
+        action.payload.editTask.entry,
+        action.payload.token
+      );
+      yield getUserTasks(action.payload.editTask.userId, action.payload.token);
+    }
     toast.success("Task Edited");
-    yield getUserTasks(action.payload.editTask.userId, action.payload.token);
   } catch (error) {
     toast.error(error.message);
   }
@@ -61,20 +83,37 @@ function* editTaskWorker(action) {
 
 function* deleteTaskWorker(action) {
   try {
-    yield deleteTaskApi(action.payload.taskId, action.payload.token);
+    if (process.env.REACT_APP_DATABASE === "firebase") {
+      yield deleteTaskFDB(action.payload.taskId);
+    } else {
+      yield deleteTaskApi(action.payload.taskId, action.payload.token);
+      yield getUserTasks(action.payload.userId, action.payload.token);
+    }
     toast.success("Task deleted");
-    yield getUserTasks(action.payload.userId, action.payload.token);
   } catch (error) {
     toast.error(error.message);
   }
 }
 
-function* clearUserTasksWorker(action) {
+function* clearUserTasksWorker() {
   try {
     yield put({
       type: "SET_USER_TASKS",
       payload: {
         userTasks: [],
+      },
+    });
+  } catch (error) {
+    toast.error(error.message);
+  }
+}
+
+function* putUserTasksWorker(action) {
+  try {
+    yield put({
+      type: "SET_USER_TASKS",
+      payload: {
+        userTasks: action.payload.userTasks,
       },
     });
   } catch (error) {
@@ -89,5 +128,6 @@ export function* taskWatcher() {
     takeEvery("EDIT_TASK", editTaskWorker),
     takeEvery("DELETE_TASK", deleteTaskWorker),
     takeEvery("CLEAR_USER_TASKS", clearUserTasksWorker),
+    takeEvery("PUT_USER_TASKS", putUserTasksWorker),
   ]);
 }

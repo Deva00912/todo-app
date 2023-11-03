@@ -4,10 +4,10 @@ const cors = require("cors");
 const crypto = require("crypto");
 require("dotenv").config();
 
-const { MONGO_URL, PORT } = require("./Services/Utils/Constants.js");
 const { registerRouter } = require("./Routes/Register.js");
 const { loginRouter } = require("./Routes/Login.js");
 const { tasksRouter } = require("./Routes/Tasks.js");
+const { MONGO_URL } = require("./Services/Utils/Constants.js");
 
 const app = express();
 const corsOptions = {
@@ -19,15 +19,20 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 
-mongoose
-  .connect(MONGO_URL)
-  .then(() => {
-    console.log("Database connected");
-    app.listen(PORT, () => {
-      console.log("Server is running at port: ", PORT);
-    });
-  })
-  .catch((error) => console.log(error.message));
+if (process.env.NODE_STAGING === "firebase") {
+  console.log("Firebase Database connected");
+} else {
+  mongoose
+    .connect(MONGO_URL)
+    .then(() => {
+      console.log(" MongoDB Database connected");
+    })
+    .catch((error) => console.log(error.message));
+}
+
+app.listen(process.env.PORT, () => {
+  console.log("Server is running at port: ", process.env.PORT);
+});
 
 app.use("/register", registerRouter);
 app.use("/login", loginRouter);

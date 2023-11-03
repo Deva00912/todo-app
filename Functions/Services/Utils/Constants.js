@@ -1,7 +1,7 @@
 const MONGO_URL =
   "mongodb+srv://devendran0912:devendran0912@cluster0.haipxq7.mongodb.net/TODO-LIST-API?retryWrites=true&w=majority";
 
-const PORT = 7000;
+// const PORT = 7000;
 
 const regex = {
   username: /^[a-z0-9]{6,}$/,
@@ -10,4 +10,4 @@ const regex = {
   text: /^[a-zA-Z]{1,}$/,
 };
 
-module.exports = { MONGO_URL, PORT, regex };
+module.exports = { MONGO_URL, regex };

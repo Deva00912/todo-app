@@ -8,6 +8,7 @@
     "bcryptjs-react": "^2.4.6",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
+    "firebase": "^10.5.2",
     "jsdoc": "^4.0.2",
     "node-gyp": "^9.4.0",
     "react": "^18.2.0",
@@ -40,7 +41,8 @@
   "scripts": {
     "start": "react-scripts start",
     "start:local": "set PORT=3003 && cross-env REACT_APP_STAGING=local react-scripts start",
-    "start:saga": "set PORT=3001 && cross-env REACT_APP_STAGING=saga react-scripts start",
+    "start:saga-mongodb": "set PORT=3001 && cross-env REACT_APP_STAGING=saga && cross-env REACT_APP_DATABASE=mongodb  react-scripts start",
+    "start:saga": "set PORT=3001 && cross-env REACT_APP_STAGING=saga REACT_APP_DATABASE=firebase react-scripts start",
     "build": " react-scripts build && serve -s build",
     "cypress:open": "cypress open",
     "jsDoc": "jsdoc -c jsDocConfig.json",

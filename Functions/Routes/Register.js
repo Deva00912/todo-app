@@ -1,8 +1,14 @@
 const express = require("express");
-const { createUser } = require("../Repository/Controllers.js");
-const { getAllUsers } = require("../Repository/Controllers.js");
+require("dotenv").config();
+
+const {
+  getAllUsers,
+  createUser,
+  firebaseGetUsersFeature,
+} = require("../Repository/Controllers.js");
 const { isUsernameExist } = require("../Repository/Controllers.js");
 const { validateSchema } = require("../ApiValidation/ApiValidator.js");
+const { firebaseCreateUser } = require("../Features/Auth.js");
 
 /**
  * Identify and format authentication-related errors for response.
@@ -86,7 +92,6 @@ registerRouter.put(
     try {
       const { username, password, firstName, lastName, confirmPassword } =
         req.body;
-
       const response = await createUser({
         username,
         password,

@@ -27,7 +27,8 @@ function Login(props) {
       props.navigate("/");
     } else {
       try {
-        const foundUser = await props.auth.checkUserCredentials(user);
+        const foundUser =
+          props.auth && (await props.auth.checkUserCredentials(user));
         if (Object.values(foundUser).length > 0) {
           props.auth?.setLogInUser(foundUser);
           toast.success("Logged in");
@@ -82,19 +83,15 @@ function Login(props) {
 }
 
 const mapStateToProps = function (state) {
-  if (process.env.REACT_APP_STAGING === "saga") {
-    return {
-      auth: state.auth,
-    };
-  }
+  return {
+    auth: state.auth,
+  };
 };
 
 const mapDispatchToProps = function () {
-  if (process.env.REACT_APP_STAGING === "saga") {
-    return {
-      logInUser: (user) => logInUser(user),
-    };
-  }
+  return {
+    logInUser: (user) => logInUser(user),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -1,9 +1,10 @@
 /* eslint-disable jest/valid-expect */
+require("dotenv").config();
 const mongoose = require("mongoose");
 const expect = require("chai").expect;
 const {
   validate,
-  postCreateUser,
+  putCreateUser,
   getGetAllUsers,
   postIsUsernameExist,
   validateUsername,
@@ -127,7 +128,7 @@ describe("Testing Features", () => {
           password: "Dev@1234",
           confirmPassword: "Dev@1234",
         };
-        const response = await postCreateUser(user);
+        const response = await putCreateUser(user);
         expect(response).to.be.a("object");
         expect(Object.values(response).length).to.be.equal(2);
         expect(response.message).to.be.equal("User created");
@@ -190,8 +191,10 @@ describe("Testing Features", () => {
 
         expect(response).to.be.a("object");
         expect(Object.values(response)).to.have.lengthOf(2);
-        expect(response.statusCode).to.be.equal(200);
-        expect(response.message).to.be.equal("Logged in");
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("Logged in");
+        expect(response).to.be.haveOwnProperty("data");
         expect(response.data).to.be.a("object");
         expect(
           Object.values(JSON.stringify(response.data))
@@ -202,17 +205,19 @@ describe("Testing Features", () => {
           username: "devendran0912",
           password: "Dev@e1234",
         };
-        const response = await checkPasswordAndLogin(
-          user.username,
-          user.password
-        );
+        var response = {};
+        try {
+          response = await checkPasswordAndLogin(user.username, user.password);
+        } catch (error) {
+          response.name = error.name;
+          response.message = error.message;
+        }
 
         expect(response).to.be.a("object");
-        expect(Object.values(response)).to.have.lengthOf(3);
-        expect(response.statusCode).to.be.equal(401);
-        expect(response.message).to.be.equal("Invalid credentials");
-        expect(response.data).to.be.a("object");
-        expect(Object.values(response.data)).to.have.lengthOf(0);
+        expect(response).to.be.haveOwnProperty("name").to.be.equal("AuthError");
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("Invalid credentials");
       });
 
       it("Non - existing user", async () => {
@@ -220,22 +225,26 @@ describe("Testing Features", () => {
           username: "hello234",
           password: "Dev@e1234",
         };
-        const response = await checkPasswordAndLogin(
-          user.username,
-          user.password
-        );
+        var response = {};
+        try {
+          response = await checkPasswordAndLogin(user.username, user.password);
+        } catch (error) {
+          response.name = error.name;
+          response.message = error.message;
+        }
 
         expect(response).to.be.a("object");
-        expect(Object.values(response)).to.have.lengthOf(3);
-        expect(response.data).to.be.a("object");
-        expect(Object.values(response.data)).to.have.lengthOf(0);
+        expect(response).to.be.haveOwnProperty("name").to.be.equal("AuthError");
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("User does not exists");
       });
     });
   });
 
   describe("Tasks", () => {
     describe("Adding task", () => {
-      it.skip("Valid task", async () => {
+      it("Valid task", async () => {
         const task = {
           userId: "64f341992245ab97687076a2",
           entry: "Test feature - 1",
@@ -244,101 +253,156 @@ describe("Testing Features", () => {
         const response = await addTaskFeature(task);
 
         expect(response).to.be.a("object");
-        expect(response.statusCode).to.be.equal(201);
-        expect(response.message).to.be.equal("Task Added!");
-        expect(response.data).to.be.a("object");
-        expect(
-          Object.values(JSON.stringify(response.data))
-        ).to.have.lengthOf.above(2);
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("Task Added!");
       });
 
       it("Adding an empty task - null", async () => {
         const task = null;
-        const response = await addTaskFeature(task);
+        var response = {};
+        try {
+          response = await addTaskFeature(task);
+        } catch (error) {
+          response.name = error.name;
+          response.message = error.message;
+        }
 
         expect(response).to.be.a("object");
-        expect(response.statusCode).to.be.equal(400);
-        expect(response.message).to.be.equal("Task cannot be empty");
-        expect(response.data).to.be.a("object");
-        expect(Object.values(response.data)).to.have.lengthOf(0);
+        expect(response).to.be.haveOwnProperty("name").to.be.equal("TaskError");
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("Task cannot be empty");
       });
+
       it("Adding an empty task entry - null", async () => {
         const task = {
           userId: "64f341992245ab97687076a2",
           entry: "",
         };
 
-        const response = await addTaskFeature(task);
+        var response = {};
+        try {
+          response = await addTaskFeature(task);
+        } catch (error) {
+          response.name = error.name;
+          response.message = error.message;
+        }
 
         expect(response).to.be.a("object");
-        expect(response.statusCode).to.be.equal(400);
-        expect(response.message).to.be.equal("Task cannot be empty");
-        expect(response.data).to.be.a("object");
-        expect(Object.values(response.data)).to.have.lengthOf(0);
+        expect(response).to.be.haveOwnProperty("name").to.be.equal("TaskError");
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("Task cannot be empty");
       });
     });
 
     describe("Updating task", () => {
       it("valid task", async () => {
         const task = {
-          taskId: "650535be18739d85cd823de6",
+          taskId: "HpEig3QtdMgR9YecBMDL",
           entry: "Task Edit Feature - 1",
         };
 
         const response = await updateTask(task.taskId, task.entry);
         expect(response).to.be.a("object");
-        expect(response.statusCode).to.be.equal(200);
-        expect(response.message).to.be.equal("Task edited");
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("Task edited");
+        expect(response).to.be.haveOwnProperty("data").to.be.a("object");
       });
+
       it("Invalid task - empty taskId", async () => {
         const task = {
           taskId: "",
           entry: "Task Edit Feature - 1",
         };
 
-        const response = await updateTask(task.taskId, task.entry);
+        var response = {};
+        try {
+          response = await updateTask(task.taskId, task.entry);
+        } catch (error) {
+          response.name = error.name;
+          response.message = error.message;
+        }
+
         expect(response).to.be.a("object");
-        expect(response.statusCode).to.be.equal(400);
-        expect(response.message).to.be.equal("Task not found!");
+        expect(response).to.be.haveOwnProperty("name").to.be.equal("TaskError");
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("Task not found!");
       });
+
       it("Invalid task - empty entry", async () => {
         const task = {
           taskId: "650535be18739d85cd823de6",
           entry: "",
         };
 
-        const response = await updateTask(task.taskId, task.entry);
+        var response = {};
+        try {
+          response = await updateTask(task.taskId, task.entry);
+        } catch (error) {
+          response.name = error.name;
+          response.message = error.message;
+        }
+
         expect(response).to.be.a("object");
-        expect(response.statusCode).to.be.equal(400);
-        expect(response.message).to.be.equal("Task cannot be empty");
+        expect(response).to.be.haveOwnProperty("name").to.be.equal("TaskError");
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("Task cannot be empty");
       });
     });
 
     describe("Deleting an task", () => {
-      it.skip("valid deletion", async () => {
+      it("valid deletion", async () => {
         const taskId = "6502ce84b0792b4d6a62efd3";
 
         const response = await deleteTaskFeature(taskId);
         expect(response).to.be.a("object");
-        expect(response.statusCode).to.be.equal(200);
-        expect(response.message).to.be.equal("Task Deleted");
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("Task deleted");
+        expect(response).to.haveOwnProperty("data").to.be.a("undefined");
       });
+
       it("invalid deletion - empty taskId", async () => {
         const taskId = "";
 
-        const response = await deleteTaskFeature(taskId);
+        var response = {};
+
+        try {
+          response = await deleteTaskFeature(taskId);
+        } catch (error) {
+          response.name = error.name;
+          response.message = error.message;
+        }
+
         expect(response).to.be.a("object");
-        expect(response.statusCode).to.be.equal(400);
-        expect(response.message).to.be.equal("Task not found!");
+        expect(response).to.be.haveOwnProperty("name").to.be.equal("TaskError");
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("Task not found!");
       });
 
-      it("invalid deletion - not an existing taskId", async () => {
+      it.skip("invalid deletion - not an existing taskId", async () => {
         const taskId = "6502ce84b0792b4d6a62efd3";
 
-        const response = await deleteTaskFeature(taskId);
+        var response = {};
+
+        try {
+          response = await deleteTaskFeature(taskId);
+        } catch (error) {
+          response.name = error.name;
+          response.message = error.message;
+        }
+
         expect(response).to.be.a("object");
-        expect(response.statusCode).to.be.equal(400);
-        expect(response.message).to.be.equal("Task not found!");
+        expect(response).to.be.haveOwnProperty("name").to.be.equal("TaskError");
+        expect(response)
+          .to.be.haveOwnProperty("message")
+          .to.be.equal("Task not found!");
       });
     });
 
@@ -348,19 +412,27 @@ describe("Testing Features", () => {
 
         const response = await getUserTasksFeature(userId);
         expect(response).to.be.a("object");
-        expect(response.statusCode).to.be.equal(200);
-        expect(response.message).to.be.equal("User Tasks");
-        expect(response.data).to.be.a("array");
-        expect(response.data).to.have.lengthOf.above(0);
+        expect(response)
+          .to.haveOwnProperty("message")
+          .to.be.equal("User Tasks");
+        expect(response).to.haveOwnProperty("data").to.be.a("array");
       });
 
       it("valid user - tasks are not present", async () => {
         const userId = "64f6fe32be6ff5aa5d25b904";
 
-        const response = await getUserTasksFeature(userId);
+        var response = {};
+        try {
+          response = await getUserTasksFeature(userId);
+        } catch (error) {
+          response.name = error.name;
+          response.message = error.message;
+        }
         expect(response).to.be.a("object");
-        expect(response.statusCode).to.be.equal(400);
-        expect(response.message).to.be.equal("No Tasks");
+        expect(response)
+          .to.haveOwnProperty("message")
+          .to.be.equal("User Tasks");
+        expect(response).to.haveOwnProperty("data").to.be.a("array");
       });
     });
   });

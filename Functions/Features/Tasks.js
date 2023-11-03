@@ -3,6 +3,13 @@
  */
 
 const {
+  addTaskFDB,
+  updateTaskFDB,
+  deleteTaskFDB,
+  getUserTasksFDB,
+  getTasksByTaskIdFDB,
+} = require("../Services/FireBase/TasksService");
+const {
   addTaskInDB,
   updateTaskInDB,
   findTaskByTaskId,
@@ -33,7 +40,11 @@ const addTaskFeature = async (task) => {
   if (!task || !task.entry) {
     throwTaskError("Task cannot be empty");
   }
-  await addTaskInDB(task);
+  if (process.env.NODE_STAGING === "firebase") {
+    await addTaskFDB(task);
+  } else {
+    await addTaskInDB(task);
+  }
   return { message: "Task Added!" };
 };
 
@@ -52,11 +63,18 @@ const updateTask = async (taskId, entry) => {
   if (!entry) {
     throwTaskError("Task cannot be empty");
   }
-  const taskByTaskId = await findTaskByTaskId(taskId);
-  if (!taskByTaskId) {
-    throwTaskError("Task not found!");
+  var updatedTask = undefined;
+  if (process.env.NODE_STAGING === "firebase") {
+    await updateTaskFDB({ taskId: taskId, entry: entry });
+    updatedTask = (await getTasksByTaskIdFDB(taskId)).data();
+  } else {
+    const taskByTaskId = await findTaskByTaskId(taskId);
+    if (!taskByTaskId) {
+      throwTaskError("Task not found!");
+    }
+    updatedTask = await updateTaskInDB(taskId, entry);
   }
-  const updatedTask = await updateTaskInDB(taskId, entry);
+
   return { message: "Task edited", data: updatedTask };
 };
 
@@ -71,11 +89,16 @@ const deleteTaskFeature = async (taskId) => {
   if (!taskId) {
     throwTaskError("Task not found!");
   }
-  const response = await findTaskByTaskId(taskId);
-  if (!response) {
-    throwTaskError("Task not found!");
+  var deletedTask = undefined;
+  if (process.env.NODE_STAGING === "firebase") {
+    await deleteTaskFDB(taskId);
+  } else {
+    const response = await findTaskByTaskId(taskId);
+    if (!response) {
+      throwTaskError("Task not found!");
+    }
+    deletedTask = await deleteTaskInDB(taskId);
   }
-  const deletedTask = await deleteTaskInDB(taskId);
   return { message: "Task deleted", data: deletedTask };
 };
 
@@ -87,11 +110,28 @@ const deleteTaskFeature = async (taskId) => {
  * @returns {Object} An object containing a message and an array of task data.
  */
 const getUserTasksFeature = async (userId) => {
-  const response = await getUserTasksFromDB(userId);
-  if (!response.length) {
-    throwTaskError("No Tasks");
+  var response = undefined;
+  if (process.env.NODE_STAGING === "firebase") {
+    response = await getUserTasks(userId);
+  } else {
+    response = await getUserTasksFromDB(userId);
+    if (!response.length) {
+      throwTaskError("No Tasks");
+    }
   }
   return { message: "User Tasks", data: response };
+};
+
+const getUserTasks = async (userId) => {
+  const snapshot = await getUserTasksFDB(userId);
+  return getDocumentsFromSnapshot(snapshot);
+};
+
+const getDocumentsFromSnapshot = (snapshot) => {
+  return snapshot.docs.map((doc) => ({
+    taskId: doc.id,
+    ...doc.data(),
+  }));
 };
 
 module.exports = {

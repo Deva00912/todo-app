@@ -5,11 +5,12 @@
 const {
   validateUsername,
   checkPasswordAndLogin,
-  postCreateUser,
+  putCreateUser,
   getGetAllUsers,
   postIsUsernameExist,
   validate,
 } = require("../Features/Auth");
+
 const {
   addTaskFeature,
   updateTask,
@@ -56,7 +57,7 @@ const createUser = async (userData) => {
   if (!validate(userData)) {
     throwError("Enter details correctly", "AuthError");
   }
-  return await postCreateUser(userData);
+  return await putCreateUser(userData);
 };
 
 /**

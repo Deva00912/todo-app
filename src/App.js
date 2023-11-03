@@ -9,8 +9,6 @@ import { useTasks } from "./Services/Hooks/useTasks.js";
 import ErrorBoundary from "./Components/ErrorBoundary/ErrorBoundary";
 import { connect } from "react-redux";
 
-console.log("Latest build - SW");
-
 const ProtectedRoute = ({ children, isLogged }) => {
   if (!isLogged) {
     return <Navigate to="/login" />;

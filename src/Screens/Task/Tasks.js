@@ -13,6 +13,12 @@ import {
   editTask,
   getUserTasks,
 } from "../../Redux/Tasks/action";
+import {
+  addTaskFDB,
+  deleteTaskFDB,
+  getUserTasksFDB,
+  updateTaskFDB,
+} from "../../Database/Firebase/tasks";
 
 function Tasks(props) {
   const [entry, setEntry] = useState({
@@ -29,17 +35,18 @@ function Tasks(props) {
 
   //Redux - Saga
   useEffect(() => {
-    getUserTasksAndShowTasks();
+    getUserTasksAndShowTasks("mount-change");
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
+    // getUserTasksAndShowTasks();
     if (create) {
-      getUserTasksAndShowTasks();
+      getUserTasksAndShowTasks("add-change");
       setCreate(false);
     }
     if (edit) {
-      getUserTasksAndShowTasks();
+      getUserTasksAndShowTasks("edit-change");
       setEdit(false);
     }
 
@@ -51,20 +58,23 @@ function Tasks(props) {
     setShowTask(props.tasks?.userTasks);
   }, [props.tasks?.userTasks]);
 
-  const getUserTasksAndShowTasks = async () => {
-    if (process.env.REACT_APP_STAGING === "saga") {
-      props.getUserTasks(props.auth.data.userId, props.authToken);
-      // setShowTask(props.tasks.userTasks);
-    } else {
-      try {
-        const getTasks = await props.task.getIndividualUserTasks(
-          props.auth.loggedInUser?.userId,
-          props.auth.loggedInUser?.token
-        );
-        setShowTask(getTasks);
-      } catch (error) {
-        toast.error(error.message);
+  const getUserTasksAndShowTasks = async (mode) => {
+    try {
+      if (process.env.REACT_APP_STAGING === "saga") {
+        props.getUserTasks(props.auth.data.userId, props.authToken, mode);
+      } else {
+        if (process.env.REACT_APP_DATABASE === "firebase") {
+          await getUserTasksFDB(props.auth.data.userId);
+        } else {
+          const getTasks = await props.task.getIndividualUserTasks(
+            props.auth.loggedInUser?.userId,
+            props.auth.loggedInUser?.token
+          );
+          setShowTask(getTasks);
+        }
       }
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
@@ -81,9 +91,11 @@ function Tasks(props) {
   const handleAddTask = async () => {
     if (process.env.REACT_APP_STAGING === "saga") {
       props.addTask(entry, props.authToken);
-      // setCreate(true);
     } else {
-      try {
+      if (process.env.REACT_APP_DATABASE === "firebase") {
+        await addTaskFDB(entry);
+        toast.success("Task Added");
+      } else {
         await props.task.addTask(
           process.env.REACT_APP_STAGING === "local"
             ? { ...entry, taskId: uuid() }
@@ -92,8 +104,6 @@ function Tasks(props) {
         );
         setCreate(true);
         toast.success("Task Added");
-      } catch (error) {
-        toast.error(error.message);
       }
     }
   };
@@ -108,9 +118,13 @@ function Tasks(props) {
         },
         props.authToken
       );
+
       // setEdit(true);
     } else {
-      try {
+      if (process.env.REACT_APP_DATABASE === "firebase") {
+        await updateTaskFDB(taskEditId, entry);
+        toast.success("Task Edited");
+      } else {
         await props.task.editTask(
           taskEditId,
           entry,
@@ -118,8 +132,6 @@ function Tasks(props) {
         );
         setEdit(true);
         toast.success("Task Edited");
-      } catch (error) {
-        toast.error(error.message);
       }
     }
   };
@@ -133,14 +145,14 @@ function Tasks(props) {
         },
         props.authToken
       );
-      // setCreate(true);
     } else {
-      try {
+      if (process.env.REACT_APP_DATABASE === "firebase") {
+        await deleteTaskFDB(taskId);
+        toast.success("Task deleted");
+      } else {
         await props.task.deleteTask(taskId, props.auth.loggedInUser?.token);
         setCreate(true);
         toast.success("Task deleted");
-      } catch (error) {
-        toast.error(error.message);
       }
     }
   };
@@ -231,8 +243,12 @@ function Tasks(props) {
                     value="Edit"
                     data-cy="editButton"
                     onClick={() => {
-                      const taskEditId = showTask[index].taskId;
-                      handleEditTask(taskEditId, entry);
+                      try {
+                        const taskEditId = showTask[index].taskId;
+                        handleEditTask(taskEditId, entry);
+                      } catch (error) {
+                        toast.error(error.message);
+                      }
                     }}
                     disabled={data.taskId === clicked ? true : false}
                   >
@@ -243,7 +259,11 @@ function Tasks(props) {
                     value="Delete"
                     data-cy="deleteButton"
                     onClick={() => {
-                      handleDeleteTask(showTask[index].taskId);
+                      try {
+                        handleDeleteTask(showTask[index].taskId);
+                      } catch (error) {
+                        toast.error(error.message);
+                      }
                     }}
                     disabled={data.taskId === clicked ? true : false}
                   >
@@ -289,7 +309,7 @@ const mapDispatchToProps = function () {
       addTask: (entry, token) => addTask(entry, token),
       editTask: (task, token) => editTask(task, token),
       deleteTask: (task, token) => deleteTask(task, token),
-      getUserTasks: (userId, token) => getUserTasks(userId, token),
+      getUserTasks: (userId, token, mode) => getUserTasks(userId, token, mode),
       clearUserTasks: () => clearUserTasks(),
       logOut: () => logOut(),
     };

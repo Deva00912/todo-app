@@ -5,11 +5,18 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { regex } = require("../Services/Utils/Constants");
+
 const {
   createUserInDB,
   getAllUsersFromDB,
   getUserFromDB,
 } = require("../Services/MongoDB/UserServices");
+
+const {
+  getUsersFDB,
+  createUserFDB,
+  getUserFDB,
+} = require("../Services/FireBase/UserService");
 
 /**
  * Validates user-entered details.
@@ -58,11 +65,15 @@ const throwAuthError = (message) => {
  * @param {Object} userData - User data to be created in the database.
  * @returns {Object} An object containing a message and user data.
  */
-const postCreateUser = async (userData) => {
+const putCreateUser = async (userData) => {
   const encryptedPassword = await bcrypt.hash(userData.password, 10);
   userData.password = encryptedPassword;
-
-  const user = await createUserInDB(userData);
+  var user = undefined;
+  if (process.env.NODE_STAGING === "firebase") {
+    user = await firebaseCreateUser(userData);
+  } else {
+    user = await createUserInDB(userData);
+  }
 
   user.token = generateJwtToken(user.userId, user.username);
 
@@ -77,7 +88,12 @@ const postCreateUser = async (userData) => {
  * @returns {Object} An object containing a message and an array of user data.
  */
 const getGetAllUsers = async () => {
-  const allUsers = await getAllUsersFromDB();
+  var allUsers = undefined;
+  if (process.env.NODE_STAGING === "firebase") {
+    allUsers = await firebaseGetUsers();
+  } else {
+    allUsers = await getAllUsersFromDB();
+  }
   if (!allUsers.length) {
     throwAuthError("No users");
   }
@@ -94,7 +110,12 @@ const getGetAllUsers = async () => {
  * @returns {Object} An object with a message and data indicating the availability of the username.
  */
 const postIsUsernameExist = async (username) => {
-  const response = await getUserFromDB(username);
+  var response = undefined;
+  if (process.env.NODE_STAGING === "firebase") {
+    response = await firebaseGetUser(username);
+  } else {
+    response = await getUserFromDB(username);
+  }
   const message = !response
     ? "Username is available"
     : "Username is already in use";
@@ -113,7 +134,12 @@ const postIsUsernameExist = async (username) => {
  * @returns {Object} An object with a message and user data if login is successful.
  */
 const checkPasswordAndLogin = async (username, password) => {
-  const user = await getUserFromDB(username);
+  var user = undefined;
+  if (process.env.NODE_STAGING === "firebase") {
+    user = await firebaseGetUser(username);
+  } else {
+    user = await getUserFromDB(username);
+  }
   if (!user) {
     throwAuthError("User does not exists");
   }
@@ -143,10 +169,32 @@ const generateJwtToken = (userId, username) => {
   return token;
 };
 
+const firebaseGetUsers = async () => {
+  const snapshot = await getUsersFDB();
+  return getDocumentsFromSnapshot(snapshot);
+};
+
+const firebaseCreateUser = async (user) => {
+  await createUserFDB(user);
+  return firebaseGetUser(user.username);
+};
+
+const firebaseGetUser = async (username) => {
+  const snapshot = await getUserFDB(username);
+  return getDocumentsFromSnapshot(snapshot)[0];
+};
+
+const getDocumentsFromSnapshot = (snapshot) => {
+  return snapshot.docs.map((doc) => ({
+    userId: doc.id,
+    ...doc.data(),
+  }));
+};
+
 module.exports = {
   validate,
   validateUsername,
-  postCreateUser,
+  putCreateUser,
   getGetAllUsers,
   postIsUsernameExist,
   checkPasswordAndLogin,
