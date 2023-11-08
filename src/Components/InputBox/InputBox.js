@@ -23,11 +23,11 @@ export default function InputBox(props) {
           newErrors.lastName = "Name is invalid";
         }
         break;
-      case "username":
+      case "email":
         if (value === "") {
-          newErrors.username = "Name can't be blank";
-        } else if (!regex.username.test(value)) {
-          newErrors.username = "Username is invalid";
+          newErrors.email = "Name can't be blank";
+        } else if (!regex.email.test(value)) {
+          newErrors.email = "Email is invalid";
         }
         break;
       case "password":

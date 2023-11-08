@@ -18,7 +18,7 @@ const loginRouter = express.Router();
  * @apiGroup Authentication
  *
  * @apiParam {Object} req.body User's credentials.
- * @apiParam {String} req.body.username User's username.
+ * @apiParam {String} req.body.email User's email.
  * @apiParam {String} req.body.password User's password.
  *
  * @apiSuccess {String} message Success message.
@@ -33,14 +33,14 @@ const loginRouter = express.Router();
  *   "token": "User authentication token"
  * }
  *
- * @apiError (Error 400) InvalidUsername The provided username is invalid.
+ * @apiError (Error 400) InvalidUsername The provided email is invalid.
  * @apiError (Error 400) InvalidCredentials The provided credentials are invalid.
  * @apiError (Error 500) InternalServerError An internal server error occurred.
  *
  * @apiErrorExample {json} Error-Response (InvalidUsername):
  * HTTP/1.1 400 Bad Request
  * {
- *   "message": "Invalid username",
+ *   "message": "Invalid email",
  *   "ackStatus": "completed"
  * }
  *
@@ -63,13 +63,14 @@ loginRouter.post(
   validateSchema("loginUser"),
   async (req, res) => {
     try {
-      const { username, password } = req.body;
-      const response = await validateLogin(username, password);
+      const { email, password } = req.body;
+      const response = await validateLogin(email, password);
       res
         .status(200)
         .json({ ...response, ackStatus: "completed" })
         .end();
     } catch (error) {
+      console.log("error", error);
       const result = identifyAuthError(error);
       res
         .status(result.statusCode)

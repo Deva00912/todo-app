@@ -6,7 +6,7 @@ describe("Registration", () => {
 
   it("Test case - Correct details", () => {
     const user = {
-      username: "abcd123",
+      email: "abcd123@test.com",
       firstName: "abcd",
       lastName: "wxyz",
       password: "Abcd@1234",
@@ -19,7 +19,7 @@ describe("Registration", () => {
 
   it("Test case - Incorrect details", () => {
     const user = {
-      username: "Abcd123",
+      email: "Abcd123",
       firstName: "abcd",
       lastName: "wxyz@",
       password: "Abcd@1234",

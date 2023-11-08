@@ -14,7 +14,7 @@ describe.only("User API", () => {
         .request("http://localhost:7000")
         .post("/login/authUserAndLogin")
         .send({
-          username: "devendran0912",
+          email: "devendran0912",
           password: "Dev@1234",
         })
         .end((err, res) => {
@@ -33,7 +33,7 @@ describe.only("User API", () => {
         .request("http://localhost:7000")
         .post("/login/authUserAndLogin")
         .send({
-          username: "devendran0912",
+          email: "devendran0912",
           password: "Deve@1234",
         })
         .end((err, res) => {
@@ -48,12 +48,12 @@ describe.only("User API", () => {
           }
         });
     });
-    it("should handle existing user - invalid credentials (username)", () => {
+    it("should handle existing user - invalid credentials (email)", () => {
       chai
         .request("http://localhost:7000")
         .post("/login/authUserAndLogin")
         .send({
-          username: "Devendran0912",
+          email: "Devendran0912",
           password: "Dev@1234",
         })
         .end((err, res) => {
@@ -72,7 +72,7 @@ describe.only("User API", () => {
         .request("http://localhost:7000")
         .post("/login/authUserAndLogin")
         .send({
-          username: "tatsumi0912",
+          email: "tatsumi0912",
           password: "Dev@1234",
         })
         .end((err, res) => {
@@ -95,7 +95,7 @@ describe.only("User API", () => {
         .request("http://localhost:7000")
         .put("/register/createUser")
         .send({
-          username: "anitha041108642",
+          email: "anitha041108642",
           firstName: "Anitha",
           lastName: "K",
           password: "Dev@1234",
@@ -118,7 +118,7 @@ describe.only("User API", () => {
           .request("http://localhost:7000")
           .put("/register/createUser")
           .send({
-            username: "anitha0912",
+            email: "anitha0912",
             firstName: "Anitha",
             lastName: "K",
             password: "Dev@1234",
@@ -140,12 +140,12 @@ describe.only("User API", () => {
       }
     });
 
-    it("error - Creating an user with an invalid username", () => {
+    it("error - Creating an user with an invalid email", () => {
       chai
         .request("http://localhost:7000")
         .put("/register/createUser")
         .send({
-          username: "Anitha8899",
+          email: "Anitha8899",
           password: "Dev@1234",
           firstName: "Anitha",
           lastName: "K",
@@ -167,7 +167,7 @@ describe.only("User API", () => {
         .request("http://localhost:7000")
         .put("/register/createUser")
         .send({
-          username: "Anitha0981",
+          email: "Anitha0981",
           password: "Dev@1234",
           firstName: "Anitha",
           lastName: "K",
@@ -196,12 +196,12 @@ describe.only("User API", () => {
         });
     });
 
-    it("checking whether an username exist? - username exists", () => {
+    it("checking whether an email exist? - email exists", () => {
       chai
         .request("http://localhost:7000")
-        .post("/register/isUsernameExists")
+        .post("/register/isUserEmailExists")
         .send({
-          username: "devendran0912",
+          email: "devendran0912",
           password: "Dev@1234",
         })
         .end((err, res) => {
@@ -212,18 +212,18 @@ describe.only("User API", () => {
             expect(res).to.have.status(400);
             expect(res.body)
               .to.have.property("message")
-              .equal("Username is already in use");
+              .equal("email is already in use");
             expect(res.body).to.have.property("data").to.be.a("object");
           }
         });
     });
 
-    it("checking whether an username exist? - username not exists", () => {
+    it("checking whether an email exist? - email not exists", () => {
       chai
         .request("http://localhost:7000")
-        .post("/register/isUsernameExists")
+        .post("/register/isUserEmailExists")
         .send({
-          username: "abcd1234",
+          email: "abcd1234",
           password: "Dev@1234",
         })
         .end((err, res) => {
@@ -234,7 +234,7 @@ describe.only("User API", () => {
             expect(res).to.have.status(200);
             expect(res.body)
               .to.have.property("message")
-              .equal("Username is available");
+              .equal("email is available");
             expect(res.body).to.have.property("data").to.be.a("array");
           }
         });

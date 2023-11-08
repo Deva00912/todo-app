@@ -7,13 +7,13 @@ import { connect } from "react-redux";
 import { logInUser } from "../../Redux/Authentication/action";
 
 function Login(props) {
-  const [user, setUser] = useState({ username: "", password: "" });
+  const [user, setUser] = useState({ email: "", password: "" });
 
   const validate = () => {
     return (
-      user.username &&
+      user.email &&
       user.password &&
-      regex.username.test(user.username) &&
+      regex.email.test(user.email) &&
       regex.password.test(user.password)
     );
   };
@@ -56,10 +56,10 @@ function Login(props) {
           Log in
         </div>
         <InputBox
-          placeholder="Enter Username"
+          placeholder="Enter email"
           type="text"
-          name="username"
-          datacy="username"
+          name="email"
+          datacy="email"
         />
         <InputBox
           placeholder="Enter Password"

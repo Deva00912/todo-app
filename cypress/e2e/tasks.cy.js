@@ -3,7 +3,7 @@ const cy = window.cy;
 describe("In Task screen ", () => {
   beforeEach("Users logged in", () => {
     const user1 = {
-      username: "abcd123",
+      email: "abcd123@test.com",
       firstName: "abcd",
       lastName: "wxyz",
       password: "Abcd@1234",

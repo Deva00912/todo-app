@@ -39,7 +39,7 @@ const registerRouter = express.Router();
  * @apiName CreateUser
  * @apiGroup Authentication
  *
- * @apiParam {String} username User's unique username.
+ * @apiParam {String} email User's unique email.
  * @apiParam {String} password User's password.
  * @apiParam {String} firstName User's first name.
  * @apiParam {String} lastName User's last name.
@@ -56,7 +56,7 @@ const registerRouter = express.Router();
  * }
  *
  * @apiError (Error 400) InvalidUserDetails The provided user details are invalid.
- * @apiError (Error 400) UserAlreadyExists The user with the provided username already exists.
+ * @apiError (Error 400) UserAlreadyExists The user with the provided email already exists.
  * @apiError (Error 500) InternalServerError An internal server error occurred.
  *
  * @apiErrorExample {json} Error-Response (InvalidUserDetails):
@@ -85,10 +85,10 @@ registerRouter.put(
   validateSchema("registerUser"),
   async (req, res) => {
     try {
-      const { username, password, firstName, lastName, confirmPassword } =
+      const { email, password, firstName, lastName, confirmPassword } =
         req.body;
       const response = await createUser({
-        username,
+        email,
         password,
         confirmPassword,
         firstName,
@@ -146,36 +146,36 @@ registerRouter.get("/getUsers", async (req, res) => {
 });
 
 /**
- * @api {post} /isUsernameExists Check Username Availability
+ * @api {post} /isUserEmailExists Check email Availability
  * @apiName IsUsernameExists
  * @apiGroup Authentication
  *
- * @apiParam {String} username User's username to check.
+ * @apiParam {String} email User's email to check.
  *
  * @apiSuccess {String} message Success message.
  * @apiSuccess {String} ackStatus Acknowledgment status.
  *
- * @apiSuccessExample {json} Success-Response (Username is available):
+ * @apiSuccessExample {json} Success-Response (email is available):
  * HTTP/1.1 200 OK
  * {
- *   "message": "Username is available",
+ *   "message": "email is available",
  *   "ackStatus": "completed"
  * }
  *
- * @apiSuccessExample {json} Success-Response (Username is not available):
+ * @apiSuccessExample {json} Success-Response (email is not available):
  * HTTP/1.1 400 Bad Request
  * {
- *   "message": "Username is already in use",
+ *   "message": "email is already in use",
  *   "ackStatus": "completed"
  * }
  *
- * @apiError (Error 400) InvalidUsername The provided username is invalid.
+ * @apiError (Error 400) InvalidUsername The provided email is invalid.
  * @apiError (Error 500) InternalServerError An internal server error occurred.
  *
  * @apiErrorExample {json} Error-Response (InvalidUsername):
  * HTTP/1.1 400 Bad Request
  * {
- *   "message": "Invalid username",
+ *   "message": "Invalid email",
  *   "ackStatus": "completed"
  * }
  *
@@ -187,14 +187,13 @@ registerRouter.get("/getUsers", async (req, res) => {
  * }
  */
 registerRouter.post(
-  "/isUsernameExists",
-  validateSchema("isUsernameAvailable"),
+  "/isUserEmailExists",
+  validateSchema("isUserEmailAvailable"),
   async (req, res) => {
     try {
-      const { username } = req.body;
-      const response = await isUsernameExist(username);
-      const statusCode =
-        response.message === "Username is available" ? 200 : 400;
+      const { email } = req.body;
+      const response = await isUsernameExist(email);
+      const statusCode = response.message === "email is available" ? 200 : 400;
       res
         .status(statusCode)
         .json({ ...response, ackStatus: "completed" })

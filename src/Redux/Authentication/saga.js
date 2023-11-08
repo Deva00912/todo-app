@@ -5,21 +5,30 @@
 import { all, put, takeEvery } from "redux-saga/effects";
 import {
   checkUserCredentialsApi,
-  checkUsernameAvailabilityApi,
+  checkUserEmailAvailabilityApi,
   createUserApi,
 } from "../../Services/Api/auth";
 import { toast } from "react-toastify";
 import {
+  registerWithEmailAndPassword,
   signInUserFDB,
   signOutFDB,
 } from "../../Database/Firebase/Authentication";
 
 function* logInUserWorker(action) {
   try {
-    const response = yield checkUserCredentialsApi({
-      username: action.payload.username,
-      password: action.payload.password,
-    });
+    var response = undefined;
+    if (process.env.REACT_APP_DATABASE === "firebase") {
+      response = yield signInUserFDB({
+        email: action.payload.email,
+        password: action.payload.password,
+      });
+    } else {
+      response = yield checkUserCredentialsApi({
+        email: action.payload.email,
+        password: action.payload.password,
+      });
+    }
     if (response) {
       yield put({
         type: "SET_LOGGED_USER",
@@ -27,7 +36,6 @@ function* logInUserWorker(action) {
           data: response,
         },
       });
-      yield signInUserFDB(response.token);
       toast.success("Logged in");
     }
   } catch (error) {
@@ -37,16 +45,22 @@ function* logInUserWorker(action) {
 
 function* registerWorker(action) {
   try {
-    yield checkUsernameAvailabilityApi(action.payload.user.username);
-    const response = yield createUserApi(action.payload.user);
-    yield put({
-      type: "SET_LOGGED_USER",
-      payload: {
-        data: response,
-      },
-    });
-    yield signInUserFDB(response.token);
-    toast.success("Registered");
+    var response = undefined;
+    if (process.env.REACT_APP_DATABASE === "firebase") {
+      response = yield registerWithEmailAndPassword(action.payload.user);
+    } else {
+      yield checkUserEmailAvailabilityApi(action.payload.user.email);
+      response = yield createUserApi(action.payload.user);
+    }
+    if (response) {
+      yield put({
+        type: "SET_LOGGED_USER",
+        payload: {
+          data: response,
+        },
+      });
+      toast.success("Registered");
+    }
   } catch (error) {
     toast.error(error.message);
   }

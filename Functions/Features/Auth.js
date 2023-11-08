@@ -22,17 +22,17 @@ const { admin } = require("../Services/FireBase/Utils/admin");
 /**
  * Validates user-entered details.
  *
- * @param {Object} userData - User data including username, firstName, lastName, password, and confirmPassword.
+ * @param {Object} userData - User data including email, firstName, lastName, password, and confirmPassword.
  * @returns {boolean} - `true` if the entered details are valid, otherwise `false`.
  */
 const validate = (userData) => {
-  return userData.username &&
+  return userData.email &&
     userData.firstName &&
     userData.lastName &&
     userData.confirmPassword &&
     userData.password &&
     userData.password === userData.confirmPassword &&
-    regex.username.test(userData.username) &&
+    regex.email.test(userData.email) &&
     regex.password.test(userData.password) &&
     regex.text.test(userData.firstName) &&
     regex.text.test(userData.lastName)
@@ -41,11 +41,11 @@ const validate = (userData) => {
 };
 
 /**
- * @param {string} username - The username to validate.
- * @returns {boolean} - `true` if the entered username is valid, otherwise `false`.
+ * @param {string} email - The email to validate.
+ * @returns {boolean} - `true` if the entered email is valid, otherwise `false`.
  */
-const validateUsername = (username) => {
-  return regex?.username.test(username) ? true : false;
+const validateUserEmail = (email) => {
+  return regex?.email.test(email) ? true : false;
 };
 
 /**
@@ -74,10 +74,10 @@ const putCreateUser = async (userData) => {
     user = await firebaseCreateUser(userData);
     user.token = await admin
       .auth()
-      .createCustomToken(user.userId, { username: user.username });
+      .createCustomToken(user.userId, { email: user.email });
   } else {
     user = await createUserInDB(userData);
-    user.token = generateJwtToken(user.userId, user.username);
+    user.token = generateJwtToken(user.userId, user.email);
   }
 
   return { message: "User created", data: user };
@@ -107,21 +107,19 @@ const getGetAllUsers = async () => {
 };
 
 /**
- * Checks if a username already exists in the database.
+ * Checks if a email already exists in the database.
  *
- * @param {String} username - The username to check.
- * @returns {Object} An object with a message and data indicating the availability of the username.
+ * @param {String} email - The email to check.
+ * @returns {Object} An object with a message and data indicating the availability of the email.
  */
-const postIsUsernameExist = async (username) => {
+const postIsUserEmailExists = async (email) => {
   var response = undefined;
   if (process.env.NODE_STAGING === "firebase") {
-    response = await firebaseGetUser(username);
+    response = await firebaseGetUser(email);
   } else {
-    response = await getUserFromDB(username);
+    response = await getUserFromDB(email);
   }
-  const message = !response
-    ? "Username is available"
-    : "Username is already in use";
+  const message = !response ? "email is available" : "email is already in use";
   return {
     message: message,
     data: !response ? [] : response,
@@ -131,31 +129,32 @@ const postIsUsernameExist = async (username) => {
 /**
  * Checks user credentials and generates a JWT token for login.
  *
- * @param {String} username - The username to check.
+ * @param {String} email - The email to check.
  * @param {String} password - The user's password.
  * @throws {AuthError} Throws an error if no user exists in the database or invalid credentials.
  * @returns {Object} An object with a message and user data if login is successful.
  */
-const checkPasswordAndLogin = async (username, password) => {
+const checkPasswordAndLogin = async (email, password) => {
   var user = undefined;
   if (process.env.NODE_STAGING === "firebase") {
-    user = await firebaseGetUser(username);
-    user.token = await admin
-      .auth()
-      .createCustomToken(user.userId, { username: user.username });
+    user = await firebaseGetUser(email);
   } else {
-    user = await getUserFromDB(username);
+    user = await getUserFromDB(email);
   }
   if (!user) {
     throwAuthError("User does not exists");
   }
 
-  if (process.env.NODE_STAGING !== "firebase") {
-    if (user && (await bcrypt.compare(password, user.password))) {
-      user.token = generateJwtToken(user.userId, user.username);
+  if (user && (await bcrypt.compare(password, user.password))) {
+    if (process.env.NODE_STAGING !== "firebase") {
+      user.token = await admin
+        .auth()
+        .createCustomToken(user.userId, { email: user.email });
     } else {
-      throwAuthError("Invalid credentials");
+      user.token = generateJwtToken(user.userId, user.email);
     }
+  } else {
+    throwAuthError("Invalid credentials");
   }
   return {
     message: "Logged in",
@@ -167,11 +166,11 @@ const checkPasswordAndLogin = async (username, password) => {
  * Generates a JWT token for a user.
  *
  * @param {String} userId - The user's ID.
- * @param {String} username - The user's username.
+ * @param {String} email - The user's email.
  * @returns {String} The generated JWT token.
  */
-const generateJwtToken = (userId, username) => {
-  const token = jwt.sign({ userId, username }, process.env.TOKEN_KEY, {
+const generateJwtToken = (userId, email) => {
+  const token = jwt.sign({ userId, email }, process.env.TOKEN_KEY, {
     expiresIn: "1h",
   });
   return token;
@@ -184,11 +183,11 @@ const firebaseGetUsers = async () => {
 
 const firebaseCreateUser = async (user) => {
   await createUserFDB(user);
-  return firebaseGetUser(user.username);
+  return firebaseGetUser(user.email);
 };
 
-const firebaseGetUser = async (username) => {
-  const snapshot = await getUserFDB(username);
+const firebaseGetUser = async (email) => {
+  const snapshot = await getUserFDB(email);
   return getDocumentsFromSnapshot(snapshot)[0];
 };
 
@@ -201,9 +200,9 @@ const getDocumentsFromSnapshot = (snapshot) => {
 
 module.exports = {
   validate,
-  validateUsername,
+  validateUserEmail,
   putCreateUser,
   getGetAllUsers,
-  postIsUsernameExist,
+  postIsUserEmailExists,
   checkPasswordAndLogin,
 };

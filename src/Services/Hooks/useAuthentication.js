@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   checkUserCredentialsApi,
-  checkUsernameAvailabilityApi,
+  checkUserEmailAvailabilityApi,
   createUserApi,
 } from "../Api/auth";
 
@@ -41,19 +41,19 @@ export function useAuth() {
     }
   };
 
-  const checkUsernameAvailability = async (user) => {
+  const checkUserEmailAvailability = async (user) => {
     if (!user) {
       throw new Error("Invalid parameters");
     } else {
       if (process.env.REACT_APP_STAGING === "local") {
         const findUser = allUser.find(
-          (userData) => userData?.username === user.username
+          (userData) => userData?.email === user.email
         );
         if (findUser && Object.values(findUser).length) {
           throw new Error("User already exists!");
         }
       } else {
-        const response = await checkUsernameAvailabilityApi(user.username);
+        const response = await checkUserEmailAvailabilityApi(user.email);
         return response;
       }
     }
@@ -73,7 +73,7 @@ export function useAuth() {
     } else {
       if (process.env.REACT_APP_STAGING === "local") {
         const findUser = allUser.find(
-          (userData) => userData?.username === user.username
+          (userData) => userData?.email === user.email
         );
         if (!findUser) {
           throw new Error("User does not exists!");
@@ -96,7 +96,7 @@ export function useAuth() {
     allUser,
     loggedInUser,
     createUser,
-    checkUsernameAvailability,
+    checkUserEmailAvailability,
     logOut,
     setLogInUser,
     checkUserCredentials,

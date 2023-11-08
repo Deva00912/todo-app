@@ -11,19 +11,19 @@ function Register(props) {
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
-    username: "",
+    email: "",
     password: "",
     confirmPassword: "",
   });
 
   const validate = () => {
-    return user.username &&
+    return user.email &&
       user.firstName &&
       user.lastName &&
       user.confirmPassword &&
       user.password &&
       user.password === user.confirmPassword &&
-      regex.username.test(user.username) &&
+      regex.email.test(user.email) &&
       regex.password.test(user.password) &&
       regex.text.test(user.firstName) &&
       regex.text.test(user.lastName)
@@ -37,7 +37,7 @@ function Register(props) {
       props.navigate("/");
     } else {
       try {
-        await props.auth.checkUsernameAvailability(user);
+        await props.auth.checkUserEmailAvailability(user);
         await props.auth.createUser(
           process.env.REACT_APP_STAGING === "local"
             ? { ...user, userId: uuid() }
@@ -67,12 +67,8 @@ function Register(props) {
           Create an account
         </div>
 
-        <InputBox
-          placeholder="Username"
-          type="text"
-          name="username"
-          datacy="username"
-        />
+        <InputBox placeholder="Email" type="text" name="email" datacy="email" />
+
         <InputBox
           placeholder="First name"
           type="text"

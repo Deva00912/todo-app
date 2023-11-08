@@ -6,8 +6,8 @@ const {
   validate,
   putCreateUser,
   getGetAllUsers,
-  postIsUsernameExist,
-  validateUsername,
+  postIsUserEmailExists,
+  validateUserEmail,
   checkPasswordAndLogin,
 } = require("../Features/Auth");
 const {
@@ -30,7 +30,7 @@ describe("Testing Features", () => {
   describe("User features", () => {
     it("Validating user - valid details", () => {
       const user = {
-        username: "devendran0912",
+        email: "devendran0912",
         firstName: "Devendran",
         lastName: "M",
         password: "Dev@1234",
@@ -40,9 +40,9 @@ describe("Testing Features", () => {
       expect(result).to.be.equal(true);
     });
     describe("Validating user - Invalid details", () => {
-      it("Incorrect username", () => {
+      it("Incorrect email", () => {
         const user = {
-          username: "Devendran0912",
+          email: "Devendran0912",
           firstName: "Devendran",
           lastName: "M",
           password: "Dev@1234",
@@ -53,7 +53,7 @@ describe("Testing Features", () => {
       });
       it("Invalid password", () => {
         const user = {
-          username: "Devendran0912",
+          email: "Devendran0912",
           firstName: "Devendran",
           lastName: "M",
           password: "dev1234",
@@ -64,7 +64,7 @@ describe("Testing Features", () => {
       });
       it("Mismatch password & confirm password", () => {
         const user = {
-          username: "Devendran0912",
+          email: "Devendran0912",
           firstName: "Devendran",
           lastName: "M",
           password: "Dev@1dd234",
@@ -75,7 +75,7 @@ describe("Testing Features", () => {
       });
       it("Empty first name", () => {
         const user = {
-          username: "devendran0912",
+          email: "devendran0912",
           firstName: "",
           lastName: "M",
           password: "Dev@1234",
@@ -86,7 +86,7 @@ describe("Testing Features", () => {
       });
       it("Empty last name", () => {
         const user = {
-          username: "devendran0912",
+          email: "devendran0912",
           firstName: "Devendran",
           lastName: "",
           password: "Dev@1234",
@@ -97,7 +97,7 @@ describe("Testing Features", () => {
       });
       it("Empty first &  last name", () => {
         const user = {
-          username: "devendran0912",
+          email: "devendran0912",
           firstName: "",
           lastName: "",
           password: "Dev@1234",
@@ -108,7 +108,7 @@ describe("Testing Features", () => {
       });
       it("Empty password & confirmPassword", () => {
         const user = {
-          username: "devendran0912",
+          email: "devendran0912",
           firstName: "Devendran",
           lastName: "M",
           password: "",
@@ -122,7 +122,7 @@ describe("Testing Features", () => {
     describe("Creating User", () => {
       it("Creating a user with Valid details", async () => {
         const user = {
-          username: "anitha33332",
+          email: "anitha33332",
           firstName: "Anitha",
           lastName: "K",
           password: "Dev@1234",
@@ -146,33 +146,33 @@ describe("Testing Features", () => {
       });
     });
 
-    describe("checking username exists", () => {
-      it("Username exists", async () => {
-        const username = "devendran0912";
-        const response = await postIsUsernameExist(username);
+    describe("checking email exists", () => {
+      it("email exists", async () => {
+        const email = "devendran0912";
+        const response = await postIsUserEmailExists(email);
         expect(response).to.be.a("object");
-        expect(response.message).to.be.equal("Username is already in use");
+        expect(response.message).to.be.equal("email is already in use");
         expect(response.data).to.be.a("object");
         expect(Object.values(response.data).length).to.be.above(1);
       });
-      it("Username is available", async () => {
-        const username = "devendrhhan0912";
-        const response = await postIsUsernameExist(username);
+      it("email is available", async () => {
+        const email = "devendrhhan0912";
+        const response = await postIsUserEmailExists(email);
 
         expect(response).to.be.a("object");
-        expect(response.message).to.be.equal("Username is available");
+        expect(response.message).to.be.equal("email is available");
         expect(response.data).to.be.a("array");
         expect(response.data.length).to.be.equal(0);
       });
 
-      it("Validating username - valid username", () => {
-        const username = "devendran0222";
-        const result = validateUsername(username);
+      it("Validating email - valid email", () => {
+        const email = "devendran0222";
+        const result = validateUserEmail(email);
         expect(result).to.be.equal(true);
       });
-      it("Validating username - invalid username", () => {
-        const username = "Devendran0222";
-        const result = validateUsername(username);
+      it("Validating email - invalid email", () => {
+        const email = "Devendran0222";
+        const result = validateUserEmail(email);
 
         expect(result).to.be.equal(false);
       });
@@ -181,13 +181,10 @@ describe("Testing Features", () => {
     describe("Login Validation", () => {
       it("existing user - valid credentials", async () => {
         const user = {
-          username: "devendran0912",
+          email: "devendran0912",
           password: "Dev@1234",
         };
-        const response = await checkPasswordAndLogin(
-          user.username,
-          user.password
-        );
+        const response = await checkPasswordAndLogin(user.email, user.password);
 
         expect(response).to.be.a("object");
         expect(Object.values(response)).to.have.lengthOf(2);
@@ -202,12 +199,12 @@ describe("Testing Features", () => {
       });
       it("existing user - invalid credentials (password)", async () => {
         const user = {
-          username: "devendran0912",
+          email: "devendran0912",
           password: "Dev@e1234",
         };
         var response = {};
         try {
-          response = await checkPasswordAndLogin(user.username, user.password);
+          response = await checkPasswordAndLogin(user.email, user.password);
         } catch (error) {
           response.name = error.name;
           response.message = error.message;
@@ -222,12 +219,12 @@ describe("Testing Features", () => {
 
       it("Non - existing user", async () => {
         const user = {
-          username: "hello234",
+          email: "hello234",
           password: "Dev@e1234",
         };
         var response = {};
         try {
-          response = await checkPasswordAndLogin(user.username, user.password);
+          response = await checkPasswordAndLogin(user.email, user.password);
         } catch (error) {
           response.name = error.name;
           response.message = error.message;

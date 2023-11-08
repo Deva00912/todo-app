@@ -6,9 +6,9 @@ beforeEach(() => {
 describe("Registration Form Validation", () => {});
 const data = [
   {
-    dataCy: '[data-cy="username"]',
+    dataCy: '[data-cy="email"]',
     wrongValues: ["A", "4", "Ab44", "$#", "Abcd@1234", "abcd@1234", "ABCD1234"],
-    correctValue: "abcd1234",
+    correctValue: "abcd1234@test.com",
   },
   {
     dataCy: '[data-cy="firstName"]',

@@ -15,11 +15,11 @@ const {
 
 const firebaseCreateUser = async (user) => {
   await createUserFDB(user);
-  return firebaseGetUser(user.username);
+  return firebaseGetUser(user.email);
 };
 
-const firebaseGetUser = async (username) => {
-  const snapshot = await getUserFDB(username);
+const firebaseGetUser = async (email) => {
+  const snapshot = await getUserFDB(email);
   return getDocumentsFromSnapshot(snapshot)[0];
 };
 
@@ -44,7 +44,7 @@ describe("Testing Firebase services", () => {
     });
     it("creating a user", async () => {
       const user = {
-        username: "suchen099",
+        email: "suchen099",
         firstName: "Chen",
         lastName: "Su",
         password: "Chen@1234",
@@ -55,8 +55,8 @@ describe("Testing Firebase services", () => {
       expect(createdUser).to.haveOwnProperty("userId");
     });
     it("fetching an existing user", async () => {
-      const username = "kimdokja9853";
-      const fetchedUser = await firebaseGetUser(username);
+      const email = "kimdokja9853";
+      const fetchedUser = await firebaseGetUser(email);
       expect(fetchedUser).to.be.a("object");
       expect(fetchedUser).to.haveOwnProperty("userId");
     });

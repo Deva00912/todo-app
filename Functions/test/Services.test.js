@@ -32,7 +32,7 @@ describe("Testing services", () => {
 
     it.skip("Creating a user", async () => {
       const user = {
-        username: "kimdokja9853",
+        email: "kimdokja9853",
         firstName: "Dokja",
         lastName: "Kim",
         password: "Dokja@1234",
@@ -45,7 +45,7 @@ describe("Testing services", () => {
 
     it("Throw error - Duplicate user", async () => {
       const user = {
-        username: "kimdokja9813ee3492",
+        email: "kimdokja9813ee3492",
         firstName: "Dokja",
         lastName: "Kim",
         password: "Dokja@1234",
@@ -61,16 +61,16 @@ describe("Testing services", () => {
     });
 
     it("Getting a user", async () => {
-      const username = "devendran0912";
-      const response = await getUserFromDB(username);
+      const email = "devendran0912";
+      const response = await getUserFromDB(email);
 
       expect(response).to.be.a("object");
       expect(Object.values(response).length).to.be.above(1);
     });
 
     it("Getting an non-existing user", async () => {
-      const username = "devendrassn0912";
-      const response = await getUserFromDB(username);
+      const email = "devendrassn0912";
+      const response = await getUserFromDB(email);
       expect(response).to.be.a("null");
     });
   });

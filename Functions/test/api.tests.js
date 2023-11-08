@@ -10,7 +10,7 @@ describe("Testing API", () => {
   describe("Register APIs", () => {
     it("Creating an user with valid credentials", async () => {
       const user = {
-        username: "hello1985",
+        email: "hello1985",
         firstName: "Dokja",
         lastName: "Kim",
         password: "Dokja@1234",
@@ -34,7 +34,7 @@ describe("Testing API", () => {
 
     it("give warning when creating an existing user", async () => {
       const user = {
-        username: "devendran0912",
+        email: "devendran0912",
         firstName: "Devendran",
         lastName: "M",
         password: "Dev@1234",
@@ -52,13 +52,13 @@ describe("Testing API", () => {
 
       const createdUser = await response.json();
       assert.equal(createdUser.statusCode, 400);
-      assert.equal(createdUser.message, "Username is already in use");
+      assert.equal(createdUser.message, "email is already in use");
       //   assert.equal(Object.values(createdUser.data).length, 8);
     });
 
     it("give warning for invalid user details before creating user", async () => {
       const user = {
-        username: "Devendran0912",
+        email: "Devendran0912",
         firstName: "Devendran",
         lastName: "M",
         password: "Dev@1234",
@@ -79,50 +79,50 @@ describe("Testing API", () => {
       assert.equal(createdUser.message, "Enter details correctly");
     });
 
-    it("give warning when Checking username availability - username is already used", async () => {
-      const username = "devendran0912";
+    it("give warning when Checking email availability - email is already used", async () => {
+      const email = "devendran0912";
       const response = await fetch(
-        "http://localhost:7000/register/username-check",
+        "http://localhost:7000/register/email-check",
         {
           method: "POST",
-          body: JSON.stringify({ username: username }),
+          body: JSON.stringify({ email: email }),
           headers: headersList,
         }
       );
       const findUser = await response.json();
       assert.equal(findUser.statusCode, 400);
-      assert.equal(findUser.message, "Username is already in use");
+      assert.equal(findUser.message, "email is already in use");
     });
 
-    it("allow to create a user when Checking username availability - username is available", async () => {
-      const username = "abc1234";
+    it("allow to create a user when Checking email availability - email is available", async () => {
+      const email = "abc1234";
       const response = await fetch(
-        "http://localhost:7000/register/username-check",
+        "http://localhost:7000/register/email-check",
         {
           method: "POST",
-          body: JSON.stringify({ username: username }),
+          body: JSON.stringify({ email: email }),
           headers: headersList,
         }
       );
       const findUser = await response.json();
       assert.equal(findUser.statusCode, 200);
-      assert.equal(findUser.message, "Username is available");
+      assert.equal(findUser.message, "email is available");
       assert.equal(Object.values(findUser.data).length, 0);
     });
 
-    it("give warning when Checking username availability - incorrect username", async () => {
-      const username = "Abc1234";
+    it("give warning when Checking email availability - incorrect email", async () => {
+      const email = "Abc1234";
       const response = await fetch(
-        "http://localhost:7000/register/username-check",
+        "http://localhost:7000/register/email-check",
         {
           method: "POST",
-          body: JSON.stringify({ username: username }),
+          body: JSON.stringify({ email: email }),
           headers: headersList,
         }
       );
       const findUser = await response.json();
       assert.equal(findUser.statusCode, 400);
-      assert.equal(findUser.message, "Username is invalid");
+      assert.equal(findUser.message, "email is invalid");
       // assert.equal(Object.values(findUser.data).length, 0);
     });
   });
@@ -130,7 +130,7 @@ describe("Testing API", () => {
   describe("Login APIs", () => {
     it("With Valid credentials", async () => {
       const user = {
-        username: "devendran0912",
+        email: "devendran0912",
         password: "Dev@1234",
       };
 
@@ -148,7 +148,7 @@ describe("Testing API", () => {
 
     it("give warning With invalid credentials (password)", async () => {
       const user = {
-        username: "devendran0912",
+        email: "devendran0912",
         password: "Dev@123466",
       };
 
@@ -164,9 +164,9 @@ describe("Testing API", () => {
       assert.equal(Object.values(findUser.data).length, 0);
     });
 
-    it("give warning With invalid credentials (username (invalid one) )", async () => {
+    it("give warning With invalid credentials (email (invalid one) )", async () => {
       const user = {
-        username: "Devendran0912",
+        email: "Devendran0912",
         password: "Dev@1234",
       };
 
@@ -178,13 +178,13 @@ describe("Testing API", () => {
       const findUser = await response.json();
 
       assert.equal(findUser.statusCode, 401);
-      assert.equal(findUser.message, "Entered Username is invalid");
+      assert.equal(findUser.message, "Entered email is invalid");
       assert.equal(Object.values(findUser.data).length, 0);
     });
 
     it("With no existing user", async () => {
       const user = {
-        username: "goku1234",
+        email: "goku1234",
         password: "Dev@1234",
       };
 

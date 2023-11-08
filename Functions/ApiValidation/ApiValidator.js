@@ -3,14 +3,14 @@ const ajv = new Ajv({ allErrors: true, removeAdditional: "all" });
 
 const loginUserSchema = require("./Schemas/LoginUsers/LoginSchema.json");
 const registerUserSchema = require("./Schemas/RegisterUsers/RegisterSchema.json");
-const isUsernameAvailable = require("./Schemas/RegisterUsers/CheckUsernameSchema.json");
+const isUserEmailAvailable = require("./Schemas/RegisterUsers/CheckUserEmailSchema.json");
 const addTaskSchema = require("./Schemas/Tasks/AddTasksSchema.json");
 const editTaskSchema = require("./Schemas/Tasks/EditTasksSchema.json");
 
 ajv.addSchema(loginUserSchema, "loginUser");
 ajv.addSchema(registerUserSchema, "registerUser");
 ajv.addSchema(addTaskSchema, "newTasks");
-ajv.addSchema(isUsernameAvailable, "isUsernameAvailable");
+ajv.addSchema(isUserEmailAvailable, "isUserEmailAvailable");
 ajv.addSchema(editTaskSchema, "editTask");
 
 const errorResponses = (schemaErrors) => {

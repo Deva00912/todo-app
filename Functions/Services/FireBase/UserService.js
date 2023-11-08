@@ -10,8 +10,8 @@ const getUsersFDB = async () => {
   return await userDB.get();
 };
 
-const getUserFDB = async (username) => {
-  return await userDB.where("username", "==", username).get();
+const getUserFDB = async (email) => {
+  return await userDB.where("email", "==", email).get();
 };
 
 module.exports = {

@@ -28,13 +28,13 @@ const getAllUsersFromDB = async () => {
 };
 
 /**
- * Retrieves a user from the database by username.
+ * Retrieves a user from the database by email.
  *
- * @param {string} username - The username of the user to retrieve.
+ * @param {string} email - The email of the user to retrieve.
  * @returns {Promise<User | null>} A Promise that resolves to the user object or null if not found.
  */
-const getUserFromDB = async (username) => {
-  return await User.findOne({ username: username });
+const getUserFromDB = async (email) => {
+  return await User.findOne({ email: email });
 };
 
 module.exports = {

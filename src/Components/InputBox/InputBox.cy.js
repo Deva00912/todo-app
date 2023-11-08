@@ -41,19 +41,19 @@ describe("Input box Component", () => {
   });
 
   describe("validating with name attribute", () => {
-    describe("name = username", () => {
-      it("valid username", () => {
-        cy.mount(<InputBox name={"username"} />);
+    describe("name = email", () => {
+      it("valid email", () => {
+        cy.mount(<InputBox name={"email"} />);
         cy.get('[data-cy="textBox"]')
           .should("be.visible")
           .type("devendran0912");
       });
-      it("Invalid username", () => {
-        cy.mount(<InputBox name={"username"} />);
+      it("Invalid email", () => {
+        cy.mount(<InputBox name={"email"} />);
         cy.get('[data-cy="textBox"]')
           .should("be.visible")
           .type("Devendran0912");
-        cy.contains("Username is invalid").should("be.visible");
+        cy.contains("email is invalid").should("be.visible");
       });
     });
   });

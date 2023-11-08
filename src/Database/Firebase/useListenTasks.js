@@ -8,7 +8,6 @@ import {
   updateDoc,
   deleteDoc,
   where,
-  getDocs,
 } from "firebase/firestore";
 import { putUserTasks } from "../../Redux/Tasks/action";
 import { useEffect, useState } from "react";
@@ -64,16 +63,4 @@ export const updateTaskFDB = async (taskId, entry) => {
 export const deleteTaskFDB = async (taskId) => {
   const taskDocumentRef = doc(db, "Tasks", taskId);
   await deleteDoc(taskDocumentRef);
-};
-
-export const getUserTasksFDB = async (userId) => {
-  const tasksRef = collection(db, "Tasks");
-  const taskQuery = query(tasksRef, where("userId", "==", userId));
-
-  const querySnapshot = await getDocs(taskQuery);
-  const userTasks = [];
-  querySnapshot.forEach((doc) => {
-    userTasks.push({ taskId: doc.id, ...doc.data() });
-  });
-  putUserTasks(userTasks);
 };

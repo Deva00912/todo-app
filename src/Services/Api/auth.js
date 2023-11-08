@@ -38,15 +38,15 @@ export async function createUserApi(user) {
   }
 }
 
-export async function checkUsernameAvailabilityApi(username) {
-  if (!username) {
+export async function checkUserEmailAvailabilityApi(email) {
+  if (!email) {
     throw new Error("Invalid parameters");
   } else {
     const response = await fetch(
-      "http://localhost:7000/register/isUsernameExists",
+      "http://localhost:7000/register/isUserEmailExists",
       {
         method: "POST",
-        body: JSON.stringify({ username: username }),
+        body: JSON.stringify({ email: email }),
         headers: headersList,
       }
     );

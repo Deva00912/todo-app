@@ -3,11 +3,11 @@
  */
 
 const {
-  validateUsername,
+  validateUserEmail,
   checkPasswordAndLogin,
   putCreateUser,
   getGetAllUsers,
-  postIsUsernameExist,
+  postIsUserEmailExists,
   validate,
 } = require("../Features/Auth");
 
@@ -34,22 +34,22 @@ const throwError = (message, name) => {
 /**
  * Validates user login and returns user data.
  *
- * @param {String} username - The user's username.
+ * @param {String} email - The user's email.
  * @param {String} password - The user's password.
- * @throws {AuthError} Throws an AuthError if the entered username is invalid.
+ * @throws {AuthError} Throws an AuthError if the entered email is invalid.
  * @returns {Object} An object containing a message and user data if login is successful.
  */
-const validateLogin = async (username, password) => {
-  if (!validateUsername(username)) {
-    throwError("Entered Username is invalid", "AuthError");
+const validateLogin = async (email, password) => {
+  if (!validateUserEmail(email)) {
+    throwError("Entered email is invalid", "AuthError");
   }
-  return await checkPasswordAndLogin(username, password);
+  return await checkPasswordAndLogin(email, password);
 };
 
 /**
  * Creates a new user with the provided user data.
  *
- * @param {Object} userData - User data including { username, firstName, lastName, password, confirmPassword }.
+ * @param {Object} userData - User data including { email, firstName, lastName, password, confirmPassword }.
  * @throws {AuthError} Throws an AuthError if the entered details are not valid.
  * @returns {Object} An object containing a message and user data if the user creation is successful.
  */
@@ -70,18 +70,18 @@ const getAllUsers = async () => {
 };
 
 /**
- * Checks if a username already exists in the database.
+ * Checks if a email already exists in the database.
  *
- * @param {String} username - The username to check.
- * @throws {AuthError} Throws an AuthError if the provided username is invalid.
- * @returns {Object} An object with a message and data indicating the availability of the username.
+ * @param {String} email - The email to check.
+ * @throws {AuthError} Throws an AuthError if the provided email is invalid.
+ * @returns {Object} An object with a message and data indicating the availability of the email.
  */
-const isUsernameExist = async (username) => {
-  if (!validateUsername(username)) {
-    throwError("Invalid username", "AuthError");
+const isUsernameExist = async (email) => {
+  if (!validateUserEmail(email)) {
+    throwError("Invalid email", "AuthError");
   }
 
-  return await postIsUsernameExist(username);
+  return await postIsUserEmailExists(email);
 };
 
 /**

@@ -7,7 +7,7 @@ describe("Testing features for firebase", () => {
   describe.skip("Validating user - Invalid details", () => {
     it("Validating user - valid details", () => {
       const user = {
-        username: "devendran0912",
+        email: "devendran0912",
         firstName: "Devendran",
         lastName: "M",
         password: "Dev@1234",
@@ -16,9 +16,9 @@ describe("Testing features for firebase", () => {
       const result = validate(user);
       expect(result).to.be.equal(true);
     });
-    it("Incorrect username", () => {
+    it("Incorrect email", () => {
       const user = {
-        username: "Devendran0912",
+        email: "Devendran0912",
         firstName: "Devendran",
         lastName: "M",
         password: "Dev@1234",
@@ -29,7 +29,7 @@ describe("Testing features for firebase", () => {
     });
     it("Invalid password", () => {
       const user = {
-        username: "Devendran0912",
+        email: "Devendran0912",
         firstName: "Devendran",
         lastName: "M",
         password: "dev1234",
@@ -40,7 +40,7 @@ describe("Testing features for firebase", () => {
     });
     it("Mismatch password & confirm password", () => {
       const user = {
-        username: "Devendran0912",
+        email: "Devendran0912",
         firstName: "Devendran",
         lastName: "M",
         password: "Dev@1dd234",
@@ -51,7 +51,7 @@ describe("Testing features for firebase", () => {
     });
     it("Empty first name", () => {
       const user = {
-        username: "devendran0912",
+        email: "devendran0912",
         firstName: "",
         lastName: "M",
         password: "Dev@1234",
@@ -62,7 +62,7 @@ describe("Testing features for firebase", () => {
     });
     it("Empty last name", () => {
       const user = {
-        username: "devendran0912",
+        email: "devendran0912",
         firstName: "Devendran",
         lastName: "",
         password: "Dev@1234",
@@ -73,7 +73,7 @@ describe("Testing features for firebase", () => {
     });
     it("Empty first &  last name", () => {
       const user = {
-        username: "devendran0912",
+        email: "devendran0912",
         firstName: "",
         lastName: "",
         password: "Dev@1234",
@@ -84,7 +84,7 @@ describe("Testing features for firebase", () => {
     });
     it("Empty password & confirmPassword", () => {
       const user = {
-        username: "devendran0912",
+        email: "devendran0912",
         firstName: "Devendran",
         lastName: "M",
         password: "",
@@ -97,7 +97,7 @@ describe("Testing features for firebase", () => {
 
   it("Creating an user", async () => {
     const user = {
-      username: "anitha33332",
+      email: "anitha33332",
       firstName: "Anitha",
       lastName: "K",
       password: "Dev@1234",

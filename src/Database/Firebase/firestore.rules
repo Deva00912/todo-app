@@ -1,11 +1,28 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
+  
+    function isUserAuthenticated() {
+      return request.auth != null;
+    }
 
-     match /{document=**} {
-      allow read, write: if request.auth != null;
+    function getUserData() {
+      return get(/databases/$(database)/documents/Users/$(request.auth.uid)).data;
+    }
+    
+    function hasUserDocument() {
+      return exists(/databases/$(database)/documents/Users/$(request.auth.uid));
+    }
+
+    match /Tasks/{taskId} {
+      allow read, create, update, delete, write: if isUserAuthenticated() &&
+        (request.auth.uid == resource.data.userId ||
+         (hasUserDocument() && getUserData().uid == request.auth.uid));
+    }
+    
+    match /Users/{userId} {
+      allow read, write;
     }
   }
 }
-
-

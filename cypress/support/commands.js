@@ -1,7 +1,7 @@
 const cy = window.cy;
 // eslint-disable-next-line
 Cypress.Commands.add("register", (user) => {
-  cy.get(`[data-cy=username]`).type(`${user.username}`);
+  cy.get(`[data-cy=email]`).type(`${user.email}`);
   cy.get(`[data-cy=firstName]`).type(user.firstName);
   cy.get(`[data-cy=lastName]`).type(user.lastName);
   cy.get(`[data-cy=password]`).type(user.password);
@@ -33,7 +33,7 @@ Cypress.Commands.add("validate", (data) => {
 
 // eslint-disable-next-line
 Cypress.Commands.add("login", (user) => {
-  cy.get("[data-cy=username]").type(`${user.username}`);
+  cy.get("[data-cy=email]").type(`${user.email}`);
   cy.get("[data-cy=password]").type(`${user.password}`);
   cy.get('[data-cy="logInButton"]').should("be.visible").click();
 });
