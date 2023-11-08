@@ -9,6 +9,10 @@ import {
   createUserApi,
 } from "../../Services/Api/auth";
 import { toast } from "react-toastify";
+import {
+  signInUserFDB,
+  signOutFDB,
+} from "../../Database/Firebase/Authentication";
 
 function* logInUserWorker(action) {
   try {
@@ -16,7 +20,6 @@ function* logInUserWorker(action) {
       username: action.payload.username,
       password: action.payload.password,
     });
-
     if (response) {
       yield put({
         type: "SET_LOGGED_USER",
@@ -24,6 +27,7 @@ function* logInUserWorker(action) {
           data: response,
         },
       });
+      yield signInUserFDB(response.token);
       toast.success("Logged in");
     }
   } catch (error) {
@@ -41,6 +45,7 @@ function* registerWorker(action) {
         data: response,
       },
     });
+    yield signInUserFDB(response.token);
     toast.success("Registered");
   } catch (error) {
     toast.error(error.message);
@@ -55,6 +60,7 @@ function* logOutWorker() {
         data: {},
       },
     });
+    yield signOutFDB();
     toast.success("Logout successful");
   } catch (error) {
     toast.error(error.message);

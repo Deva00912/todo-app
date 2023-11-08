@@ -1,14 +1,9 @@
 const express = require("express");
 require("dotenv").config();
 
-const {
-  getAllUsers,
-  createUser,
-  firebaseGetUsersFeature,
-} = require("../Repository/Controllers.js");
+const { getAllUsers, createUser } = require("../Repository/Controllers.js");
 const { isUsernameExist } = require("../Repository/Controllers.js");
 const { validateSchema } = require("../ApiValidation/ApiValidator.js");
-const { firebaseCreateUser } = require("../Features/Auth.js");
 
 /**
  * Identify and format authentication-related errors for response.

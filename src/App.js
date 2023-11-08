@@ -8,6 +8,7 @@ import { useAuth } from "./Services/Hooks/useAuthentication.js";
 import { useTasks } from "./Services/Hooks/useTasks.js";
 import ErrorBoundary from "./Components/ErrorBoundary/ErrorBoundary";
 import { connect } from "react-redux";
+import useListenTasks from "./Database/Firebase/useListenTasks.js";
 
 const ProtectedRoute = ({ children, isLogged }) => {
   if (!isLogged) {
@@ -33,6 +34,10 @@ function App(props) {
     auth.logOut();
     window.location.reload();
   };
+
+  useListenTasks({
+    auth: process.env.REACT_APP_STAGING === "saga" ? props.auth : auth,
+  });
 
   const checkedLoggedUser = () => {
     if (process.env.REACT_APP_STAGING === "saga") {

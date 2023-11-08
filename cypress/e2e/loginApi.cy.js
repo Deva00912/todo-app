@@ -98,18 +98,19 @@ describe("Testing the app APIS", () => {
     beforeEach(() => {
       cy.visit("/login");
       const user = {
-        _id: "64f341992245ab97687076a3",
-        userId: "64f341992245ab97687076a2",
+        userId: "g8ZQjXoWhM4zbmw7nNDH",
         firstName: "Devendran",
         lastName: "M",
-        username: "devendran0912",
         password: "Dev@1234",
         confirmPassword: "Dev@1234",
+        username: "devendran0912",
+        token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJnOFpRalhvV2hNNHpibXc3bk5ESCIsInVzZXJuYW1lIjoiZGV2ZW5kcmFuMDkxMiIsImlhdCI6MTY5OTA3MjMzMSwiZXhwIjoxNjk5MDc1OTMxfQ.ejvXmRUHzBRZiaye8QCGnZNBwB8rxqs6JyIsct1FVkc",
       };
       cy.login(user);
     });
 
-    it("Adding an task", () => {
+    it.only("Adding an task", () => {
       cy.location("pathname").should("eq", "/");
       cy.get('[data-cy="taskEntry"]').should("be.visible").type("task-2");
       cy.get('[data-cy="addTask"]').should("be.visible").click();
@@ -118,7 +119,7 @@ describe("Testing the app APIS", () => {
       cy.get('[data-cy="deleteButton"]').should("be.visible");
     });
 
-    it("Editing a Task working", () => {
+    it.only("Editing a Task working", () => {
       cy.contains("task-2").should("be.visible");
       cy.get('[data-cy="editButton"]').should("be.visible");
       cy.get('[data-cy="deleteButton"]').should("be.visible");
@@ -129,11 +130,12 @@ describe("Testing the app APIS", () => {
       cy.contains("Task Edited").should("be.visible");
     });
 
-    it("Deleting a task working", () => {
+    it.only("Deleting a task working", () => {
       cy.contains("task-2 to task-0").should("be.visible");
       cy.get('[data-cy="editButton"]').should("be.visible");
       cy.get('[data-cy="deleteButton"]').should("be.visible");
       cy.get('[data-cy="deleteButton"]').should("be.visible").first().click();
+      cy.wait(2000);
       cy.contains("Task deleted").should("be.visible");
     });
   });

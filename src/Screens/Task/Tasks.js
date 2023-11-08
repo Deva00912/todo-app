@@ -16,9 +16,8 @@ import {
 import {
   addTaskFDB,
   deleteTaskFDB,
-  getUserTasksFDB,
   updateTaskFDB,
-} from "../../Database/Firebase/tasks";
+} from "../../Database/Firebase/useListenTasks";
 
 function Tasks(props) {
   const [entry, setEntry] = useState({
@@ -41,15 +40,9 @@ function Tasks(props) {
 
   useEffect(() => {
     // getUserTasksAndShowTasks();
-    if (create) {
-      getUserTasksAndShowTasks("add-change");
-      setCreate(false);
+    if (process.env.REACT_APP_DATABASE !== "firebase") {
+      withoutFirebase();
     }
-    if (edit) {
-      getUserTasksAndShowTasks("edit-change");
-      setEdit(false);
-    }
-
     // eslint-disable-next-line
   }, [create, edit, clicked]);
 
@@ -58,13 +51,24 @@ function Tasks(props) {
     setShowTask(props.tasks?.userTasks);
   }, [props.tasks?.userTasks]);
 
-  const getUserTasksAndShowTasks = async (mode) => {
+  const withoutFirebase = () => {
+    if (create) {
+      getUserTasksAndShowTasks(false);
+      setCreate(false);
+    }
+    if (edit) {
+      getUserTasksAndShowTasks("edit-change");
+      setEdit(false);
+    }
+  };
+
+  const getUserTasksAndShowTasks = async () => {
     try {
       if (process.env.REACT_APP_STAGING === "saga") {
-        props.getUserTasks(props.auth.data.userId, props.authToken, mode);
+        // props.getUserTasks(props.auth.data.userId, props.authToken);
       } else {
         if (process.env.REACT_APP_DATABASE === "firebase") {
-          await getUserTasksFDB(props.auth.data.userId);
+          // await getUserTasksFDB(props.auth.data.userId);
         } else {
           const getTasks = await props.task.getIndividualUserTasks(
             props.auth.loggedInUser?.userId,
@@ -102,7 +106,7 @@ function Tasks(props) {
             : entry,
           props.auth.loggedInUser?.token
         );
-        setCreate(true);
+        // setCreate(true);
         toast.success("Task Added");
       }
     }
@@ -130,7 +134,7 @@ function Tasks(props) {
           entry,
           props.auth.loggedInUser?.token
         );
-        setEdit(true);
+        // setEdit(true);
         toast.success("Task Edited");
       }
     }
@@ -151,7 +155,7 @@ function Tasks(props) {
         toast.success("Task deleted");
       } else {
         await props.task.deleteTask(taskId, props.auth.loggedInUser?.token);
-        setCreate(true);
+        // setCreate(true);
         toast.success("Task deleted");
       }
     }

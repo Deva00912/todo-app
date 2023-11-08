@@ -17,6 +17,7 @@ const {
   createUserFDB,
   getUserFDB,
 } = require("../Services/FireBase/UserService");
+const { admin } = require("../Services/FireBase/Utils/admin");
 
 /**
  * Validates user-entered details.
@@ -71,11 +72,13 @@ const putCreateUser = async (userData) => {
   var user = undefined;
   if (process.env.NODE_STAGING === "firebase") {
     user = await firebaseCreateUser(userData);
+    user.token = await admin
+      .auth()
+      .createCustomToken(user.userId, { username: user.username });
   } else {
     user = await createUserInDB(userData);
+    user.token = generateJwtToken(user.userId, user.username);
   }
-
-  user.token = generateJwtToken(user.userId, user.username);
 
   return { message: "User created", data: user };
 };
@@ -137,6 +140,9 @@ const checkPasswordAndLogin = async (username, password) => {
   var user = undefined;
   if (process.env.NODE_STAGING === "firebase") {
     user = await firebaseGetUser(username);
+    user.token = await admin
+      .auth()
+      .createCustomToken(user.userId, { username: user.username });
   } else {
     user = await getUserFromDB(username);
   }
@@ -144,10 +150,12 @@ const checkPasswordAndLogin = async (username, password) => {
     throwAuthError("User does not exists");
   }
 
-  if (user && (await bcrypt.compare(password, user.password))) {
-    user.token = generateJwtToken(user.userId, user.username);
-  } else {
-    throwAuthError("Invalid credentials");
+  if (process.env.NODE_STAGING !== "firebase") {
+    if (user && (await bcrypt.compare(password, user.password))) {
+      user.token = generateJwtToken(user.userId, user.username);
+    } else {
+      throwAuthError("Invalid credentials");
+    }
   }
   return {
     message: "Logged in",

@@ -10,14 +10,14 @@ import { getUserTasks } from "./action";
 import {
   addTaskFDB,
   deleteTaskFDB,
-  getUserTasksFDB,
   updateTaskFDB,
-} from "../../Database/Firebase/tasks";
+} from "../../Database/Firebase/useListenTasks";
 
 function* addTaskWorker(action) {
   try {
     if (process.env.REACT_APP_DATABASE === "firebase") {
       yield addTaskFDB(action.payload.task);
+      toast.success("Task Added");
     } else {
       yield addTaskApi(action.payload.task, action.payload.token);
       toast.success("Task Added");
@@ -31,9 +31,7 @@ function* addTaskWorker(action) {
 function* getUserTasksWorker(action) {
   try {
     var userTasks = [];
-    if (process.env.REACT_APP_DATABASE === "firebase") {
-      yield getUserTasksFDB(action.payload.userId);
-    } else {
+    if (process.env.REACT_APP_DATABASE !== "firebase") {
       userTasks = yield getIndividualUserTasksApi(
         action.payload.userId,
         action.payload.token
