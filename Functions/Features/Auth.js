@@ -17,7 +17,6 @@ const {
   createUserFDB,
   getUserFDB,
 } = require("../Services/FireBase/UserService");
-const { admin } = require("../Services/FireBase/Utils/admin");
 
 /**
  * Validates user-entered details.
@@ -72,9 +71,6 @@ const putCreateUser = async (userData) => {
   var user = undefined;
   if (process.env.NODE_STAGING === "firebase") {
     user = await firebaseCreateUser(userData);
-    user.token = await admin
-      .auth()
-      .createCustomToken(user.userId, { email: user.email });
   } else {
     user = await createUserInDB(userData);
     user.token = generateJwtToken(user.userId, user.email);
@@ -147,9 +143,6 @@ const checkPasswordAndLogin = async (email, password) => {
 
   if (user && (await bcrypt.compare(password, user.password))) {
     if (process.env.NODE_STAGING !== "firebase") {
-      user.token = await admin
-        .auth()
-        .createCustomToken(user.userId, { email: user.email });
     } else {
       user.token = generateJwtToken(user.userId, user.email);
     }

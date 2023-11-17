@@ -59,7 +59,7 @@ export const deleteTask = (task, token) => {
     type: actionTypes.DELETE_TASK,
     payload: {
       taskId: task.taskId,
-      userId: task.userId,
+      email: task.email,
       token: token,
     },
   });
@@ -69,14 +69,14 @@ export const deleteTask = (task, token) => {
  * Dispatches an action to get tasks for a user.
  *
  * @function
- * @param {string} userId - The user's ID.
+ * @param {string} email - The user's ID.
  * @param {string} token - User authentication token.
  */
-export const getUserTasks = (userId, token, mode) => {
+export const getUserTasks = (email, token, mode) => {
   store.dispatch({
     type: actionTypes.GET_USER_TASKS,
     payload: {
-      userId: userId,
+      email: email,
       token: token,
       mode: mode,
     },

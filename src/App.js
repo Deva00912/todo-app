@@ -9,7 +9,6 @@ import { useTasks } from "./Services/Hooks/useTasks.js";
 import ErrorBoundary from "./Components/ErrorBoundary/ErrorBoundary";
 import { connect } from "react-redux";
 import useListenTasks from "./Database/Firebase/useListenTasks.js";
-import { signedInUserTrackIn } from "./Database/Firebase/Authentication.js";
 
 const ProtectedRoute = ({ children, isLogged }) => {
   if (!isLogged) {
@@ -27,7 +26,7 @@ const PublicRoute = ({ children, isLogged }) => {
 };
 
 function App(props) {
-  signedInUserTrackIn();
+  // signedInUserTrackIn();
   const navigate = useNavigate();
   const auth = useAuth();
   const task = useTasks(auth);
@@ -43,11 +42,11 @@ function App(props) {
 
   const checkedLoggedUser = () => {
     if (process.env.REACT_APP_STAGING === "saga") {
-      return props.auth.data && typeof props.auth.data.userId === "string"
+      return props.auth.data && typeof props.auth.data.email === "string"
         ? true
         : false;
     } else {
-      return auth.loggedInUser && typeof auth.loggedInUser.userId === "string"
+      return auth.loggedInUser && typeof auth.loggedInUser.email === "string"
         ? true
         : false;
     }

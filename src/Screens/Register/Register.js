@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
-import { regex } from "../../Services/Utils/Constants";
+import { regex } from "../../Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
 import uuid from "react-uuid";
 import { connect } from "react-redux";
@@ -46,6 +46,7 @@ function Register(props) {
         toast.success("Registered");
         props.navigate("/");
       } catch (error) {
+        console.log("error", error);
         toast.error(error.message);
       }
     }

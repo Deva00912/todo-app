@@ -3,22 +3,30 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
   
-    function isUserAuthenticated() {
+    function isSignedIn() {
       return request.auth != null;
     }
 
-    function getUserData() {
-      return get(/databases/$(database)/documents/Users/$(request.auth.uid)).data;
+    function authorizeUserToDoCRUD() {
+      return request.auth.token.email == resource.data.email;
     }
-    
-    function hasUserDocument() {
-      return exists(/databases/$(database)/documents/Users/$(request.auth.uid));
+
+    function authorizeUser() {
+      return request.auth.token.email == request.resource.data.email;
+    }
+
+    function isUser() {
+      return isSignedIn() && authorizeUser();
+    }
+    function isUserCRUD() {
+      return isSignedIn() && authorizeUserToDoCRUD();
     }
 
     match /Tasks/{taskId} {
-      allow read, create, update, delete, write: if isUserAuthenticated() &&
-        (request.auth.uid == resource.data.userId ||
-         (hasUserDocument() && getUserData().uid == request.auth.uid));
+
+      allow create, update: if isUser();
+
+      allow read, list, delete: if isUserCRUD();
     }
     
     match /Users/{userId} {

@@ -118,11 +118,11 @@ const deleteTask = async (taskId) => {
 /**
  * Retrieves all tasks of a user from the database.
  *
- * @param {String} userId - The ID of the user whose tasks are to be retrieved.
+ * @param {String} email - The ID of the user whose tasks are to be retrieved.
  * @returns {Object} An object containing a message and an array of task data.
  */
-const getUserTask = async (userId) => {
-  return await getUserTasksFeature(userId);
+const getUserTask = async (email) => {
+  return await getUserTasksFeature(email);
 };
 
 module.exports = {

@@ -21,10 +21,10 @@ import {
 
 function Tasks(props) {
   const [entry, setEntry] = useState({
-    userId:
+    email:
       process.env.REACT_APP_STAGING === "saga"
-        ? props.auth.data.userId
-        : props.auth.loggedInUser?.userId,
+        ? props.auth.data.email
+        : props.auth.loggedInUser?.email,
     entry: "",
   });
   const [showTask, setShowTask] = useState([]);
@@ -65,13 +65,13 @@ function Tasks(props) {
   const getUserTasksAndShowTasks = async () => {
     try {
       if (process.env.REACT_APP_STAGING === "saga") {
-        // props.getUserTasks(props.auth.data.userId, props.authToken);
+        // props.getUserTasks(props.auth.data.email, props.authToken);
       } else {
         if (process.env.REACT_APP_DATABASE === "firebase") {
-          // await getUserTasksFDB(props.auth.data.userId);
+          // await getUserTasksFDB(props.auth.data.email);
         } else {
           const getTasks = await props.task.getIndividualUserTasks(
-            props.auth.loggedInUser?.userId,
+            props.auth.loggedInUser?.email,
             props.auth.loggedInUser?.token
           );
           setShowTask(getTasks);
@@ -118,7 +118,7 @@ function Tasks(props) {
         {
           taskId: taskEditId,
           entry: entry.entry,
-          userId: props.auth.data.userId,
+          email: props.auth.data.email,
         },
         props.authToken
       );
@@ -145,7 +145,7 @@ function Tasks(props) {
       props.deleteTask(
         {
           taskId: taskId,
-          userId: props.auth.data.userId,
+          email: props.auth.data.email,
         },
         props.authToken
       );
@@ -313,7 +313,7 @@ const mapDispatchToProps = function () {
       addTask: (entry, token) => addTask(entry, token),
       editTask: (task, token) => editTask(task, token),
       deleteTask: (task, token) => deleteTask(task, token),
-      getUserTasks: (userId, token, mode) => getUserTasks(userId, token, mode),
+      getUserTasks: (email, token, mode) => getUserTasks(email, token, mode),
       clearUserTasks: () => clearUserTasks(),
       logOut: () => logOut(),
     };

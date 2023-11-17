@@ -4,18 +4,11 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth, db } from "./firebase";
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 
 export const signInUserFDB = async (user) => {
   await signInWithEmailAndPassword(auth, user.email, user.password);
-  return await getUser(user.email);
+  return await getUserDocumentByEmail(user.email);
 };
 
 export const signOutFDB = async () => {
@@ -29,25 +22,29 @@ export const registerWithEmailAndPassword = async (user) => {
     user.password
   );
   const createdUser = response.user;
-  const userDocRef = doc(db, "Users", createdUser.uid); // Use createdUser.uid as the document ID
-  await setDoc(userDocRef, {
+  const userDocRef = collection(db, "Users");
+  await addDoc(userDocRef, {
     authProvider: "local",
     uid: createdUser.uid,
-    ...user,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    password: user.password,
   });
-  return await getUser(user.email);
+  return await getUserDocumentByEmail(user.email);
 };
 
-const getUser = async (email) => {
-  const userRef = collection(db, "Users");
-  const userQuery = query(userRef, where("email", "==", email));
-
-  const querySnapshot = await getDocs(userQuery);
+export const getUserDocumentByEmail = async (email) => {
+  const usersRef = collection(db, "Users");
+  const userQuery = query(usersRef, where("email", "==", email));
+  const userDocSnapshot = await getDocs(userQuery);
   const user = [];
-  querySnapshot.forEach((doc) => {
-    user.push({ userId: doc.id, ...doc.data() });
-  });
-  return user[0];
+  !userDocSnapshot.empty &&
+    userDocSnapshot.forEach((doc) =>
+      user.push({ userId: doc.id, ...doc.data() })
+    );
+
+  return user.length ? user[0] : null;
 };
 
 export const signedInUserTrackIn = () => {

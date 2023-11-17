@@ -3,12 +3,12 @@
   "description": "describes the required properties to store user's tasks",
   "type": "object",
   "properties": {
-    "userId": {
+    "email": {
       "type": "string"
     },
     "entry": {
       "type": "string"
     }
   },
-  "required": ["userId", "entry"]
+  "required": ["email", "entry"]
 }

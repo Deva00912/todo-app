@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../../Components/Button/Button";
-import { regex } from "../../Services/Utils/Constants";
+import { regex } from "../../Utils/Constants";
 import InputBox from "../../Components/InputBox/InputBox";
 import { connect } from "react-redux";
 import { logInUser } from "../../Redux/Authentication/action";
@@ -23,7 +23,7 @@ function Login(props) {
       return toast.error("Entered details is wrong!");
     }
     if (process.env.REACT_APP_STAGING === "saga") {
-      props.logInUser(user);
+      props.logInUser({ user });
       props.navigate("/");
     } else {
       try {

@@ -11,6 +11,8 @@ import {
 } from "firebase/firestore";
 import { putUserTasks } from "../../Redux/Tasks/action";
 import { useEffect, useState } from "react";
+import { handleFirebaseError } from "../../Utils/identifyError";
+import { toast } from "react-toastify";
 
 export default function useListenTasks(props) {
   const [taskListener, setTaskListener] = useState({
@@ -18,29 +20,37 @@ export default function useListenTasks(props) {
   });
 
   const subscribeToTaskListener = () => {
-    const userId = props.auth.data?.userId ? props.auth.data?.userId : "";
+    try {
+      const email = props.auth.data?.email ? props.auth.data?.email : "";
 
-    const tasksRef = collection(db, "Tasks");
-    const taskQuery = query(tasksRef, where("userId", "==", userId));
+      const tasksRef = collection(db, "Tasks");
+      const taskQuery = query(tasksRef, where("email", "==", email));
 
-    return onSnapshot(
-      taskQuery,
-      { includeMetadataChanges: true },
-      (snapshot) => {
-        const userTasks = [];
-        snapshot.forEach((doc) => {
-          userTasks.push({ taskId: doc.id, ...doc.data() });
-        });
-        putUserTasks(userTasks);
-      }
-    );
+      return onSnapshot(
+        taskQuery,
+        { includeMetadataChanges: true },
+        (snapshot) => {
+          const userTasks = [];
+          snapshot.forEach((doc) => {
+            userTasks.push({ taskId: doc.id, ...doc.data() });
+          });
+          putUserTasks(userTasks);
+        }
+      );
+    } catch (error) {
+      toast.error(
+        process.env.REACT_APP_DATABASE === "firebase"
+          ? handleFirebaseError(error)
+          : error.message
+      );
+    }
   };
 
   useEffect(() => {
-    if (props.auth.data.userId && typeof taskListener.listener !== "function") {
+    if (props.auth.data.email && typeof taskListener.listener !== "function") {
       setTaskListener({ listener: subscribeToTaskListener() });
     } else if (
-      !props.auth.data.userId &&
+      !props.auth.data.email &&
       typeof taskListener.listener === "function"
     ) {
       taskListener.listener();
@@ -48,7 +58,7 @@ export default function useListenTasks(props) {
     }
 
     // eslint-disable-next-line
-  }, [props.auth.data.userId]);
+  }, [props.auth.data.email]);
 }
 
 export const addTaskFDB = async (task) => {

@@ -16,8 +16,8 @@ const deleteTaskFDB = async (taskId) => {
   return await tasksDB.doc(taskId).delete();
 };
 
-const getUserTasksFDB = async (userId) => {
-  return await tasksDB.where("userId", "==", userId).get();
+const getUserTasksFDB = async (email) => {
+  return await tasksDB.where("email", "==", email).get();
 };
 
 const getTasksByTaskIdFDB = async (taskId) => {

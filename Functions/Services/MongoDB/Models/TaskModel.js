@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const taskSchema = mongoose.Schema(
   {
     taskId: { type: mongoose.Types.ObjectId, required: true, unique: true },
-    userId: { type: mongoose.Types.ObjectId, required: true },
+    email: { type: String, required: true },
     entry: {
       type: String,
       required: [true, "Write your task here"],

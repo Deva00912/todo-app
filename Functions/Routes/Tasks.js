@@ -267,10 +267,10 @@ tasksRouter.delete("/deleteTask/:id", jwtAuth, async (req, res) => {
  *   "ackStatus": "completed"
  * }
  */
-tasksRouter.get("/findUserTasks/:id", jwtAuth, async (req, res) => {
+tasksRouter.post("/findUserTasks/", jwtAuth, async (req, res) => {
   try {
-    const userId = req.params.id;
-    const response = await getUserTask(userId);
+    const email = req.body.email;
+    const response = await getUserTask(email);
     res
       .status(200)
       .json({ ...response, ackStatus: "completed" })

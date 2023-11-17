@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { regex } from "../../Services/Utils/Constants";
+import { regex } from "../../Utils/Constants";
 
 export default function InputBox(props) {
   const [errors, setErrors] = useState({});

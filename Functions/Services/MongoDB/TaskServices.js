@@ -58,11 +58,11 @@ const findTaskByTaskId = async (taskId) => {
 /**
  * Retrieves all tasks of a user from the database.
  *
- * @param {String} userId - The ID of the user whose tasks are to be retrieved.
+ * @param {String} email - The ID of the user whose tasks are to be retrieved.
  * @returns {Promise<Task[]>} A Promise that resolves to an array of task objects.
  */
-const getUserTasksFromDB = async (userId) => {
-  return await Task.find({ userId: userId });
+const getUserTasksFromDB = async (email) => {
+  return await Task.find({ email: email });
 };
 
 module.exports = {

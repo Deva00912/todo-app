@@ -21,7 +21,7 @@ function* addTaskWorker(action) {
     } else {
       yield addTaskApi(action.payload.task, action.payload.token);
       toast.success("Task Added");
-      yield getUserTasks(action.payload.task.userId, action.payload.token);
+      yield getUserTasks(action.payload.task.email, action.payload.token);
     }
   } catch (error) {
     toast.error(error.message);
@@ -33,7 +33,7 @@ function* getUserTasksWorker(action) {
     var userTasks = [];
     if (process.env.REACT_APP_DATABASE !== "firebase") {
       userTasks = yield getIndividualUserTasksApi(
-        action.payload.userId,
+        action.payload.email,
         action.payload.token
       );
       if (userTasks.length) {
@@ -71,7 +71,7 @@ function* editTaskWorker(action) {
         action.payload.editTask.entry,
         action.payload.token
       );
-      yield getUserTasks(action.payload.editTask.userId, action.payload.token);
+      yield getUserTasks(action.payload.editTask.email, action.payload.token);
     }
     toast.success("Task Edited");
   } catch (error) {
@@ -85,7 +85,7 @@ function* deleteTaskWorker(action) {
       yield deleteTaskFDB(action.payload.taskId);
     } else {
       yield deleteTaskApi(action.payload.taskId, action.payload.token);
-      yield getUserTasks(action.payload.userId, action.payload.token);
+      yield getUserTasks(action.payload.email, action.payload.token);
     }
     toast.success("Task deleted");
   } catch (error) {

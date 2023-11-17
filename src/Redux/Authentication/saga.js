@@ -10,18 +10,27 @@ import {
 } from "../../Services/Api/auth";
 import { toast } from "react-toastify";
 import {
+  getUserDocumentByEmail,
   registerWithEmailAndPassword,
   signInUserFDB,
   signOutFDB,
 } from "../../Database/Firebase/Authentication";
+import { handleFirebaseError } from "../../Utils/identifyError";
 
 function* logInUserWorker(action) {
   try {
     var response = undefined;
     if (process.env.REACT_APP_DATABASE === "firebase") {
+      const userEmailAvailable = yield getUserDocumentByEmail(
+        action.payload.user.email
+      );
+      if (!userEmailAvailable) {
+        throw new Error("User does not exists");
+      }
+
       response = yield signInUserFDB({
-        email: action.payload.email,
-        password: action.payload.password,
+        email: action.payload.user.email,
+        password: action.payload.user.password,
       });
     } else {
       response = yield checkUserCredentialsApi({
@@ -39,7 +48,13 @@ function* logInUserWorker(action) {
       toast.success("Logged in");
     }
   } catch (error) {
-    toast.error(error.message);
+    toast.error(
+      process.env.REACT_APP_DATABASE === "firebase"
+        ? error.code
+          ? handleFirebaseError(error)
+          : error.message
+        : error.message
+    );
   }
 }
 
@@ -47,6 +62,12 @@ function* registerWorker(action) {
   try {
     var response = undefined;
     if (process.env.REACT_APP_DATABASE === "firebase") {
+      const userEmailAvailable = yield getUserDocumentByEmail(
+        action.payload.user.email
+      );
+      if (userEmailAvailable) {
+        throw new Error("User already exists");
+      }
       response = yield registerWithEmailAndPassword(action.payload.user);
     } else {
       yield checkUserEmailAvailabilityApi(action.payload.user.email);
@@ -62,7 +83,13 @@ function* registerWorker(action) {
       toast.success("Registered");
     }
   } catch (error) {
-    toast.error(error.message);
+    toast.error(
+      process.env.REACT_APP_DATABASE === "firebase"
+        ? error.code
+          ? handleFirebaseError(error)
+          : error.message
+        : error.message
+    );
   }
 }
 
@@ -77,7 +104,9 @@ function* logOutWorker() {
     yield signOutFDB();
     toast.success("Logout successful");
   } catch (error) {
-    toast.error(error.message);
+    process.env.REACT_APP_DATABASE === "firebase"
+      ? handleFirebaseError(error)
+      : toast.error(error.message);
   }
 }
 

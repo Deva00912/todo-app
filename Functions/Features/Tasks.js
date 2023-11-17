@@ -105,16 +105,16 @@ const deleteTaskFeature = async (taskId) => {
 /**
  * Retrieves all tasks of a user from the database.
  *
- * @param {String} userId - The ID of the user whose tasks are to be retrieved.
+ * @param {String} email - The ID of the user whose tasks are to be retrieved.
  * @throws {TaskError} - Throws error as TaskError, if any errors occurs.
  * @returns {Object} An object containing a message and an array of task data.
  */
-const getUserTasksFeature = async (userId) => {
+const getUserTasksFeature = async (email) => {
   var response = undefined;
   if (process.env.NODE_STAGING === "firebase") {
-    response = await getUserTasks(userId);
+    response = await getUserTasks(email);
   } else {
-    response = await getUserTasksFromDB(userId);
+    response = await getUserTasksFromDB(email);
     if (!response.length) {
       throwTaskError("No Tasks");
     }
@@ -122,8 +122,8 @@ const getUserTasksFeature = async (userId) => {
   return { message: "User Tasks", data: response };
 };
 
-const getUserTasks = async (userId) => {
-  const snapshot = await getUserTasksFDB(userId);
+const getUserTasks = async (email) => {
+  const snapshot = await getUserTasksFDB(email);
   return getDocumentsFromSnapshot(snapshot);
 };
 
