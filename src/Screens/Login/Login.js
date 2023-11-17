@@ -77,6 +77,18 @@ function Login(props) {
         >
           Don't have an account?
         </div>
+        <div
+          className="cursor-pointer margin-4px color-teal-blue font-family-times-new-roman line-height-16px font-size-100-percent "
+          onClick={() => {
+            const customUrl = "uhi://discover?hip=ANBU-HI";
+
+            // Navigate to the custom URL
+            window.location.href = customUrl;
+          }}
+          datacy="goToRegister"
+        >
+          Go to App
+        </div>
       </form>
     </>
   );
