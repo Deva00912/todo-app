@@ -43,7 +43,7 @@
     "start:local": "set PORT=3003 && cross-env REACT_APP_STAGING=local react-scripts start",
     "start:saga-mongodb": "set PORT=3001 && cross-env REACT_APP_STAGING=saga REACT_APP_DATABASE=mongodb  react-scripts start",
     "start:saga": "set PORT=3001 && cross-env REACT_APP_STAGING=saga REACT_APP_DATABASE=firebase react-scripts start",
-    "build": "react-scripts build && serve -s build",
+    "build": "react-scripts build",
     "cypress:open": "cypress open",
     "jsDoc": "jsdoc -c jsDocConfig.json",
     "storybook": "storybook dev -p 6006",
