@@ -80,7 +80,8 @@ function Login(props) {
         <div
           className="cursor-pointer margin-4px color-teal-blue font-family-times-new-roman line-height-16px font-size-100-percent "
           onClick={() => {
-            const customUrl = "uhi://discover?hip=ANBU-HI";
+            // const customUrl = "uhi://discover?hip=ANBU-HI";
+            const customUrl = "ninto://notification-permission?ask=true";
 
             // Navigate to the custom URL
             window.location.href = customUrl;
