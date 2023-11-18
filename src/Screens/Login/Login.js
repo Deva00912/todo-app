@@ -78,7 +78,7 @@ function Login(props) {
           Don't have an account?
         </div>
         <div
-          className="cursor-pointer margin-4px color-teal-blue font-family-times-new-roman line-height-16px font-size-100-percent "
+          className="cursor-pointer user-select-none margin-4px color-teal-blue font-family-times-new-roman line-height-16px font-size-100-percent "
           onClick={() => {
             // const customUrl = "uhi://discover?hip=ANBU-HI";
             const customUrl = "ninto://notification-permission?ask=true";
